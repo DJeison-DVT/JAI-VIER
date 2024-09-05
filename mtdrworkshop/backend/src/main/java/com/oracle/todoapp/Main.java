@@ -19,6 +19,7 @@ import io.helidon.webserver.cors.CorsSupport;
 import io.helidon.webserver.cors.CrossOriginConfig;
 
 
+
 /*
  * This is the helidon-se backend.
  * @author jean.de.lavarene@oracle.com
@@ -29,13 +30,14 @@ public final class Main {
       throws IOException, SQLException {
     System.out.println("Working Directory = " + System.getProperty("user.dir"));
     System.setProperty("oracle.jdbc.fanEnabled", "false");
+
     LogManager
         .getLogManager()
         .readConfiguration(
             Main.class.getResourceAsStream("/logging.properties"));
     Config config = Config.create();
 
-    WebServer.builder()
+      WebServer.builder()
       .config(config.get("server")) //update this server configuration from the config provided
       .addMediaSupport(JsonpSupport.create())
       .routing(createRouting(config))
@@ -54,7 +56,7 @@ public final class Main {
       });
   }
 
-  private static Routing createRouting(Config config) throws SQLException {
+  private static Routing createRouting(Config config) {
 
     // Creates a Helidon's Service implementation.
     // Use database configuration from application.yaml that

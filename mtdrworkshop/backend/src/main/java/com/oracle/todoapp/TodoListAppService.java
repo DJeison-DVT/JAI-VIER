@@ -29,7 +29,7 @@ public class TodoListAppService implements Service {
   private final TodoItemStorage todoItems;
 
   public TodoListAppService(Config config) {
-    todoItems = TodoItemStorage.get(config);
+    todoItems = new TodoItemStorage(config);
   }
 
   @Override
