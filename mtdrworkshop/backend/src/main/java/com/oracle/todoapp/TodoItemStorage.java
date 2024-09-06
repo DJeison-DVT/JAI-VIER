@@ -74,7 +74,7 @@ class TodoItemStorage {
         Connection conn = ads.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(
             "SELECT id, description, creation_ts, done FROM TODOOWNER.todoitem ORDER BY creation_ts DESC");
-        ResultSet rs = pstmt.executeQuery();) {
+        ResultSet rs = pstmt.executeQuery()) {
       while (rs.next()) {
         TodoItem item = TodoItem.of(
             rs.getInt("id"),
@@ -99,7 +99,7 @@ class TodoItemStorage {
         PreparedStatement pstmt = conn
             .prepareStatement("SELECT id, description, creation_ts, done FROM todoowner.todoitem WHERE id=?");) {
       pstmt.setInt(1, id);
-      try (ResultSet rs = pstmt.executeQuery();) {
+      try (ResultSet rs = pstmt.executeQuery()) {
         if (rs.next()) {
           ret = TodoItem.of(rs.getInt("id"), rs.getString("description"),
               rs.getObject("creation_ts", OffsetDateTime.class), rs.getBoolean("done"));
