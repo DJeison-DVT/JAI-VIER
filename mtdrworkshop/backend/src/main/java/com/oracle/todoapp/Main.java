@@ -7,7 +7,6 @@
 package com.oracle.todoapp;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.LogManager;
 
 import io.helidon.config.Config;
@@ -24,8 +23,7 @@ import io.helidon.webserver.cors.CrossOriginConfig;
  */
 public final class Main {
 
-  public static void main(final String[] args)
-      throws IOException, SQLException {
+  public static void main(final String[] args) throws IOException {
     System.out.println("Working Directory = " + System.getProperty("user.dir"));
     System.setProperty("oracle.jdbc.fanEnabled", "false");
 
@@ -34,7 +32,7 @@ public final class Main {
         .readConfiguration(
             Main.class.getResourceAsStream("/logging.properties"));
     Config config = Config.create();
-    
+
     WebServer.builder()
         .config(config.get("server")) // update this server configuration from the config provided
         .addMediaSupport(JsonpSupport.create())

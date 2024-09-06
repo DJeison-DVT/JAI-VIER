@@ -121,7 +121,6 @@ class TodoItem implements Serializable {
       itemsJSONArray.add(toJsonObject(p));
     });
 
-    return Json.createObjectBuilder()
-        .add("items", itemsJSONArray).build();
+    return Json.createObjectBuilder().add("items", itemsJSONArray).build();
   }
 }
