@@ -35,11 +35,11 @@ public class TodoListAppService implements Service {
   @Override
   public void update(Rules rules) {
     rules
-      .get("/", this::getAllTodos)
-      .post("/", this::saveTodo)
-      .get("/{id}", this::getTodoById)
-      .put("/{id}", this::updateTodo)
-      .delete("/{id}", this::deleteTodoById);
+        .get("/", this::getAllTodos)
+        .post("/", this::saveTodo)
+        .get("/{id}", this::getTodoById)
+        .put("/{id}", this::updateTodo)
+        .delete("/{id}", this::deleteTodoById);
   }
 
   private void getAllTodos(ServerRequest serverRequest, ServerResponse serverResponse) {
@@ -50,25 +50,22 @@ public class TodoListAppService implements Service {
   private void saveTodo(ServerRequest serverRequest, ServerResponse serverResponse) {
     LOGGER.fine("saveTodo");
     serverRequest.content().as(JsonObject.class)
-      .thenApply(
-          /* convert from JSON to TodoItem object */
-          TodoItem::fromJsonObject)
-      .thenApply(todoItem ->
-          TodoItem.of(todoItem.getId(),todoItem.getDescription(),
-            todoItem.getCreatedAt(),todoItem.isDone())
-      )
-      .thenApply(this.todoItems::save) // this blocking
+        .thenApply(
+            /* convert from JSON to TodoItem object */
+            TodoItem::fromJsonObject)
+        .thenApply(todoItem -> TodoItem.of(todoItem.getId(), todoItem.getDescription(),
+            todoItem.getCreatedAt(), todoItem.isDone()))
+        .thenApply(this.todoItems::save) // this blocking
 
-      // Use async APIs when avaiable:
-      // .thenCompose(this.todoItems::asyncSave)
-      .thenCompose(
-          todoItem -> {
+        // Use async APIs when avaiable:
+        // .thenCompose(this.todoItems::asyncSave)
+        .thenCompose(
+            todoItem -> {
               serverResponse.status(201)
                   .headers().add("timestamp", todoItem.getCreatedAt().toString())
-                  .location(URI.create(""+todoItem.getId()));
+                  .location(URI.create("" + todoItem.getId()));
               return serverResponse.send();
-          }
-      );
+            });
 
   }
 
@@ -77,12 +74,13 @@ public class TodoListAppService implements Service {
     String id = serverRequest.path().param("id");
     TodoItem todo = this.todoItems.getById(id);
     if (todo == null) {
-      // todo  identified by "id" wasn't found:
+      // todo identified by "id" wasn't found:
       serverRequest.next(new TodoItemNotFoundException(id));
     } else {
       serverResponse.status(200).send(TodoItem.toJsonObject(todo));
     }
   }
+
   private void updateTodo(ServerRequest serverRequest, ServerResponse serverResponse) {
     LOGGER.fine("updateTodo");
     TodoItem item = this.todoItems.getById(serverRequest.path().param("id"));
@@ -97,9 +95,9 @@ public class TodoListAppService implements Service {
         // Use async APIs when avaiable:
         // .thenCompose(this.todiItems::asyncSave)
         .thenCompose(
-            p -> serverResponse.status(200).send(TodoItem.toJsonObject(p))
-        );
+            p -> serverResponse.status(200).send(TodoItem.toJsonObject(p)));
   }
+
   void deleteTodoById(ServerRequest serverRequest, ServerResponse serverResponse) {
     LOGGER.fine("deleteTodo");
     this.todoItems.deleteById(serverRequest.path().param("id"));

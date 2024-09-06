@@ -18,8 +18,6 @@ import io.helidon.webserver.WebServer;
 import io.helidon.webserver.cors.CorsSupport;
 import io.helidon.webserver.cors.CrossOriginConfig;
 
-
-
 /*
  * This is the helidon-se backend.
  * @author jean.de.lavarene@oracle.com
@@ -36,24 +34,23 @@ public final class Main {
         .readConfiguration(
             Main.class.getResourceAsStream("/logging.properties"));
     Config config = Config.create();
-
-      WebServer.builder()
-      .config(config.get("server")) //update this server configuration from the config provided
-      .addMediaSupport(JsonpSupport.create())
-      .routing(createRouting(config))
-      .build()
-      .start()
-      .thenAccept(ws -> {
-        System.out.printf(
-          "webserver is up! http://localhost:%s/api/todolist%n", ws.port());
-        ws.whenShutdown().thenRun(() ->
-          System.out.println("WEB server is DOWN. Good bye!"));
-      })
-      .exceptionally(t -> {
-        System.err.printf("Startup failed: %s%n", t.getMessage());
-        t.printStackTrace(System.err);
-        return null;
-      });
+    
+    WebServer.builder()
+        .config(config.get("server")) // update this server configuration from the config provided
+        .addMediaSupport(JsonpSupport.create())
+        .routing(createRouting(config))
+        .build()
+        .start()
+        .thenAccept(ws -> {
+          System.out.printf(
+              "webserver is up! http://localhost:%s/api/todolist%n", ws.port());
+          ws.whenShutdown().thenRun(() -> System.out.println("WEB server is DOWN. Good bye!"));
+        })
+        .exceptionally(t -> {
+          System.err.printf("Startup failed: %s%n", t.getMessage());
+          t.printStackTrace(System.err);
+          return null;
+        });
   }
 
   private static Routing createRouting(Config config) {
@@ -64,15 +61,15 @@ public final class Main {
     TodoListAppService todoListAppService = new TodoListAppService(config.get("database"));
 
     // Enables CORS
-      // update if needed
-      CorsSupport corsSupport = CorsSupport.builder()
+    // update if needed
+    CorsSupport corsSupport = CorsSupport.builder()
         .addCrossOrigin(CrossOriginConfig.builder()
             .allowOrigins()
             .allowMethods("POST", "PUT", "DELETE")
             .exposeHeaders("location", "timestamp")
             .build())
         .addCrossOrigin(CrossOriginConfig.create())
-            .build();
+        .build();
 
     // Create routing and register
     return Routing
@@ -81,13 +78,14 @@ public final class Main {
         .error(Throwable.class, handleErrors())
         .build();
   }
+
   private static ErrorHandler<Throwable> handleErrors() {
     return (req, res, t) -> {
-        if (t instanceof TodoItemNotFoundException) {
-            res.status(404).send(t.getMessage());
-        } else {
-            req.next(t);
-        }
+      if (t instanceof TodoItemNotFoundException) {
+        res.status(404).send(t.getMessage());
+      } else {
+        req.next(t);
+      }
     };
   }
 }
