@@ -45,19 +45,24 @@ class TodoItemStorage {
   TodoItemStorage(Config config) {
     LOGGER.log(Level.CONFIG, config::toString);
     ads = AppDatasource.get(config);
+
   }
 
   /**
-   * We have two options to implement the backend. We can either make the database compute
-   * the JSON document or create the JSON document in Java. In this implementation we have
-   * chosen to build the JSON document in Java. So this method returns a list of TodoItem
+   * We have two options to implement the backend. We can either make the database
+   * compute
+   * the JSON document or create the JSON document in Java. In this implementation
+   * we have
+   * chosen to build the JSON document in Java. So this method returns a list of
+   * TodoItem
    * objects.
    *
    * The Oracle Database can also return the rows in a JSON format:
    * SELECT
-   *   json_arrayagg(json_object('id' VALUE id, 'description' VALUE description, 'date' VALUE creation_ts))
+   * json_arrayagg(json_object('id' VALUE id, 'description' VALUE description,
+   * 'date' VALUE creation_ts))
    * FROM
-   *   todoitem
+   * todoitem
    * ORDER BY creation_ts DESC
    *
    * @return a list of TodoItem objects
@@ -66,48 +71,48 @@ class TodoItemStorage {
     LOGGER.fine("all");
     ArrayList<TodoItem> list = new ArrayList<TodoItem>();
     try (
-      Connection conn = ads.getConnection();
-      PreparedStatement pstmt = conn.prepareStatement("SELECT id, description, creation_ts, done FROM TODOOWNER.todoitem ORDER BY creation_ts DESC");
-      ResultSet rs = pstmt.executeQuery();
-    ) {
-      while(rs.next()) {
+        Connection conn = ads.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(
+            "SELECT id, description, creation_ts, done FROM TODOOWNER.todoitem ORDER BY creation_ts DESC");
+        ResultSet rs = pstmt.executeQuery();) {
+      while (rs.next()) {
         TodoItem item = TodoItem.of(
-          rs.getInt("id"),
-          rs.getString("description"),
-          rs.getObject("creation_ts", OffsetDateTime.class),
-          rs.getBoolean("done"));
+            rs.getInt("id"),
+            rs.getString("description"),
+            rs.getObject("creation_ts", OffsetDateTime.class),
+            rs.getBoolean("done"));
         list.add(item);
       }
     } catch (SQLException e) {
-      LOGGER.log(Level.SEVERE, e, ()->"in all()");
+      LOGGER.log(Level.SEVERE, e, () -> "in all()");
     }
     LOGGER.fine("all() returns:");
-    LOGGER.fine(()->list.toString());
+    LOGGER.fine(() -> list.toString());
     return list;
   }
 
   TodoItem getById(int id) {
-    LOGGER.fine(()->"getById("+id+")");
+    LOGGER.fine(() -> "getById(" + id + ")");
     TodoItem ret = null;
     try (
         Connection conn = ads.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement("SELECT id, description, creation_ts, done FROM todoowner.todoitem WHERE id=?");
-        ){
+        PreparedStatement pstmt = conn
+            .prepareStatement("SELECT id, description, creation_ts, done FROM todoowner.todoitem WHERE id=?");) {
       pstmt.setInt(1, id);
       try (ResultSet rs = pstmt.executeQuery();) {
-        if(rs.next()) {
+        if (rs.next()) {
           ret = TodoItem.of(rs.getInt("id"), rs.getString("description"),
-            rs.getObject("creation_ts", OffsetDateTime.class), rs.getBoolean("done"));
+              rs.getObject("creation_ts", OffsetDateTime.class), rs.getBoolean("done"));
         }
       }
     } catch (SQLException e) {
-      LOGGER.log(Level.SEVERE, e, ()->"in getById("+id+")");
+      LOGGER.log(Level.SEVERE, e, () -> "in getById(" + id + ")");
     }
-    if(ret != null){
-      LOGGER.fine(()->"getById("+id+") returns:");
+    if (ret != null) {
+      LOGGER.fine(() -> "getById(" + id + ") returns:");
       LOGGER.fine(ret.toString());
     } else {
-      LOGGER.fine(()->"getById("+id+") returns: null");
+      LOGGER.fine(() -> "getById(" + id + ") returns: null");
     }
     return ret;
   }
@@ -117,35 +122,36 @@ class TodoItemStorage {
       int idInt = Integer.parseInt(id);
       return getById(idInt);
     } catch (NumberFormatException e) {
-      LOGGER.log(Level.INFO, ()->"NumberFormatException in getById("+id+"): "+e.getMessage());
+      LOGGER.log(Level.INFO, () -> "NumberFormatException in getById(" + id + "): " + e.getMessage());
     }
     return null;
   }
+
   CompletionStage<TodoItem> asyncSave(TodoItem item) {
     // Use 20c JDBC and UCP in order to use the async APIs
     return null;
   }
+
   TodoItem save(TodoItem item) {
-    LOGGER.fine("save("+item.toString()+")");
+    LOGGER.fine("save(" + item.toString() + ")");
     int idInt = item.getId();
     try (
-      Connection conn = ads.getConnection();
-    ){
-      if(idInt >=0 ) {
-        try(
-          PreparedStatement pstmt = conn.prepareStatement("UPDATE todoowner.todoitem SET description=?, done=? WHERE id=?");
-        ){
+        Connection conn = ads.getConnection();) {
+      if (idInt >= 0) {
+        try (
+            PreparedStatement pstmt = conn
+                .prepareStatement("UPDATE todoowner.todoitem SET description=?, done=? WHERE id=?");) {
           pstmt.setString(1, item.getDescription());
-          pstmt.setInt(2, item.isDone()?1:0);
+          pstmt.setInt(2, item.isDone() ? 1 : 0);
           pstmt.setInt(3, idInt);
           int updateCount = pstmt.executeUpdate();
-          LOGGER.info(()->"save - update case - updateCount="+updateCount);
+          LOGGER.info(() -> "save - update case - updateCount=" + updateCount);
         }
         return this.getById(idInt);
       } else {
         try (
-          PreparedStatement pstmt = conn.prepareStatement("INSERT INTO todoowner.todoitem (description) VALUES (?)", new String[]{"id"});
-        ){
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO todoowner.todoitem (description) VALUES (?)",
+                new String[] { "id" });) {
           pstmt.setString(1, item.getDescription());
 
           int updateCount = pstmt.executeUpdate(); // this call blocks the thread
@@ -154,12 +160,12 @@ class TodoItemStorage {
           rs.next();
           int id = rs.getInt(1);
 
-          LOGGER.fine(()->"save - insert case - updateCount="+updateCount);
+          LOGGER.fine(() -> "save - insert case - updateCount=" + updateCount);
           return this.getById(id);
         }
       }
     } catch (SQLException e) {
-      LOGGER.log(Level.SEVERE, e, ()->"in save(...)");
+      LOGGER.log(Level.SEVERE, e, () -> "in save(...)");
     }
     return this.getById(idInt);
   }
@@ -169,21 +175,21 @@ class TodoItemStorage {
       int idInt = Integer.parseInt(id);
       return deleteById(idInt);
     } catch (NumberFormatException e) {
-      LOGGER.log(Level.INFO, ()->"NumberFormatException in deleteById("+id+"): "+e.getMessage());
+      LOGGER.log(Level.INFO, () -> "NumberFormatException in deleteById(" + id + "): " + e.getMessage());
     }
     return false;
   }
+
   boolean deleteById(int id) {
-    LOGGER.fine(()->"deleteById(" + id + ")");
+    LOGGER.fine(() -> "deleteById(" + id + ")");
     int ret = 0;
     try (
         Connection conn = ads.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todoowner.todoitem WHERE id=?");
-      ){
+        PreparedStatement pstmt = conn.prepareStatement("DELETE FROM todoowner.todoitem WHERE id=?");) {
       pstmt.setInt(1, id);
       ret = pstmt.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.log(Level.SEVERE, e, ()->"in deleteById("+id+")");
+      LOGGER.log(Level.SEVERE, e, () -> "in deleteById(" + id + ")");
     }
     return (ret == 1);
   }
