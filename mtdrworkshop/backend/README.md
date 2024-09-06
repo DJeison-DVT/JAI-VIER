@@ -80,8 +80,7 @@ spec:
         - name: database.user
           value: myUser # update with your database user
         - name: database.url
-          value: myUrl # update with your database URL
-
+          value: "jdbc:oracle:thin:@<details>" # update with your database URL
         - name: database.password
           valueFrom:
             secretKeyRef:
@@ -89,7 +88,22 @@ spec:
               key: password
         ports:
         - containerPort: 8080
+
+        # if database wallet is required
+        volumeMounts:
+        - name: creds
+          mountPath: /app/creds # update with the right path to the wallet
+        # end if
+        
       restartPolicy: Always
+      
+      # if database wallet is required
+      volumes:
+      - name: creds
+        secret:
+          secretName: db-wallet-secret # update with the actual secret
+      # end if
+
 
 ---
 
@@ -109,4 +123,9 @@ spec:
 This configuration requires the following secret to be created:
 ```bash
 kubectl create secret generic myDatabasePWDSecret --from-literal=password=<value>
+```
+
+If a wallet is necessary, you can run the following command to create the wallet secret
+```bash
+kubectl create secret generic wallet --from-file=<wallet_location>
 ```
