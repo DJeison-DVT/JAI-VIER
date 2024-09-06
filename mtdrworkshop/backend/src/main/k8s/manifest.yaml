@@ -30,7 +30,7 @@ spec:
           value: "todoitem"
         - name: OCI_REGION
           value: "%OCI_REGION%"
-        - name: dbpassword
+        - name: database.password
           valueFrom:
             secretKeyRef:
               name: dbuser
