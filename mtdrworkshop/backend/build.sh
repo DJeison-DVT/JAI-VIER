@@ -13,6 +13,6 @@ mvn clean package
 docker build -f src/main/docker/Dockerfile -t $IMAGE .
 
 if [ $? -ne 0 ]; then
-    exit 1
+  exit 1
 fi
 docker push $IMAGE

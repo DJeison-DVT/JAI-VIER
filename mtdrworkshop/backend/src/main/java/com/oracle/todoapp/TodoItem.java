@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 
@@ -21,7 +20,7 @@ import javax.json.JsonObject;
  * a description, a creation date and a boolean that indicates if the item is
  * done (in other words "complete") or not.
  * @author  jean.de.lavarene@oracle.com
- */
+*/
 
 class TodoItem implements Serializable {
   private static final long serialVersionUID = 4168008245514009223L;
@@ -32,7 +31,7 @@ class TodoItem implements Serializable {
   OffsetDateTime createdAt;
   boolean done;
 
-  static TodoItem of(int id, String description, OffsetDateTime when, boolean done){
+  static TodoItem of(int id, String description, OffsetDateTime when, boolean done) {
     TodoItem todoItem = new TodoItem();
     todoItem.setId(id);
     todoItem.setCreatedAt(when);
@@ -40,19 +39,24 @@ class TodoItem implements Serializable {
     todoItem.setDone(done);
     return todoItem;
   }
+
   void setDescription(String description) {
     this.description = description;
   }
-  void setDone(boolean done){
+
+  void setDone(boolean done) {
     this.done = done;
   }
+
   private void setCreatedAt(OffsetDateTime now) {
     this.createdAt = now;
 
   }
+
   private void setId(int idStr) {
     this.id = idStr;
   }
+
   int getId() {
     return this.id;
   }
@@ -64,28 +68,31 @@ class TodoItem implements Serializable {
   OffsetDateTime getCreatedAt() {
     return createdAt;
   }
-  boolean isDone(){
+
+  boolean isDone() {
     return done;
   }
+
   @Override
   public String toString() {
-    String ret= "TodoItem { \"id\": "+this.id
-      +", \"description\": "+this.description
-      +", \"createdAt\": "+this.createdAt
-      +", \"done\" : "+((done)?"true":"false")
-      +" }";
+    String ret = "TodoItem { \"id\": " + this.id
+        + ", \"description\": " + this.description
+        + ", \"createdAt\": " + this.createdAt
+        + ", \"done\" : " + ((done) ? "true" : "false")
+        + " }";
     return ret;
   }
 
   /**
    * Returns the Json representation of the given TodoItem instance.
+   * 
    * @param item an object of TodoItem
    * @return
    */
   static JsonObject toJsonObject(TodoItem item) {
     return Json.createObjectBuilder()
         .add("id", item.getId())
-        .add("description", item.getDescription()==null?"":item.getDescription())
+        .add("description", item.getDescription() == null ? "" : item.getDescription())
         .add("createdAt", item.getCreatedAt().toString())
         .add("done", item.isDone())
         .build();
@@ -94,6 +101,7 @@ class TodoItem implements Serializable {
 
   /**
    * Returns an instance of TodoItem that corresponds to the given item in Json.
+   * 
    * @param json a json object representing a todo item
    * @return an instance of this class
    */
@@ -113,7 +121,6 @@ class TodoItem implements Serializable {
       itemsJSONArray.add(toJsonObject(p));
     });
 
-    return Json.createObjectBuilder()
-            .add("items", itemsJSONArray).build();
+    return Json.createObjectBuilder().add("items", itemsJSONArray).build();
   }
 }

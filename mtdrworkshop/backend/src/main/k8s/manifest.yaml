@@ -1,4 +1,4 @@
-## MyToDoReact version 2.0.0
+## MyToDoReact version 2.1.0
 ##
 ## Copyright (c) 2021 Oracle, Inc.
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
@@ -30,7 +30,7 @@ spec:
           value: "todoitem"
         - name: OCI_REGION
           value: "%OCI_REGION%"
-        - name: dbpassword
+        - name: database.password
           valueFrom:
             secretKeyRef:
               name: dbuser
@@ -54,9 +54,9 @@ kind: Service
 metadata:
   name: backend-service
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
-  - port: 80
+  - port: 8080
     targetPort: 8080
   selector:
     app: backendapp

@@ -32,9 +32,9 @@ mv -- /tmp/"$YAML_NAME" "$YAML_NAME"
 
 
 if [ -z "$1" ]; then
-    kubectl apply -f $SCRIPT_DIR/"$YAML_NAME" -n mtdrworkshop
+  kubectl apply -f $SCRIPT_DIR/"$YAML_NAME" -n mtdrworkshop
 else
-    kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/"$YAML_NAME") -n mtdrworkshop
+  kubectl apply -f <(istioctl kube-inject -f $SCRIPT_DIR/"$YAML_NAME") -n mtdrworkshop
 fi
 
 #kubectl apply -f $SCRIPT_DIR/order-service.yaml -n mtdrworkshop
