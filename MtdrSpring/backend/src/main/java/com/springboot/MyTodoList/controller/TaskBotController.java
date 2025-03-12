@@ -20,24 +20,24 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.springboot.MyTodoList.model.ToDoItem;
-import com.springboot.MyTodoList.service.ToDoItemService;
+import com.springboot.MyTodoList.model.Task;
+import com.springboot.MyTodoList.service.TaskService;
 import com.springboot.MyTodoList.util.BotCommands;
 import com.springboot.MyTodoList.util.BotHelper;
 import com.springboot.MyTodoList.util.BotLabels;
 import com.springboot.MyTodoList.util.BotMessages;
 
-public class ToDoItemBotController extends TelegramLongPollingBot {
+public class TaskBotController extends TelegramLongPollingBot {
 
-	private static final Logger logger = LoggerFactory.getLogger(ToDoItemBotController.class);
-	private ToDoItemService toDoItemService;
+	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
+	private TaskService taskService;
 	private String botName;
 
-	public ToDoItemBotController(String botToken, String botName, ToDoItemService toDoItemService) {
+	public TaskBotController(String botToken, String botName, TaskService taskService) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
-		this.toDoItemService = toDoItemService;
+		this.taskService = taskService;
 		this.botName = botName;
 	}
 
@@ -92,9 +92,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				try {
 
-					ToDoItem item = getToDoItemById(id).getBody();
+					Task item = getTaskById(id).getBody();
 					item.setDone(true);
-					updateToDoItem(item, id);
+					updateTask(item, id);
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DONE.getMessage(), this);
 
 				} catch (Exception e) {
@@ -109,9 +109,9 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				try {
 
-					ToDoItem item = getToDoItemById(id).getBody();
+					Task item = getTaskById(id).getBody();
 					item.setDone(false);
-					updateToDoItem(item, id);
+					updateTask(item, id);
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_UNDONE.getMessage(), this);
 
 				} catch (Exception e) {
@@ -126,7 +126,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 				try {
 
-					deleteToDoItem(id).getBody();
+					deleteTask(id).getBody();
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DELETED.getMessage(), this);
 
 				} catch (Exception e) {
@@ -142,7 +142,7 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
 					|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
 
-				List<ToDoItem> allItems = getAllToDoItems();
+				List<Task> allItems = getAllTasks();
 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 				List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -159,10 +159,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 				myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 				keyboard.add(myTodoListTitleRow);
 
-				List<ToDoItem> activeItems = allItems.stream().filter(item -> item.isDone() == false)
+				List<Task> activeItems = allItems.stream().filter(item -> item.isDone() == false)
 						.collect(Collectors.toList());
 
-				for (ToDoItem item : activeItems) {
+				for (Task item : activeItems) {
 
 					KeyboardRow currentRow = new KeyboardRow();
 					currentRow.add(item.getDescription());
@@ -170,10 +170,10 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 					keyboard.add(currentRow);
 				}
 
-				List<ToDoItem> doneItems = allItems.stream().filter(item -> item.isDone() == true)
+				List<Task> doneItems = allItems.stream().filter(item -> item.isDone() == true)
 						.collect(Collectors.toList());
 
-				for (ToDoItem item : doneItems) {
+				for (Task item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
 					currentRow.add(item.getDescription());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
@@ -220,11 +220,11 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 
 			else {
 				try {
-					ToDoItem newItem = new ToDoItem();
+					Task newItem = new Task();
 					newItem.setDescription(messageTextFromTelegram);
 					newItem.setCreation_ts(OffsetDateTime.now());
 					newItem.setDone(false);
-					ResponseEntity entity = addToDoItem(newItem);
+					ResponseEntity entity = addTask(newItem);
 
 					SendMessage messageToTelegram = new SendMessage();
 					messageToTelegram.setChatId(chatId);
@@ -239,29 +239,29 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 	}
 
 	@Override
-	public String getBotUsername() {		
+	public String getBotUsername() {
 		return botName;
 	}
 
-	// GET /todolist
-	public List<ToDoItem> getAllToDoItems() { 
-		return toDoItemService.findAll();
+	// GET /tasklist
+	public List<Task> getAllTasks() {
+		return taskService.findAll();
 	}
 
-	// GET BY ID /todolist/{id}
-	public ResponseEntity<ToDoItem> getToDoItemById(@PathVariable int id) {
+	// GET BY ID /tasklist/{id}
+	public ResponseEntity<Task> getTaskById(@PathVariable int id) {
 		try {
-			ResponseEntity<ToDoItem> responseEntity = toDoItemService.getItemById(id);
-			return new ResponseEntity<ToDoItem>(responseEntity.getBody(), HttpStatus.OK);
+			ResponseEntity<Task> responseEntity = taskService.getItemById(id);
+			return new ResponseEntity<Task>(responseEntity.getBody(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-	// PUT /todolist
-	public ResponseEntity addToDoItem(@RequestBody ToDoItem todoItem) throws Exception {
-		ToDoItem td = toDoItemService.addToDoItem(todoItem);
+	// PUT /tasklist
+	public ResponseEntity addTask(@RequestBody Task task) throws Exception {
+		Task td = taskService.addTask(task);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("location", "" + td.getID());
 		responseHeaders.set("Access-Control-Expose-Headers", "location");
@@ -270,23 +270,23 @@ public class ToDoItemBotController extends TelegramLongPollingBot {
 		return ResponseEntity.ok().headers(responseHeaders).build();
 	}
 
-	// UPDATE /todolist/{id}
-	public ResponseEntity updateToDoItem(@RequestBody ToDoItem toDoItem, @PathVariable int id) {
+	// UPDATE /tasklist/{id}
+	public ResponseEntity updateTask(@RequestBody Task task, @PathVariable int id) {
 		try {
-			ToDoItem toDoItem1 = toDoItemService.updateToDoItem(id, toDoItem);
-			System.out.println(toDoItem1.toString());
-			return new ResponseEntity<>(toDoItem1, HttpStatus.OK);
+			Task task1 = taskService.updateTask(id, task);
+			System.out.println(task1.toString());
+			return new ResponseEntity<>(task1, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 	}
 
-	// DELETE todolist/{id}
-	public ResponseEntity<Boolean> deleteToDoItem(@PathVariable("id") int id) {
+	// DELETE tasklist/{id}
+	public ResponseEntity<Boolean> deleteTask(@PathVariable("id") int id) {
 		Boolean flag = false;
 		try {
-			flag = toDoItemService.deleteToDoItem(id);
+			flag = taskService.deleteTask(id);
 			return new ResponseEntity<>(flag, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);

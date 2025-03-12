@@ -6,7 +6,7 @@
 */
 /*
  * The swagger definition of the APIs can be found here:
- * https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/oracleonpremjava/b/todolist/o/swagger_APIs_definition.json
+ * https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/oracleonpremjava/b/tasklist/o/swagger_APIs_definition.json
  *
  * You can view it in swagger-ui by going to the following petstore swagger ui page and
  * pasting the URL above that points to the definitions of the APIs that are used in this app:
@@ -14,7 +14,7 @@
  * @author  jean.de.lavarene@oracle.com
  */
 // Copy from the endpoint from the API Gateway Deployment
-// Example: const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.<region>.oci.customer-oci.com/todolist';
-// const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.eu-frankfurt-1.oci.customer-oci.com/todolist';
-const API_LIST = '/todolist';
+// Example: const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.<region>.oci.customer-oci.com/tasklist';
+// const API_LIST = 'https://di2eyonlz5s7kmuektcddaw5zq.apigateway.eu-frankfurt-1.oci.customer-oci.com/tasklist';
+const API_LIST = '/tasklist';
 export default API_LIST;
