@@ -2,14 +2,13 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "TASK")
-public class Task {
+@Table(name = "SUBTASK")
+public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
@@ -21,33 +20,27 @@ public class Task {
     OffsetDateTime created_at;
     @Column(name = "UPDATED_AT")
     OffsetDateTime updated_at;
-    @Column(name = "DUE_DATE")
-    OffsetDateTime due_date;
-    @Column(name = "PRIORITY")
-    int priority;
     @Column(name = "STATUS")
     int status;
-    @Column(name = "ESTIMATED_HOURS")
-    int estimated_hours;
-    @JsonManagedReference
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Subtask> subtasks;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "TASK_ID", nullable = false)
+    private Task task;
+    @Transient
+    private int task_id;
 
-    public Task() {
+    public Subtask() {
     }
 
-    public Task(int ID, String title, String description, OffsetDateTime created_at, OffsetDateTime updated_at,
-            OffsetDateTime due_date, int priority, int status, int estimated_hours, List<Subtask> subtasks) {
+    public Subtask(int ID, String title, String description, OffsetDateTime created_at, OffsetDateTime updated_at,
+            int status, Task task) {
         this.ID = ID;
         this.title = title;
         this.description = description;
         this.created_at = created_at;
         this.updated_at = updated_at;
-        this.due_date = due_date;
-        this.priority = priority;
         this.status = status;
-        this.estimated_hours = estimated_hours;
-        this.subtasks = subtasks;
+        this.task = task;
     }
 
     public int getID() {
@@ -90,22 +83,6 @@ public class Task {
         this.updated_at = updated_at;
     }
 
-    public OffsetDateTime getDue_date() {
-        return due_date;
-    }
-
-    public void setDue_date(OffsetDateTime due_date) {
-        this.due_date = due_date;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -114,35 +91,31 @@ public class Task {
         this.status = status;
     }
 
-    public int getEstimated_hours() {
-        return estimated_hours;
+    public Task getTask() {
+        return task;
     }
 
-    public void setEstimated_hours(int estimated_hours) {
-        this.estimated_hours = estimated_hours;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
-    public List<Subtask> getSubtasks() {
-        return subtasks;
+    public int getTask_id() {
+        return task != null ? task.getID() : task_id;
     }
 
-    public void setSubtasks(List<Subtask> subtasks) {
-        this.subtasks = subtasks;
+    public void setTask_id(int task_id) {
+        this.task_id = task_id;
     }
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "Subtask{" +
                 "ID=" + ID +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
-                ", due_date=" + due_date +
-                ", priority=" + priority +
                 ", status=" + status +
-                ", estimated_hours=" + estimated_hours +
-                ", subtasks=" + subtasks.toString() +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.service;
 
+import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,15 @@ public class TaskService {
             task.setPriority(td.getPriority());
             task.setStatus(td.getStatus());
             task.setEstimated_hours(td.getEstimated_hours());
-            return taskRepository.save(task);
+            Task savedTask = taskRepository.save(task);
+
+            if (td.getSubtasks() != null) {
+                for (Subtask subtask : td.getSubtasks()) {
+                    subtask.setTask(savedTask);
+                }
+                savedTask.setSubtasks(td.getSubtasks());
+            }
+            return taskRepository.save(savedTask);
         } else {
             return null;
         }
