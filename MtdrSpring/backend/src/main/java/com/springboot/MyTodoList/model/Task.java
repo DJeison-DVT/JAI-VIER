@@ -1,33 +1,45 @@
 package com.springboot.MyTodoList.model;
 
-
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
-/*
-    representation of the TODOITEM table that exists already
-    in the autonomous database
- */
 @Entity
-@Table(name = "TODOITEM")
-public class ToDoItem {
+@Table(name = "TASK")
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
+    @Column(name = "TITLE")
+    String title;
     @Column(name = "DESCRIPTION")
     String description;
-    @Column(name = "CREATION_TS")
-    OffsetDateTime creation_ts;
-    @Column(name = "done")
-    boolean done;
-    public ToDoItem(){
+    @Column(name = "CREATED_AT")
+    OffsetDateTime created_at;
+    @Column(name = "UPDATED_AT")
+    OffsetDateTime updated_at;
+    @Column(name = "DUE_DATE")
+    OffsetDateTime due_date;
+    @Column(name = "PRIORITY")
+    int priority;
+    @Column(name = "STATUS")
+    int status;
+    @Column(name = "estimated_hours")
+    int estimated_hours;
 
+    public Task() {
     }
-    public ToDoItem(int ID, String description, OffsetDateTime creation_ts, boolean done) {
+
+    public Task(int ID, String title, String description, OffsetDateTime created_at, OffsetDateTime updated_at,
+            OffsetDateTime due_date, int priority, int status, int estimated_hours) {
         this.ID = ID;
+        this.title = title;
         this.description = description;
-        this.creation_ts = creation_ts;
-        this.done = done;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.due_date = due_date;
+        this.priority = priority;
+        this.status = status;
+        this.estimated_hours = estimated_hours;
     }
 
     public int getID() {
@@ -38,6 +50,14 @@ public class ToDoItem {
         this.ID = ID;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -46,29 +66,66 @@ public class ToDoItem {
         this.description = description;
     }
 
-    public OffsetDateTime getCreation_ts() {
-        return creation_ts;
+    public OffsetDateTime getCreated_at() {
+        return created_at;
     }
 
-    public void setCreation_ts(OffsetDateTime creation_ts) {
-        this.creation_ts = creation_ts;
+    public void setCreated_at(OffsetDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public boolean isDone() {
-        return done;
+    public OffsetDateTime getUpdated_at() {
+        return updated_at;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setUpdated_at(OffsetDateTime updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public OffsetDateTime getDue_date() {
+        return due_date;
+    }
+
+    public void setDue_date(OffsetDateTime due_date) {
+        this.due_date = due_date;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getEstimated_hours() {
+        return estimated_hours;
+    }
+
+    public void setEstimated_hours(int estimated_hours) {
+        this.estimated_hours = estimated_hours;
     }
 
     @Override
     public String toString() {
-        return "ToDoItem{" +
+        return "Task{" +
                 "ID=" + ID +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", creation_ts=" + creation_ts +
-                ", done=" + done +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", due_date=" + due_date +
+                ", priority=" + priority +
+                ", status=" + status +
+                ", estimated_hours=" + estimated_hours +
                 '}';
     }
 }

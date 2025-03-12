@@ -140,9 +140,40 @@ CREATE USER $U IDENTIFIED BY "$DB_PASSWORD" DEFAULT TABLESPACE data QUOTA UNLIMI
 GRANT CREATE SESSION, CREATE VIEW, CREATE SEQUENCE, CREATE PROCEDURE TO $U;
 GRANT CREATE TABLE, CREATE TRIGGER, CREATE TYPE, CREATE MATERIALIZED VIEW TO $U;
 GRANT CONNECT, RESOURCE, pdb_dba, SODA_APP to $U;
-CREATE TABLE TODOUSER.todoitem (id NUMBER GENERATED ALWAYS AS IDENTITY, description VARCHAR2(4000), creation_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, done NUMBER(1,0) , PRIMARY KEY (id));
-insert into TODOUSER.todoitem  (description, done) values ('Manual item insert', 0);
-commit;
+CREATE TABLE TODOUSER.task (
+    id NUMBER GENERATED ALWAYS AS IDENTITY, 
+    title VARCHAR2(200) NOT NULL,
+    description VARCHAR2(4000), 
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    due_date TIMESTAMP WITH TIME ZONE,
+    priority NUMBER(1) NOT NULL CHECK (priority BETWEEN 0 AND 3), -- 0: LOW, 1: MEDIUM, 2: HIGH, 3: CRITICAL
+    status NUMBER(1) NOT NULL CHECK (status BETWEEN 0 AND 3),  -- 0: TODO, 1: IN_PROGRESS, 2: IN_REVIEW, 3: DONE
+    estimated_hours NUMBER(5,2),
+
+    -- project_id NUMBER NOT NULL,
+    -- sprint_id NUMBER,
+    -- assignee_id NUMBER,
+    -- reporter_id NUMBER NOT NULL,
+
+    PRIMARY KEY (id)
+    
+    -- CONSTRAINT fk_task_project FOREIGN KEY (project_id) REFERENCES projects(project_id),
+    -- CONSTRAINT fk_task_sprint FOREIGN KEY (sprint_id) REFERENCES sprints(sprint_id),
+    -- CONSTRAINT fk_task_assignee FOREIGN KEY (assignee_id) REFERENCES users(user_id),
+    -- CONSTRAINT fk_task_reporter FOREIGN KEY (reporter_id) REFERENCES users(user_id)
+);
+
+CREATE OR REPLACE TRIGGER update_todoitem_timestamp
+BEFORE UPDATE ON TODOUSER.task
+FOR EACH ROW
+BEGIN
+    :NEW.updated_at := CURRENT_TIMESTAMP;
+END;
+/
+
+INSERT INTO TODOUSER.task  (title, description, priority, status, estimated_hours) VALUES ('Task 1', 'Task 1 Description', 1, 0, 1);
+COMMIT;
 !
   state_set_done TODO_USER
   echo "finished connecting to database and creating attributes"

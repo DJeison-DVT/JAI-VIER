@@ -48,9 +48,14 @@ public class TaskService {
         if (taskData.isPresent()) {
             Task task = taskData.get();
             task.setID(id);
-            task.setCreation_ts(td.getCreation_ts());
+            task.setTitle(td.getTitle());
             task.setDescription(td.getDescription());
-            task.setDone(td.isDone());
+            task.setCreated_at(td.getCreated_at());
+            task.setUpdated_at(td.getUpdated_at());
+            task.setDue_date(td.getDue_date());
+            task.setPriority(td.getPriority());
+            task.setStatus(td.getStatus());
+            task.setEstimated_hours(td.getEstimated_hours());
             return taskRepository.save(task);
         } else {
             return null;

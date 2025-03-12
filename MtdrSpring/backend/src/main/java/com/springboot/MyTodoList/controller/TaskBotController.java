@@ -93,7 +93,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 				try {
 
 					Task item = getTaskById(id).getBody();
-					item.setDone(true);
+					item.setStatus(3);
 					updateTask(item, id);
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DONE.getMessage(), this);
 
@@ -110,7 +110,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 				try {
 
 					Task item = getTaskById(id).getBody();
-					item.setDone(false);
+					item.setStatus(0);
 					updateTask(item, id);
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_UNDONE.getMessage(), this);
 
@@ -159,23 +159,24 @@ public class TaskBotController extends TelegramLongPollingBot {
 				myTodoListTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
 				keyboard.add(myTodoListTitleRow);
 
-				List<Task> activeItems = allItems.stream().filter(item -> item.isDone() == false)
+				List<Task> activeItems = allItems.stream()
+						.filter(item -> item.getStatus() == 0 || item.getStatus() == 1 || item.getStatus() == 2)
 						.collect(Collectors.toList());
 
 				for (Task item : activeItems) {
 
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					currentRow.add(item.getTitle());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 				}
 
-				List<Task> doneItems = allItems.stream().filter(item -> item.isDone() == true)
+				List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == 3)
 						.collect(Collectors.toList());
 
 				for (Task item : doneItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
+					currentRow.add(item.getTitle());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
 					keyboard.add(currentRow);
@@ -221,9 +222,14 @@ public class TaskBotController extends TelegramLongPollingBot {
 			else {
 				try {
 					Task newItem = new Task();
-					newItem.setDescription(messageTextFromTelegram);
-					newItem.setCreation_ts(OffsetDateTime.now());
-					newItem.setDone(false);
+					newItem.setTitle(messageTextFromTelegram);
+					newItem.setDescription("");
+					newItem.setCreated_at(OffsetDateTime.now());
+					newItem.setUpdated_at(OffsetDateTime.now());
+					newItem.setDue_date(OffsetDateTime.now());
+					newItem.setStatus(0);
+					newItem.setPriority(1);
+					newItem.setEstimated_hours(0);
 					ResponseEntity entity = addTask(newItem);
 
 					SendMessage messageToTelegram = new SendMessage();
