@@ -7,63 +7,42 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "PROJECT_MEMBER")
 public class ProjectMember {
+    @EmbeddedId
+    protected ProjectMemberId id;
 
-    @Transient
-    @Column(name = "PROJECT_ID")
-    int project_id;
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "PROJECT_ID", nullable = false)
-    Project project;
-    @Transient
-    @Column(name = "USER_ID")
-    int user_id;
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    User user;
     @Column(name = "JOINED_DATE")
-    OffsetDateTime joined_date;
+    private OffsetDateTime joined_date;
 
     public ProjectMember() {
     }
 
-    public ProjectMember(Project project, User user, OffsetDateTime joined_date) {
-        this.project = project;
-        this.user = user;
+    public ProjectMember(int project_id, int user_id, OffsetDateTime joined_date) {
+        this.id = new ProjectMemberId(project_id, user_id); // ✅ Initialize ID
         this.joined_date = joined_date;
     }
 
+    public ProjectMemberId getId() {
+        return id;
+    }
+
+    public void setId(ProjectMemberId id) {
+        this.id = id;
+    }
+
     public int getProject_id() {
-        return project_id;
+        return id.getProjectId();
     }
 
     public void setProject_id(int project_id) {
-        this.project_id = project_id;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
+        this.id.setProjectId(project_id);
     }
 
     public int getUser_id() {
-        return user_id;
+        return id.getUserId();
     }
 
     public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+        this.id.setUserId(user_id);
     }
 
     public OffsetDateTime getJoined_date() {
@@ -77,8 +56,8 @@ public class ProjectMember {
     @Override
     public String toString() {
         return "ProjectMember{" +
-                "project=" + project +
-                ", user=" + user +
+                "project=" + id.getProjectId() +
+                ", user=" + id.getUserId() +
                 ", joined_date=" + joined_date +
                 '}';
     }
