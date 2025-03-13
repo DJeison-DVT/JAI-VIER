@@ -54,10 +54,10 @@ public class SubtaskController {
     @DeleteMapping(value = "/subtasklist/{id}")
     public ResponseEntity<Boolean> deleteSubtask(@PathVariable("id") int id) {
         Boolean flag = false;
-        flag = subtaskService.deleteSubtask(id);
-        if (flag) {
+        try {
+            flag = subtaskService.deleteSubtask(id);
             return new ResponseEntity<>(true, HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
     }

@@ -1,7 +1,9 @@
 package com.springboot.MyTodoList.service;
 
+import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
+import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
     public List<Task> findAll() {
         List<Task> tasks = taskRepository.findAll();
@@ -32,6 +36,15 @@ public class TaskService {
     }
 
     public Task addTask(Task task) {
+        if (task.getProject_id() == 0) {
+            throw new IllegalArgumentException("Task must be linked to an existing Project.");
+        }
+
+        Project existingProject = projectRepository.findById(task.getProject_id()).orElseThrow(
+                () -> new IllegalArgumentException("Project not found with ID: " + task.getProject_id()));
+
+        task.setProject(existingProject);
+
         return taskRepository.save(task);
     }
 
@@ -57,15 +70,7 @@ public class TaskService {
             task.setPriority(td.getPriority());
             task.setStatus(td.getStatus());
             task.setEstimated_hours(td.getEstimated_hours());
-            Task savedTask = taskRepository.save(task);
-
-            if (td.getSubtasks() != null) {
-                for (Subtask subtask : td.getSubtasks()) {
-                    subtask.setTask(savedTask);
-                }
-                savedTask.setSubtasks(td.getSubtasks());
-            }
-            return taskRepository.save(savedTask);
+            return taskRepository.save(task);
         } else {
             return null;
         }

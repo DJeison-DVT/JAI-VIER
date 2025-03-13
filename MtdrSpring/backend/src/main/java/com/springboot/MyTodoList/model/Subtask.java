@@ -116,6 +116,7 @@ public class Subtask {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", status=" + status +
+                ", task_id=" + task_id +
                 '}';
     }
 }
