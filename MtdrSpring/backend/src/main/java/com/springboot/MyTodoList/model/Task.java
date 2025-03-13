@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.OffsetDateTime;
@@ -32,6 +33,12 @@ public class Task {
     @JsonManagedReference
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subtask> subtasks;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "PROJECT_ID", nullable = false)
+    private Project project;
+    @Transient
+    private int project_id;
 
     public Task() {
     }
@@ -130,6 +137,22 @@ public class Task {
         this.subtasks = subtasks;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public int getProject_id() {
+        return project != null ? project.getID() : project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -142,7 +165,8 @@ public class Task {
                 ", priority=" + priority +
                 ", status=" + status +
                 ", estimated_hours=" + estimated_hours +
-                ", subtasks=" + subtasks.toString() +
+                ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
+                ", project_id=" + project_id +
                 '}';
     }
 }

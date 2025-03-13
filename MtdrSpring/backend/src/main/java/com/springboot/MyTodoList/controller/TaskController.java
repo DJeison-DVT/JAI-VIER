@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -35,7 +34,7 @@ public class TaskController {
 
     // @CrossOrigin
     @PostMapping(value = "/tasklist")
-    public ResponseEntity addTask(@RequestBody Task task) throws Exception {
+    public ResponseEntity<Task> addTask(@RequestBody Task task) throws Exception {
         Task td = taskService.addTask(task);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + td.getID());
@@ -48,7 +47,7 @@ public class TaskController {
 
     // @CrossOrigin
     @PutMapping(value = "tasklist/{id}")
-    public ResponseEntity updateTask(@RequestBody Task task, @PathVariable int id) {
+    public ResponseEntity<Task> updateTask(@RequestBody Task task, @PathVariable int id) {
         try {
             Task task1 = taskService.updateTask(id, task);
             System.out.println(task1.toString());
