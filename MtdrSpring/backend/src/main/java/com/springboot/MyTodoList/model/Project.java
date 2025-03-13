@@ -156,6 +156,14 @@ public class Project {
         return sb.toString();
     }
 
+    public String quickDescription() {
+        return String.format("📂 *Project:* %s\n" +
+                "   📝 Description: %s\n" +
+                "   📅 Start: %s | ⏳ End: %s\n" +
+                "   🔄 Status: %s\n",
+                name, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText());
+    }
+
     // Helper method to convert status to text
     private String statusText() {
         switch (status) {
