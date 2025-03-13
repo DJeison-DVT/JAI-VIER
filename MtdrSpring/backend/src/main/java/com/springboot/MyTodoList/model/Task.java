@@ -173,11 +173,11 @@ public class Task {
     public String publicDescription() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(
-                "📝 %s\n" +
+                "📝 %s, 🆔 ID: %d\n" +
                         "   📝 Description: %s\n" +
                         "   📅 Created: %s | 🔄 Updated: %s\n" +
                         "   📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
-                title, description, created_at, updated_at, due_date, priorityText(), statusText()));
+                title, ID, description, created_at, updated_at, due_date, priorityText(), statusText()));
 
         // Append subtasks if available
         if (subtasks != null && !subtasks.isEmpty()) {
@@ -190,7 +190,8 @@ public class Task {
     }
 
     public String quickDescription() {
-        return String.format("📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", title, due_date, priorityText(),
+        return String.format("🆔 ID: %d | 📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", ID, title, due_date,
+                priorityText(),
                 statusText());
     }
 

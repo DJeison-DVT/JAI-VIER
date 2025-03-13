@@ -138,7 +138,7 @@ public class Project {
     public String publicDescription() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(
-                "📂 *Project:* %s\n" +
+                "📂 *Project:* %s, 🆔 ID: %d\n" +
                         "   📝 Description: %s\n" +
                         "   📅 Start: %s | ⏳ End: %s\n" +
                         "   🔄 Status: %s\n",
@@ -157,7 +157,7 @@ public class Project {
     }
 
     public String quickDescription() {
-        return String.format("📂 *Project:* %s\n" +
+        return String.format("🆔 ID: %d, 📂 *Project:* %s\n" +
                 "   📝 Description: %s\n" +
                 "   📅 Start: %s | ⏳ End: %s\n" +
                 "   🔄 Status: %s\n",

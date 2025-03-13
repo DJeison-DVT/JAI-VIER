@@ -122,7 +122,7 @@ public class Subtask {
 
     public String publicDescription() {
         return String.format(
-                "  🔹 %s\n" +
+                "  🔹 %s, 🆔 ID: %d\n" +
                         "     📝 Description: %s\n" +
                         "     📅 Created: %s | 🔄 Updated: %s\n" +
                         "     📌 Status: %s",
@@ -130,7 +130,7 @@ public class Subtask {
     }
 
     public String quickDescription() {
-        return String.format("📝 %s | 🔄 Status: %s", title, statusText());
+        return String.format("🆔 ID: %d | 📝 %s | 🔄 Status: %s", title, statusText());
     }
 
     private String statusText() {
