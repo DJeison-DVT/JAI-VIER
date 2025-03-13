@@ -84,6 +84,20 @@ public class UserMessageModel implements MessageModel<User> {
     }
 
     @Override
+    public String post(User user) {
+        try {
+            ResponseEntity<User> userEntity = userController.addUser(user);
+            if (userEntity.getStatusCodeValue() == 201) {
+                return "Usuario creado";
+            } else {
+                return "No se pudo crear el usuario";
+            }
+        } catch (Exception e) {
+            return "No se pudo crear el usuario";
+        }
+    }
+
+    @Override
     public String update(int id, User user) {
         ResponseEntity<User> userEntity = userController.updateUser(user, id);
         if (userEntity.getStatusCodeValue() == 200) {

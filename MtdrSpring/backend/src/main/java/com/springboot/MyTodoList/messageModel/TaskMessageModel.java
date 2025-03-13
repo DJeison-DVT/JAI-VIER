@@ -76,6 +76,20 @@ public class TaskMessageModel implements MessageModel<Task> {
     }
 
     @Override
+    public String post(Task task) {
+        try {
+            ResponseEntity<Task> taskEntity = taskController.addTask(task);
+            if (taskEntity.getStatusCodeValue() == 201) {
+                return "Tarea creada";
+            } else {
+                return "No se pudo crear la tarea";
+            }
+        } catch (Exception e) {
+            return "No se pudo crear la tarea";
+        }
+    }
+
+    @Override
     public String update(int id, Task task) {
         ResponseEntity<Task> taskEntity = taskController.updateTask(task, id);
         if (taskEntity.getStatusCodeValue() == 200) {

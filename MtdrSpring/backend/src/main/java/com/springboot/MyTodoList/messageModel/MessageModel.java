@@ -10,6 +10,8 @@ public interface MessageModel<T> {
 
     String reportSpecific(int id);
 
+    String post(T t);
+
     String update(int id, T t);
 
     String delete(int id);

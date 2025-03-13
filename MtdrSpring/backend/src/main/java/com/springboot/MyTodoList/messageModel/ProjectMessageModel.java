@@ -78,6 +78,20 @@ public class ProjectMessageModel implements MessageModel<Project> {
     }
 
     @Override
+    public String post(Project project) {
+        try {
+            ResponseEntity<Project> projectEntity = projectController.addProject(project);
+            if (projectEntity.getStatusCodeValue() == 201) {
+                return "Proyecto creado";
+            } else {
+                return "No se pudo crear el proyecto";
+            }
+        } catch (Exception e) {
+            return "No se pudo crear el proyecto";
+        }
+    }
+
+    @Override
     public String update(int id, Project project) {
         ResponseEntity<Project> projectEntity = projectController.updateProject(project, id);
         if (projectEntity.getStatusCodeValue() == 200) {

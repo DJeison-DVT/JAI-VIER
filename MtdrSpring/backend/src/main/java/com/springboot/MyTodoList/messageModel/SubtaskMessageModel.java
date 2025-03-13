@@ -81,6 +81,20 @@ public class SubtaskMessageModel implements MessageModel<Subtask> {
     }
 
     @Override
+    public String post(Subtask subtask) {
+        try {
+            ResponseEntity<Subtask> subtaskEntity = subtaskController.addSubtask(subtask);
+            if (subtaskEntity.getStatusCodeValue() == 201) {
+                return "Subtarea creada";
+            } else {
+                return "No se pudo crear la subtarea";
+            }
+        } catch (Exception e) {
+            return "No se pudo crear la subtarea";
+        }
+    }
+
+    @Override
     public String update(int id, Subtask subtask) {
         ResponseEntity<Subtask> subtaskEntity = subtaskController.updateSubtask(subtask, id);
         if (subtaskEntity.getStatusCodeValue() == 200) {
