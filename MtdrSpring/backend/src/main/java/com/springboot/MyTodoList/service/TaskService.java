@@ -1,7 +1,6 @@
 package com.springboot.MyTodoList.service;
 
 import com.springboot.MyTodoList.model.Project;
-import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.TaskRepository;
@@ -45,6 +44,8 @@ public class TaskService {
                 () -> new IllegalArgumentException("Project not found with ID: " + task.getProject_id()));
 
         task.setProject(existingProject);
+        task.setCreated_at(OffsetDateTime.now());
+        task.setUpdated_at(OffsetDateTime.now());
 
         return taskRepository.save(task);
     }
@@ -65,7 +66,6 @@ public class TaskService {
             task.setID(id);
             task.setTitle(td.getTitle());
             task.setDescription(td.getDescription());
-            task.setCreated_at(td.getCreated_at());
             task.setUpdated_at(OffsetDateTime.now());
             task.setDue_date(td.getDue_date());
             task.setPriority(td.getPriority());

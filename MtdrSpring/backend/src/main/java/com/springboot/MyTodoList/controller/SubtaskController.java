@@ -27,7 +27,7 @@ public class SubtaskController {
 
     // @CrossOrigin
     @PostMapping(value = "/subtasklist")
-    public ResponseEntity addSubtask(@RequestBody Subtask subtask) throws Exception {
+    public ResponseEntity<Subtask> addSubtask(@RequestBody Subtask subtask) throws Exception {
         Subtask st = subtaskService.addSubtask(subtask);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + st.getID());
@@ -40,7 +40,7 @@ public class SubtaskController {
 
     // @CrossOrigin
     @PutMapping(value = "subtasklist/{id}")
-    public ResponseEntity updateSubtask(@RequestBody Subtask subtask, @PathVariable int id) {
+    public ResponseEntity<Subtask> updateSubtask(@RequestBody Subtask subtask, @PathVariable int id) {
         try {
             Subtask subtask1 = subtaskService.updateSubtask(id, subtask);
             System.out.println(subtask1.toString());
@@ -53,9 +53,8 @@ public class SubtaskController {
     // @CrossOrigin
     @DeleteMapping(value = "/subtasklist/{id}")
     public ResponseEntity<Boolean> deleteSubtask(@PathVariable("id") int id) {
-        Boolean flag = false;
         try {
-            flag = subtaskService.deleteSubtask(id);
+            subtaskService.deleteSubtask(id);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);

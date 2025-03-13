@@ -32,6 +32,8 @@ public class ProjectService {
     }
 
     public Project addProject(Project project) {
+        project.setCreated_at(OffsetDateTime.now());
+        project.setUpdated_at(OffsetDateTime.now());
         return projectRepository.save(project);
     }
 
@@ -50,7 +52,6 @@ public class ProjectService {
             Project existingProject = projectData.get();
             existingProject.setName(pr.getName());
             existingProject.setDescription(pr.getDescription());
-            existingProject.setCreated_at(pr.getCreated_at());
             existingProject.setUpdated_at(OffsetDateTime.now());
             existingProject.setStatus(pr.getStatus());
             existingProject.setEnd_date(pr.getEnd_date());
