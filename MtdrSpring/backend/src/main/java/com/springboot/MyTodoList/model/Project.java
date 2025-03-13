@@ -134,4 +134,42 @@ public class Project {
                 ", tasks=" + (tasks != null ? tasks.toString() : "[]") +
                 '}';
     }
+
+    public String publicDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(
+                "📂 *Project:* %s\n" +
+                        "   📝 Description: %s\n" +
+                        "   📅 Start: %s | ⏳ End: %s\n" +
+                        "   🔄 Status: %s\n",
+                name, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText()));
+
+        if (tasks != null && !tasks.isEmpty()) {
+            sb.append("📌 *Tasks:*\n");
+            for (Task task : tasks) {
+                sb.append(task.quickDescription()).append("\n");
+            }
+        } else {
+            sb.append("📌 No tasks assigned yet.\n");
+        }
+
+        return sb.toString();
+    }
+
+    // Helper method to convert status to text
+    private String statusText() {
+        switch (status) {
+            case 0:
+                return "📋 Planning";
+            case 1:
+                return "🚧 In Progress";
+            case 2:
+                return "✅ Completed";
+            case 3:
+                return "⏸️ On Hold";
+            default:
+                return "⚠️ Unknown";
+        }
+    }
+
 }

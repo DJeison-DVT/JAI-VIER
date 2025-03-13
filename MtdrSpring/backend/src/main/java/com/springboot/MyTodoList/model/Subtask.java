@@ -119,4 +119,31 @@ public class Subtask {
                 ", task_id=" + task_id +
                 '}';
     }
+
+    public String publicDescription() {
+        return String.format(
+                "  🔹 %s\n" +
+                        "     📝 Description: %s\n" +
+                        "     📅 Created: %s | 🔄 Updated: %s\n" +
+                        "     📌 Status: %s",
+                title, description, created_at, updated_at, statusText());
+    }
+
+    public String quickDescription() {
+        return String.format("📝 %s | 🔄 Status: %s", title, statusText());
+    }
+
+    private String statusText() {
+        switch (status) {
+            case 0:
+                return "❌ Not Started";
+            case 1:
+                return "⏳ In Progress";
+            case 2:
+                return "✅ Completed";
+            default:
+                return "⚠️ Unknown";
+        }
+    }
+
 }

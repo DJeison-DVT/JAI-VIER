@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.OffsetDateTime;
@@ -153,5 +154,15 @@ public class User {
                 ", updated_at=" + updated_at +
                 ", active=" + active +
                 '}';
+    }
+
+    public String publicDescription() {
+        return String.format("👤 *User Profile*\n" + "🆔 ID: %d\n" + "👤 Username: %s\n" + "📧 Email: %s\n"
+                + "👨‍💼 Full Name: %s\n" + "🛠 Role: %s\n" + "🌍 Work Mode: %s\n" + ID, username, email, full_name,
+                role, work_mode);
+    }
+
+    public String quickDescription() {
+        return String.format("👤 %s, | 👨‍💼 %s | 🛠 %s", username, full_name, role);
     }
 }

@@ -169,4 +169,57 @@ public class Task {
                 ", project_id=" + project_id +
                 '}';
     }
+
+    public String publicDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(
+                "📝 %s\n" +
+                        "   📝 Description: %s\n" +
+                        "   📅 Created: %s | 🔄 Updated: %s\n" +
+                        "   📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
+                title, description, created_at, updated_at, due_date, priorityText(), statusText()));
+
+        // Append subtasks if available
+        if (subtasks != null && !subtasks.isEmpty()) {
+            sb.append("   📋 *Subtasks:*\n");
+            for (Subtask subtask : subtasks) {
+                sb.append(subtask.publicDescription()).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String quickDescription() {
+        return String.format("📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", title, due_date, priorityText(),
+                statusText());
+    }
+
+    // Helper method to convert priority to text
+    private String priorityText() {
+        switch (priority) {
+            case 1:
+                return "🟢 Low";
+            case 2:
+                return "🟡 Medium";
+            case 3:
+                return "🔴 High";
+            default:
+                return "⚠️ Critical";
+        }
+    }
+
+    // Helper method to convert status to text
+    private String statusText() {
+        switch (status) {
+            case 0:
+                return "❌ Not Started";
+            case 1:
+                return "⏳ In Progress";
+            case 2:
+                return "✅ Completed";
+            default:
+                return "⚠️ Unknown";
+        }
+    }
+
 }
