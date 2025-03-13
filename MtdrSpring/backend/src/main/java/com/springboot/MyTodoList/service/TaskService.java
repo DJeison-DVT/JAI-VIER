@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ public class TaskService {
             task.setTitle(td.getTitle());
             task.setDescription(td.getDescription());
             task.setCreated_at(td.getCreated_at());
-            task.setUpdated_at(td.getUpdated_at());
+            task.setUpdated_at(OffsetDateTime.now());
             task.setDue_date(td.getDue_date());
             task.setPriority(td.getPriority());
             task.setStatus(td.getStatus());

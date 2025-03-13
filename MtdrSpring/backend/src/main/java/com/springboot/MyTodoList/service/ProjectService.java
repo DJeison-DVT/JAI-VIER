@@ -1,5 +1,6 @@
 package com.springboot.MyTodoList.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +51,7 @@ public class ProjectService {
             existingProject.setName(pr.getName());
             existingProject.setDescription(pr.getDescription());
             existingProject.setCreated_at(pr.getCreated_at());
-            existingProject.setUpdated_at(pr.getUpdated_at());
+            existingProject.setUpdated_at(OffsetDateTime.now());
             existingProject.setStatus(pr.getStatus());
             existingProject.setEnd_date(pr.getEnd_date());
             existingProject.setStart_date(pr.getStart_date());

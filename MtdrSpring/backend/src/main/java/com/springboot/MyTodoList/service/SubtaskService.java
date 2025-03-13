@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ public class SubtaskService {
             subtask.setTitle(st.getTitle());
             subtask.setDescription(st.getDescription());
             subtask.setCreated_at(st.getCreated_at());
-            subtask.setUpdated_at(st.getUpdated_at());
+            subtask.setUpdated_at(OffsetDateTime.now());
             subtask.setStatus(st.getStatus());
             subtask.setTask(st.getTask());
             return subtaskRepository.save(subtask);
