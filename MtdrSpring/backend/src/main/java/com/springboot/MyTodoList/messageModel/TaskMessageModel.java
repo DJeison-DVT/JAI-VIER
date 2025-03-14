@@ -17,15 +17,14 @@ import com.springboot.MyTodoList.model.User;
 @Service
 public class TaskMessageModel implements MessageModel<Task> {
     private TaskController taskController;
-
-    @Autowired
     private ProjectMemberController projectMemberController;
-
-    @Autowired
     private ProjectController projectController;
 
-    public TaskMessageModel(TaskController taskController) {
+    public TaskMessageModel(TaskController taskController, ProjectMemberController projectMemberController,
+            ProjectController projectController) {
         this.taskController = taskController;
+        this.projectMemberController = projectMemberController;
+        this.projectController = projectController;
     }
 
     @Override
@@ -78,6 +77,7 @@ public class TaskMessageModel implements MessageModel<Task> {
     @Override
     public String post(Task task) {
         try {
+            System.out.println(task.toString());
             ResponseEntity<Task> taskEntity = taskController.addTask(task);
             if (taskEntity.getStatusCodeValue() == 201) {
                 return "Tarea creada";

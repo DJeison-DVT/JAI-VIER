@@ -15,12 +15,11 @@ import com.springboot.MyTodoList.model.User;
 @Service
 public class ProjectMessageModel implements MessageModel<Project> {
     private ProjectController projectController;
-
-    @Autowired
     private ProjectMemberController projectMemberController;
 
-    public ProjectMessageModel(ProjectController projectController) {
+    public ProjectMessageModel(ProjectController projectController, ProjectMemberController projectMemberController) {
         this.projectController = projectController;
+        this.projectMemberController = projectMemberController;
     }
 
     @Override

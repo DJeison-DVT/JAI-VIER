@@ -35,6 +35,7 @@ public class TaskController {
     // @CrossOrigin
     @PostMapping(value = "/tasklist")
     public ResponseEntity<Task> addTask(@RequestBody Task task) throws Exception {
+        System.out.println("Received task: " + task.toString());
         Task td = taskService.addTask(task);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + td.getID());

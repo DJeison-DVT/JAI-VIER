@@ -1,38 +1,39 @@
 package com.springboot.MyTodoList.messageModel;
 
-import org.springframework.stereotype.Component;
-
 import com.springboot.MyTodoList.controller.*;
-import com.springboot.MyTodoList.model.*;
 
-@Component
 public class MessageModelFactory {
-    private final ProjectController projectController;
     private final TaskController taskController;
+    private final ProjectMemberController projectMemberController;
+    private final ProjectController projectController;
     private final SubtaskController subtaskController;
     private final UserController userController;
 
-    public MessageModelFactory(ProjectController projectController, TaskController taskController,
-            SubtaskController subtaskController, UserController userController,
-            ProjectMemberController projectMemberController) {
-        this.projectController = projectController;
+    public MessageModelFactory(TaskController taskController, ProjectMemberController projectMemberController,
+            ProjectController projectController, SubtaskController subtaskController, UserController userController) {
         this.taskController = taskController;
+        this.projectMemberController = projectMemberController;
+        this.projectController = projectController;
         this.subtaskController = subtaskController;
         this.userController = userController;
     }
 
-    @SuppressWarnings("unchecked") // Safe cast
-    public <T> MessageModel<T> getModel(Class<T> type) {
-        if (type == Project.class) {
-            return (MessageModel<T>) new ProjectMessageModel(projectController);
-        } else if (type == Task.class) {
-            return (MessageModel<T>) new TaskMessageModel(taskController);
-        } else if (type == Subtask.class) {
-            return (MessageModel<T>) new SubtaskMessageModel(subtaskController);
-        } else if (type == User.class) {
-            return (MessageModel<T>) new UserMessageModel(userController);
-        } else {
-            throw new IllegalArgumentException("Unsupported model type: " + type.getSimpleName());
+    @SuppressWarnings("unchecked")
+    public <T> MessageModel<T> getMessageModel(String type) {
+        switch (type.toLowerCase()) {
+            case "task":
+                return (MessageModel<T>) new TaskMessageModel(taskController, projectMemberController,
+                        projectController);
+            case "project":
+                return (MessageModel<T>) new ProjectMessageModel(projectController, projectMemberController);
+            case "user":
+                return (MessageModel<T>) new UserMessageModel(userController, projectMemberController,
+                        projectController);
+            case "subtask":
+                return (MessageModel<T>) new SubtaskMessageModel(subtaskController, projectMemberController,
+                        projectController);
+            default:
+                throw new IllegalArgumentException("Unsupported model type: " + type);
         }
     }
 }

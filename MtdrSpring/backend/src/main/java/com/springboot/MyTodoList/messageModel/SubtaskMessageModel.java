@@ -18,15 +18,14 @@ import com.springboot.MyTodoList.model.User;
 @Service
 public class SubtaskMessageModel implements MessageModel<Subtask> {
     private SubtaskController subtaskController;
-
-    @Autowired
     private ProjectMemberController projectMemberController;
-
-    @Autowired
     private ProjectController projectController;
 
-    public SubtaskMessageModel(SubtaskController subtaskController) {
+    public SubtaskMessageModel(SubtaskController subtaskController, ProjectMemberController projectMemberController,
+            ProjectController projectController) {
         this.subtaskController = subtaskController;
+        this.projectMemberController = projectMemberController;
+        this.projectController = projectController;
     }
 
     @Override

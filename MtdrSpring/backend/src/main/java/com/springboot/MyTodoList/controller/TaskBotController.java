@@ -3,6 +3,7 @@ package com.springboot.MyTodoList.controller;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -16,33 +17,57 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.springboot.MyTodoList.messageModel.MessageModel;
+import com.springboot.MyTodoList.messageModel.MessageModelFactory;
+import com.springboot.MyTodoList.messageModel.TaskMessageModel;
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
+import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.service.SubtaskService;
 import com.springboot.MyTodoList.service.TaskService;
+import com.springboot.MyTodoList.service.UserService;
 import com.springboot.MyTodoList.util.BotCommands;
 import com.springboot.MyTodoList.util.BotHelper;
 import com.springboot.MyTodoList.util.BotLabels;
 import com.springboot.MyTodoList.util.BotMessages;
+import com.springboot.MyTodoList.util.CommandParser;
+import com.springboot.MyTodoList.typeBuilder.TypeBuilder;
+import com.springboot.MyTodoList.typeBuilder.TypeBuilderFactory;
 
 public class TaskBotController extends TelegramLongPollingBot {
 
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 	private TaskService taskService;
 	private SubtaskService subtaskService;
+	private UserService userService;
 	private String botName;
 
-	public TaskBotController(String botToken, String botName, TaskService taskService, SubtaskService subtaskService) {
+	private TaskController taskController;
+	private SubtaskController subtaskController;
+	private UserController userController;
+	private ProjectController projectController;
+	private ProjectMemberController projectMemberController;
+
+	public TaskBotController(String botToken, String botName, TaskService taskService, SubtaskService subtaskService,
+			UserService userService, TaskController taskController, SubtaskController subtaskController,
+			UserController userController, ProjectController projectController,
+			ProjectMemberController projectMemberController) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
 		this.taskService = taskService;
 		this.subtaskService = subtaskService;
+		this.userService = userService;
 		this.botName = botName;
+
+		this.taskController = taskController;
+		this.subtaskController = subtaskController;
+		this.userController = userController;
+		this.projectController = projectController;
+		this.projectMemberController = projectMemberController;
 	}
 
 	@Override
@@ -332,8 +357,91 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 		} else {
 			try {
+				User user = getUserById(1).getBody();
+
 				// use command parser
+				CommandParser commandParser = new CommandParser(messageTextFromTelegram);
+				String action = commandParser.getAction();
+				String type = commandParser.getType();
+				Map<String, String> parameters = commandParser.getFields();
+
+				System.out.println("Action: " + action);
+				System.out.println("Type: " + type);
+				System.out.println("Parameters: " + parameters);
+
+				MessageModelFactory messageModelFactory = new MessageModelFactory(taskController,
+						projectMemberController,
+						projectController, subtaskController, userController);
+				MessageModel<?> messageModel = messageModelFactory.getMessageModel(type);
+				TypeBuilder<?> typeBuilder = TypeBuilderFactory.getBuilder(type);
+
+				logger.info("Created TypeBuilder instance: {}", typeBuilder.getClass().getSimpleName());
+				logger.info("Created MessageModel instance: {}", messageModel.getClass().getSimpleName());
+
+				StringBuilder sb = new StringBuilder();
+				switch (action) {
+					case "report":
+						String report_result = "";
+						if (commandParser.hasField("id")) {
+							int report_id = Integer.parseInt(commandParser.getField("id"));
+							report_result = messageModel.reportSingle(report_id, user);
+						} else if (commandParser.hasField(type + "_id")) {
+							int report_id = Integer.parseInt(commandParser.getField(type + "_id"));
+							report_result = messageModel.reportSpecific(report_id);
+						} else {
+							report_result = messageModel.reportAll(user);
+						}
+						sb.append(report_result);
+						break;
+					case "create":
+						Object create_object = typeBuilder.build(parameters);
+						@SuppressWarnings("unchecked")
+						String create_response = ((MessageModel<Object>) messageModel).post(create_object);
+						sb.append(create_response);
+						break;
+					case "update":
+						if (!commandParser.hasField("id")) {
+							throw new IllegalArgumentException("No id provided for update");
+						}
+						int id = Integer.parseInt(commandParser.getField("id"));
+						Object update_object = typeBuilder.build(parameters);
+						@SuppressWarnings("unchecked")
+						String update_response = ((MessageModel<Object>) messageModel).update(id,
+								update_object);
+						sb.append(update_response);
+						break;
+					case "delete":
+						if (!commandParser.hasField("id")) {
+							throw new IllegalArgumentException("No id provided for delete");
+						}
+						int delete_id = Integer.parseInt(commandParser.getField("id"));
+						String delete = messageModel.delete(delete_id);
+						sb.append(delete);
+						break;
+					default:
+						break;
+				}
+				SendMessage messageToTelegram = new SendMessage();
+				messageToTelegram.setChatId(chatId);
+				messageToTelegram.setText(BotMessages.SUCCESFUL_COMMAND.getMessage() + "\n" +
+						sb.toString());
+
+				try {
+					execute(messageToTelegram);
+				} catch (TelegramApiException e1) {
+					logger.error(e1.getLocalizedMessage(), e1);
+				}
+
 			} catch (Exception e) {
+				SendMessage messageToTelegram = new SendMessage();
+				messageToTelegram.setChatId(chatId);
+				messageToTelegram.setText(BotMessages.INVALID_COMMAND.getMessage());
+
+				try {
+					execute(messageToTelegram);
+				} catch (TelegramApiException e1) {
+					logger.error(e1.getLocalizedMessage(), e1);
+				}
 				logger.error(e.getLocalizedMessage(), e);
 			}
 		}
@@ -354,6 +462,16 @@ public class TaskBotController extends TelegramLongPollingBot {
 		try {
 			ResponseEntity<Task> responseEntity = taskService.getItemById(id);
 			return new ResponseEntity<Task>(responseEntity.getBody(), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	public ResponseEntity<User> getUserById(@PathVariable int id) {
+		try {
+			ResponseEntity<User> responseEntity = userService.getItemById(id);
+			return new ResponseEntity<User>(responseEntity.getBody(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
