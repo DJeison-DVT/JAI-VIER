@@ -154,4 +154,14 @@ public class User {
                 ", active=" + active +
                 '}';
     }
+
+    public String publicDescription() {
+        return String.format("👤 *User Profile*\n" + "🆔 ID: %d\n" + "👤 Username: %s\n" + "📧 Email: %s\n"
+                + "👨‍💼 Full Name: %s\n" + "🛠 Role: %s\n" + "🌍 Work Mode: %s\n" + ID, username, email, full_name,
+                role, work_mode);
+    }
+
+    public String quickDescription() {
+        return String.format("👤 %s, | 👨‍💼 %s | 🛠 %s", username, full_name, role);
+    }
 }

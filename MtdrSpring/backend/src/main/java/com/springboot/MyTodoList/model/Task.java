@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -168,5 +169,52 @@ public class Task {
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
                 ", project_id=" + project_id +
                 '}';
+    }
+
+    public String publicDescription() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return String.format(
+                "📝 %s, 🆔 ID: %d\n" +
+                        "   📝 Description: %s\n" +
+                        "   📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
+                title, ID, description, due_date.format(formatter), priorityText(), statusText());
+    }
+
+    public String quickDescription() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return String.format("🆔 ID: %d | 📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", ID, title,
+                due_date.format(formatter),
+                priorityText(),
+                statusText());
+    }
+
+    // Helper method to convert priority to text
+    private String priorityText() {
+        switch (priority) {
+            case 1:
+                return "🟢 Low";
+            case 2:
+                return "🟡 Medium";
+            case 3:
+                return "🔴 High";
+            default:
+                return "⚠️ Critical";
+        }
+    }
+
+    // Helper method to convert status to text
+    private String statusText() {
+        switch (status) {
+            case 0:
+                return "📝 TODO"; // Task needs to be done
+            case 1:
+                return "⏳ In Progress"; // Task is currently being worked on
+            case 2:
+                return "🔍 In Review"; // Task is being reviewed
+            case 3:
+                return "✅ Completed"; // Task is finished
+            default:
+                return "⚠️ Unknown Status"; // Catch-all for unexpected values
+        }
     }
 }

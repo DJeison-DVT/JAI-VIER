@@ -50,7 +50,7 @@ public class ProjectMemberController {
     public ResponseEntity<ProjectMember> addProjectMember(@RequestBody ProjectMember projectMember) throws Exception {
         ProjectMember pr = projectMemberService.addProjectMember(projectMember);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + pr.getProject_id() + "/" + pr.getUser_id());
+        responseHeaders.set("location", "" + pr.getId());
         responseHeaders.set("Access-Control-Expose-Headers", "location");
         // URI location = URI.create(""+pr.getID())
 
