@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "SUBTASK")
@@ -121,12 +122,13 @@ public class Subtask {
     }
 
     public String publicDescription() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return String.format(
                 "  🔹 %s, 🆔 ID: %d\n" +
                         "     📝 Description: %s\n" +
                         "     📅 Created: %s | 🔄 Updated: %s\n" +
                         "     📌 Status: %s",
-                title, description, created_at, updated_at, statusText());
+                title, ID, description, created_at.format(formatter), updated_at.format(formatter), statusText());
     }
 
     public String quickDescription() {

@@ -142,7 +142,7 @@ public class Project {
                         "   📝 Description: %s\n" +
                         "   📅 Start: %s | ⏳ End: %s\n" +
                         "   🔄 Status: %s\n",
-                name, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText()));
+                name, ID, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText()));
 
         if (tasks != null && !tasks.isEmpty()) {
             sb.append("📌 *Tasks:*\n");

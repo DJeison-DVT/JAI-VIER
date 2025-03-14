@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -171,26 +172,18 @@ public class Task {
     }
 
     public String publicDescription() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format(
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return String.format(
                 "📝 %s, 🆔 ID: %d\n" +
                         "   📝 Description: %s\n" +
-                        "   📅 Created: %s | 🔄 Updated: %s\n" +
                         "   📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
-                title, ID, description, created_at, updated_at, due_date, priorityText(), statusText()));
-
-        // Append subtasks if available
-        if (subtasks != null && !subtasks.isEmpty()) {
-            sb.append("   📋 *Subtasks:*\n");
-            for (Subtask subtask : subtasks) {
-                sb.append(subtask.publicDescription()).append("\n");
-            }
-        }
-        return sb.toString();
+                title, ID, description, due_date.format(formatter), priorityText(), statusText());
     }
 
     public String quickDescription() {
-        return String.format("🆔 ID: %d | 📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", ID, title, due_date,
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return String.format("🆔 ID: %d | 📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", ID, title,
+                due_date.format(formatter),
                 priorityText(),
                 statusText());
     }
@@ -213,14 +206,15 @@ public class Task {
     private String statusText() {
         switch (status) {
             case 0:
-                return "❌ Not Started";
+                return "📝 TODO"; // Task needs to be done
             case 1:
-                return "⏳ In Progress";
+                return "⏳ In Progress"; // Task is currently being worked on
             case 2:
-                return "✅ Completed";
+                return "🔍 In Review"; // Task is being reviewed
+            case 3:
+                return "✅ Completed"; // Task is finished
             default:
-                return "⚠️ Unknown";
+                return "⚠️ Unknown Status"; // Catch-all for unexpected values
         }
     }
-
 }
