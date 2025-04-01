@@ -10,6 +10,7 @@ import com.springboot.MyTodoList.dto.LoginRequest;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.service.UserService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -42,9 +43,9 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + us.getID());
         responseHeaders.set("Access-Control-Expose-Headers", "location");
-        // URI location = URI.create(""+us.getID())
+        URI location = URI.create("" + us.getID());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(location)
                 .headers(responseHeaders).build();
     }
 

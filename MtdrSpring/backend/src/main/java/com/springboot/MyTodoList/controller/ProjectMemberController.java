@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.service.ProjectMemberService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -52,9 +53,9 @@ public class ProjectMemberController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + pr.getId());
         responseHeaders.set("Access-Control-Expose-Headers", "location");
-        // URI location = URI.create(""+pr.getID())
+        URI location = URI.create("" + pr.getId());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(location)
                 .headers(responseHeaders).build();
     }
 

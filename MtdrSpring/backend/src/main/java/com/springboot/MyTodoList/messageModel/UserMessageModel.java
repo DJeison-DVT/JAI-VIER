@@ -3,7 +3,6 @@ package com.springboot.MyTodoList.messageModel;
 import java.util.List;
 
 import org.jvnet.hk2.annotations.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import com.springboot.MyTodoList.controller.ProjectController;

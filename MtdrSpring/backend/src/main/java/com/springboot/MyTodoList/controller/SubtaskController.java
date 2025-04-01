@@ -2,6 +2,9 @@ package com.springboot.MyTodoList.controller;
 
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.service.SubtaskService;
+
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,9 +35,9 @@ public class SubtaskController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + st.getID());
         responseHeaders.set("Access-Control-Expose-Headers", "location");
-        // URI location = URI.create(""+st.getID())
+        URI location = URI.create("" + st.getID());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(location)
                 .headers(responseHeaders).build();
     }
 

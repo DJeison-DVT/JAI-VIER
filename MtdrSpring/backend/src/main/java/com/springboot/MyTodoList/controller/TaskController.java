@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -40,9 +41,9 @@ public class TaskController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + td.getID());
         responseHeaders.set("Access-Control-Expose-Headers", "location");
-        // URI location = URI.create(""+td.getID())
+        URI location = URI.create("" + td.getID());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(location)
                 .headers(responseHeaders).build();
     }
 
