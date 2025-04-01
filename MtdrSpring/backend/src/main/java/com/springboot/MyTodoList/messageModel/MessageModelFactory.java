@@ -24,11 +24,6 @@ public class MessageModelFactory {
             case "task":
                 return (MessageModel<T>) new TaskMessageModel(taskController, projectMemberController,
                         projectController);
-            case "project":
-                return (MessageModel<T>) new ProjectMessageModel(projectController, projectMemberController);
-            case "user":
-                return (MessageModel<T>) new UserMessageModel(userController, projectMemberController,
-                        projectController);
             case "subtask":
                 return (MessageModel<T>) new SubtaskMessageModel(subtaskController, projectMemberController,
                         projectController);
