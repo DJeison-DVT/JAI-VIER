@@ -1,0 +1,371 @@
+// utils/projectData.js
+// Este archivo contiene todos los datos del proyecto JAI-VIER
+
+export const projectData = {
+    name: "JAI-VIER - Herramienta de Administración de Proyectos",
+    startDate: "2025-02-07",
+    endDate: "2025-09-04",
+    currentSprint: "Sprint 3 Tareas de Infraestructura (OCI)",
+    stats: {
+      totalTasks: 49,
+      completedTasks: 6,
+      remainingTasks: 43,
+      totalEstimatedHours: 483,
+      completedEstimatedHours: 48,
+      remainingHours: 435,
+      completionPercentage: 10,
+      totalActualHours: 36
+    }
+  };
+  
+  export const sprintData = {
+    "Sprint 1": {
+      totalTasks: 3,
+      completedTasks: 3,
+      remainingTasks: 0,
+      totalEstimatedHours: 24,
+      completedEstimatedHours: 24,
+      remainingHours: 0,
+      completionPercentage: 100,
+      startDate: "2025-02-07",
+      endDate: "2025-02-20"
+    },
+    "Sprint 2": {
+      totalTasks: 3,
+      completedTasks: 3,
+      remainingTasks: 0,
+      totalEstimatedHours: 24,
+      completedEstimatedHours: 24,
+      remainingHours: 0,
+      completionPercentage: 100,
+      startDate: "2025-02-21",
+      endDate: "2025-03-06"
+    },
+    "Sprint 3 Tareas de Infraestructura (OCI)": {
+      totalTasks: 3,
+      completedTasks: 0,
+      remainingTasks: 3,
+      totalEstimatedHours: 28,
+      completedEstimatedHours: 0,
+      remainingHours: 28,
+      completionPercentage: 0,
+      startDate: "2025-03-07",
+      endDate: "2025-03-20"
+    },
+    "Sprint 4 Configuración de CI/CD": {
+      totalTasks: 3,
+      completedTasks: 0,
+      remainingTasks: 3,
+      totalEstimatedHours: 24,
+      completedEstimatedHours: 0,
+      remainingHours: 24,
+      completionPercentage: 0,
+      startDate: "2025-03-21",
+      endDate: "2025-04-03"
+    },
+    "Sprint 5 Preparación de codebase": {
+      totalTasks: 3,
+      completedTasks: 0,
+      remainingTasks: 3,
+      totalEstimatedHours: 29,
+      completedEstimatedHours: 0,
+      remainingHours: 29,
+      completionPercentage: 0,
+      startDate: "2025-04-04",
+      endDate: "2025-04-17"
+    },
+    "Sprint 6 Desarrollo de Microservicios Core": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 57,
+      completedEstimatedHours: 0,
+      remainingHours: 57,
+      completionPercentage: 0,
+      startDate: "2025-04-18",
+      endDate: "2025-05-01"
+    },
+    "Sprint 7 Integración y Pruebas Backend": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 38,
+      completedEstimatedHours: 0,
+      remainingHours: 38,
+      completionPercentage: 0,
+      startDate: "2025-05-02",
+      endDate: "2025-05-15"
+    },
+    "Sprint 8 Desarrollo Frontend": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 42,
+      completedEstimatedHours: 0,
+      remainingHours: 42,
+      completionPercentage: 0,
+      startDate: "2025-05-16",
+      endDate: "2025-05-29"
+    },
+    "Sprint 9 Desarrollo de Chatbot Telegram": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 42,
+      completedEstimatedHours: 0,
+      remainingHours: 42,
+      completionPercentage: 0,
+      startDate: "2025-05-30",
+      endDate: "2025-06-12"
+    },
+    "Sprint 10 Integración de Componentes": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 42,
+      completedEstimatedHours: 0,
+      remainingHours: 42,
+      completionPercentage: 0,
+      startDate: "2025-06-13",
+      endDate: "2025-06-26"
+    },
+    "Sprint 11 Pruebas Exhaustivas": {
+      totalTasks: 4,
+      completedTasks: 0,
+      remainingTasks: 4,
+      totalEstimatedHours: 38,
+      completedEstimatedHours: 0,
+      remainingHours: 38,
+      completionPercentage: 0,
+      startDate: "2025-06-27",
+      endDate: "2025-07-10"
+    },
+    "Sprint 12 c": {
+      totalTasks: 2,
+      completedTasks: 0,
+      remainingTasks: 2,
+      totalEstimatedHours: 25,
+      completedEstimatedHours: 0,
+      remainingHours: 25,
+      completionPercentage: 0,
+      startDate: "2025-07-11",
+      endDate: "2025-07-24"
+    },
+    "Sprint 13 correction de bugs": {
+      totalTasks: 3,
+      completedTasks: 0,
+      remainingTasks: 3,
+      totalEstimatedHours: 30,
+      completedEstimatedHours: 0,
+      remainingHours: 30,
+      completionPercentage: 0,
+      startDate: "2025-07-25",
+      endDate: "2025-08-07"
+    },
+    "Sprint 14 Despliegue Final": {
+      totalTasks: 3,
+      completedTasks: 0,
+      remainingTasks: 3,
+      totalEstimatedHours: 22,
+      completedEstimatedHours: 0,
+      remainingHours: 22,
+      completionPercentage: 0,
+      startDate: "2025-08-08",
+      endDate: "2025-08-21"
+    },
+    "Sprint 15 Documentación y Entrega": {
+      totalTasks: 1,
+      completedTasks: 0,
+      remainingTasks: 1,
+      totalEstimatedHours: 6,
+      completedEstimatedHours: 0,
+      remainingHours: 6,
+      completionPercentage: 0,
+      startDate: "2025-08-22",
+      endDate: "2025-09-04"
+    }
+  };
+  
+  export const memberData = {
+    "Aaron3312": {
+      totalTasks: 23,
+      completedTasks: 6,
+      inProgressTasks: 1,
+      pendingTasks: 16,
+      estimatedHours: 117.3
+    },
+    "arambs22": {
+      totalTasks: 15,
+      completedTasks: 4,
+      inProgressTasks: 0,
+      pendingTasks: 11,
+      estimatedHours: 49.8
+    },
+    "Banales2": {
+      totalTasks: 19,
+      completedTasks: 5,
+      inProgressTasks: 1,
+      pendingTasks: 13,
+      estimatedHours: 89.3
+    },
+    "DJeison-DVT": {
+      totalTasks: 23,
+      completedTasks: 4,
+      inProgressTasks: 0,
+      pendingTasks: 19,
+      estimatedHours: 110.3
+    },
+    "Fercubos": {
+      totalTasks: 16,
+      completedTasks: 4,
+      inProgressTasks: 0,
+      pendingTasks: 12,
+      estimatedHours: 55.8
+    },
+    "RomeoThePickleTec": {
+      totalTasks: 17,
+      completedTasks: 4,
+      inProgressTasks: 0,
+      pendingTasks: 13,
+      estimatedHours: 60.3
+    }
+  };
+  
+  export const fullBurndownData = [
+    {date: "2025-02-07", ideal: 483, actual: 483, sprint: "Sprint 1"},
+    {date: "2025-02-14", ideal: 466.9, actual: 475, sprint: "Sprint 1"},
+    {date: "2025-02-20", ideal: 452.2, actual: 459, sprint: "Sprint 1"},
+    {date: "2025-02-21", ideal: 450.3, actual: 459, sprint: "Sprint 2"},
+    {date: "2025-02-28", ideal: 432.9, actual: 451, sprint: "Sprint 2"},
+    {date: "2025-03-06", ideal: 417.2, actual: 435, sprint: "Sprint 2"},
+    {date: "2025-03-07", ideal: 415.3, actual: 435, sprint: "Sprint 3 Tareas de Infraestructura (OCI)"},
+    {date: "2025-03-14", ideal: 397.9, actual: 435, sprint: "Sprint 3 Tareas de Infraestructura (OCI)"},
+    {date: "2025-03-20", ideal: 382.2, actual: 435, sprint: "Sprint 3 Tareas de Infraestructura (OCI)"},
+    {date: "2025-03-21", ideal: 380.3, actual: 435, sprint: "Sprint 4 Configuración de CI/CD"},
+    {date: "2025-03-28", ideal: 362.9, actual: 422, sprint: "Sprint 4 Configuración de CI/CD"},
+    {date: "2025-04-03", ideal: 347.2, actual: 414, sprint: "Sprint 4 Configuración de CI/CD"},
+    {date: "2025-04-04", ideal: 345.3, actual: 414, sprint: "Sprint 5 Preparación de codebase"},
+    {date: "2025-04-11", ideal: 327.9, actual: 414, sprint: "Sprint 5 Preparación de codebase"},
+    {date: "2025-04-17", ideal: 312.2, actual: 389, sprint: "Sprint 5 Preparación de codebase"},
+    {date: "2025-04-18", ideal: 310.3, actual: 389, sprint: "Sprint 6 Desarrollo de Microservicios Core"},
+    {date: "2025-04-25", ideal: 292.9, actual: 389, sprint: "Sprint 6 Desarrollo de Microservicios Core"},
+    {date: "2025-05-01", ideal: 277.2, actual: 348, sprint: "Sprint 6 Desarrollo de Microservicios Core"},
+    {date: "2025-05-02", ideal: 275.3, actual: 348, sprint: "Sprint 7 Integración y Pruebas Backend"},
+    {date: "2025-05-09", ideal: 257.9, actual: 348, sprint: "Sprint 7 Integración y Pruebas Backend"},
+    {date: "2025-05-15", ideal: 242.2, actual: 321, sprint: "Sprint 7 Integración y Pruebas Backend"},
+    {date: "2025-05-16", ideal: 240.3, actual: 321, sprint: "Sprint 8 Desarrollo Frontend"},
+    {date: "2025-05-23", ideal: 222.9, actual: 321, sprint: "Sprint 8 Desarrollo Frontend"},
+    {date: "2025-05-29", ideal: 207.2, actual: 291, sprint: "Sprint 8 Desarrollo Frontend"},
+    {date: "2025-05-30", ideal: 205.3, actual: 291, sprint: "Sprint 9 Desarrollo de Chatbot Telegram"},
+    {date: "2025-06-06", ideal: 187.9, actual: 291, sprint: "Sprint 9 Desarrollo de Chatbot Telegram"},
+    {date: "2025-06-12", ideal: 172.2, actual: 261, sprint: "Sprint 9 Desarrollo de Chatbot Telegram"},
+    {date: "2025-06-13", ideal: 170.3, actual: 261, sprint: "Sprint 10 Integración de Componentes"},
+    {date: "2025-06-20", ideal: 152.9, actual: 261, sprint: "Sprint 10 Integración de Componentes"},
+    {date: "2025-06-26", ideal: 137.2, actual: 231, sprint: "Sprint 10 Integración de Componentes"},
+    {date: "2025-06-27", ideal: 135.3, actual: 231, sprint: "Sprint 11 Pruebas Exhaustivas"},
+    {date: "2025-07-04", ideal: 117.9, actual: 231, sprint: "Sprint 11 Pruebas Exhaustivas"},
+    {date: "2025-07-10", ideal: 102.2, actual: 201, sprint: "Sprint 11 Pruebas Exhaustivas"},
+    {date: "2025-07-11", ideal: 100.3, actual: 201, sprint: "Sprint 12 c"},
+    {date: "2025-07-18", ideal: 82.9, actual: 201, sprint: "Sprint 12 c"},
+    {date: "2025-07-24", ideal: 67.2, actual: 176, sprint: "Sprint 12 c"},
+    {date: "2025-07-25", ideal: 65.3, actual: 176, sprint: "Sprint 13 correction de bugs"},
+    {date: "2025-08-01", ideal: 47.9, actual: 176, sprint: "Sprint 13 correction de bugs"},
+    {date: "2025-08-07", ideal: 32.2, actual: 146, sprint: "Sprint 13 correction de bugs"},
+    {date: "2025-08-08", ideal: 30.3, actual: 146, sprint: "Sprint 14 Despliegue Final"},
+    {date: "2025-08-15", ideal: 12.9, actual: 146, sprint: "Sprint 14 Despliegue Final"},
+    {date: "2025-08-21", ideal: 0, actual: 124, sprint: "Sprint 14 Despliegue Final"},
+    {date: "2025-08-22", ideal: 0, actual: 124, sprint: "Sprint 15 Documentación y Entrega"},
+    {date: "2025-08-29", ideal: 0, actual: 124, sprint: "Sprint 15 Documentación y Entrega"},
+    {date: "2025-09-04", ideal: 0, actual: 0, sprint: "Sprint 15 Documentación y Entrega"}
+  ];
+  
+  export const tasks = [
+    { id: 1, title: "Certificacion OCI", sprint: "Sprint 1", estimate: 8, actual: 4, status: "Done", completionDate: "2025-02-14", assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 2, title: "ProyectPlan (Aaron)", sprint: "Sprint 1", estimate: 8, actual: 2, status: "Done", completionDate: "2025-02-20", assignees: ["Aaron3312"] },
+    { id: 3, title: "Doc de Analisis de requerimientos", sprint: "Sprint 1", estimate: 8, actual: 4, status: "Done", completionDate: "2025-02-25", assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 4, title: "Presentation for ORACLE 1", sprint: "Sprint 2", estimate: 6, actual: 8, status: "Done", completionDate: "2025-02-28", assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 5, title: "Deploy 0 (Aaron, Bañales)", sprint: "Sprint 2", estimate: 8, actual: 14, status: "Done", completionDate: "2025-02-26", assignees: ["Aaron3312", "Banales2"] },
+    { id: 6, title: "Plan de pruebas", sprint: "Sprint 2", estimate: 10, actual: 4, status: "Done", completionDate: "2025-03-02", assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 7, title: "Configurar recursos básicos en OCI (Aaron, Bañales)", sprint: "Sprint 3 Tareas de Infraestructura (OCI)", estimate: 10, actual: null, status: "In progress", completionDate: null, assignees: ["Aaron3312", "Banales2"] },
+    { id: 8, title: "Implementar Oracle Autonomous Database (Diego, Tellez)", sprint: "Sprint 3 Tareas de Infraestructura (OCI)", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT", "RomeoThePickleTec"] },
+    { id: 9, title: "Configurar entornos Kubernetes (Bañales)", sprint: "Sprint 3 Tareas de Infraestructura (OCI)", estimate: 12, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2"] },
+    { id: 10, title: "Implementar pipeline de CI/CD básico (Bañales, Aaron)", sprint: "Sprint 4 Configuración de CI/CD", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "Banales2"] },
+    { id: 11, title: "Configurar entornos de desarrollo (Tellez)", sprint: "Sprint 4 Configuración de CI/CD", estimate: 6, actual: null, status: "Backlog", completionDate: null, assignees: ["RomeoThePickleTec"] },
+    { id: 12, title: "Configurar API Gateway (Diego)", sprint: "Sprint 4 Configuración de CI/CD", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT"] },
+    { id: 13, title: "Crear estructura base de microservicios (Diego, Aaron)", sprint: "Sprint 5 Preparación de codebase", estimate: 15, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "DJeison-DVT"] },
+    { id: 14, title: "Preparar integración con Telegram (Fernando, Aram)", sprint: "Sprint 5 Preparación de codebase", estimate: 6, actual: null, status: "Backlog", completionDate: null, assignees: ["Fercubos", "arambs22"] },
+    { id: 15, title: "Implementar microservicio de Gestión de Usuarios (Diego)", sprint: "Sprint 6 Desarrollo de Microservicios Core", estimate: 12, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT"] },
+    { id: 16, title: "Implementar microservicio de Gestión de Proyectos (Aaron)", sprint: "Sprint 6 Desarrollo de Microservicios Core", estimate: 14, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312"] },
+    { id: 17, title: "Implementar microservicio de Gestión de Tareas (Diego, Aaron)", sprint: "Sprint 6 Desarrollo de Microservicios Core", estimate: 15, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "DJeison-DVT"] },
+    { id: 18, title: "Implementar microservicio de Análisis y KPIs (Bañales)", sprint: "Sprint 6 Desarrollo de Microservicios Core", estimate: 16, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2"] },
+    { id: 19, title: "Implementar pruebas unitarias para microservicios (Fernando)", sprint: "Sprint 7 Integración y Pruebas Backend", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Fercubos"] },
+    { id: 20, title: "Implementar pruebas de integración (Fernando, Aram)", sprint: "Sprint 7 Integración y Pruebas Backend", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["arambs22", "Fercubos"] },
+    { id: 21, title: "Integrar todos los microservicios (Aaron, Diego)", sprint: "Sprint 7 Integración y Pruebas Backend", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "DJeison-DVT"] },
+    { id: 22, title: "Implementar seguridad en APIs (Tellez)", sprint: "Sprint 7 Integración y Pruebas Backend", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["RomeoThePickleTec"] },
+    { id: 23, title: "Configurar proyecto frontend (Aaron)", sprint: "Sprint 8 Desarrollo Frontend", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312"] },
+    { id: 24, title: "Desarrollar módulo de autenticación (Aaron, Aram)", sprint: "Sprint 8 Desarrollo Frontend", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22"] },
+    { id: 25, title: "Desarrollar dashboard principal (Aaron)", sprint: "Sprint 8 Desarrollo Frontend", estimate: 12, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312"] },
+    { id: 26, title: "Desarrollar estructura base del chatbot (Diego, Fernando)", sprint: "Sprint 8 Desarrollo Frontend", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT", "Fercubos"] },
+    { id: 27, title: "Implementar comandos para gestión de proyectos (Diego)", sprint: "Sprint 9 Desarrollo de Chatbot Telegram", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT"] },
+    { id: 28, title: "Implementar comandos para gestión de tareas (Diego, Bañales)", sprint: "Sprint 9 Desarrollo de Chatbot Telegram", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2", "DJeison-DVT"] },
+    { id: 29, title: "Implementar consultas de KPIs vía bot (Bañales)", sprint: "Sprint 9 Desarrollo de Chatbot Telegram", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2"] },
+    { id: 30, title: "Desarrollar módulo de gestión de proyectos (Aaron, Aram)", sprint: "Sprint 9 Desarrollo de Chatbot Telegram", estimate: 14, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22"] },
+    { id: 31, title: "Desarrollar módulo de gestión de tareas (Aaron, Aram)", sprint: "Sprint 10 Integración de Componentes", estimate: 14, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22"] },
+    { id: 32, title: "Integrar frontend con backend (Aaron, Diego)", sprint: "Sprint 10 Integración de Componentes", estimate: 12, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "DJeison-DVT"] },
+    { id: 33, title: "Integrar chatbot con backend (Diego, Bañales)", sprint: "Sprint 10 Integración de Componentes", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2", "DJeison-DVT"] },
+    { id: 34, title: "Implementar sistema de notificaciones cruzadas (Bañales, Tellez)", sprint: "Sprint 10 Integración de Componentes", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2", "RomeoThePickleTec"] },
+    { id: 35, title: "Realizar pruebas de rendimiento (Fernando, Aram)", sprint: "Sprint 11 Pruebas Exhaustivas", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["arambs22", "Fercubos"] },
+    { id: 36, title: "Realizar pruebas de seguridad (Tellez)", sprint: "Sprint 11 Pruebas Exhaustivas", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["RomeoThePickleTec"] },
+    { id: 37, title: "Realizar pruebas de usabilidad (Fernando, Aram)", sprint: "Sprint 11 Pruebas Exhaustivas", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["arambs22", "Fercubos"] },
+    { id: 38, title: "Implementar estructura base del chatbot (Diego, Fernando)", sprint: "Sprint 11 Pruebas Exhaustivas", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT", "Fercubos"] },
+    { id: 39, title: "Corrección de bugs identificados (Todo el equipo)", sprint: "Sprint 12 c", estimate: 15, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 40, title: "Finalizar documentación técnica (Tellez, Diego)", sprint: "Sprint 12 c", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["DJeison-DVT", "RomeoThePickleTec"] },
+    { id: 41, title: "Preparar entorno de producción (Bañales, Tellez)", sprint: "Sprint 13 correction de bugs", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Banales2", "RomeoThePickleTec"] },
+    { id: 42, title: "Despliegue de todos los componentes (Bañales, Aaron)", sprint: "Sprint 13 correction de bugs", estimate: 12, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "Banales2"] },
+    { id: 43, title: "Pruebas post-despliegue (Fernando, Aram)", sprint: "Sprint 13 correction de bugs", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["arambs22", "Fercubos"] },
+    { id: 44, title: "Finalizar documentación de usuario (Tellez, Fernando)", sprint: "Sprint 14 Despliegue Final", estimate: 10, actual: null, status: "Backlog", completionDate: null, assignees: ["Fercubos", "RomeoThePickleTec"] },
+    { id: 45, title: "Preparar presentación final (Todo el equipo)", sprint: "Sprint 14 Despliegue Final", estimate: 8, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 46, title: "Sesión de lecciones aprendidas (Todo el equipo)", sprint: "Sprint 14 Despliegue Final", estimate: 4, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "arambs22", "Banales2", "DJeison-DVT", "Fercubos", "RomeoThePickleTec"] },
+    { id: 47, title: "Entrega formal del proyecto (Tellez, Aaron)", sprint: "Sprint 15 Documentación y Entrega", estimate: 6, actual: null, status: "Backlog", completionDate: null, assignees: ["Aaron3312", "RomeoThePickleTec"] }
+  ];
+  
+  export const colors = {
+    ideal: '#8884d8',
+    actual: '#82ca9d',
+    completed: '#4caf50',
+    inProgress: '#ff9800',
+    pending: '#f44336',
+    today: '#e91e63'
+  };
+  
+  export const members = [
+    'all',
+    'Aaron3312',
+    'arambs22',
+    'Banales2',
+    'DJeison-DVT',
+    'Fercubos',
+    'RomeoThePickleTec'
+  ];
+  
+  // Fecha actual para la línea de referencia (simulamos que es 7 de marzo de 2025)
+  export const today = '2025-03-07';
+  
+  export const sprints = [
+    'all',
+    'Sprint 1',
+    'Sprint 2',
+    'Sprint 3 Tareas de Infraestructura (OCI)',
+    'Sprint 4 Configuración de CI/CD',
+    'Sprint 5 Preparación de codebase',
+    'Sprint 6 Desarrollo de Microservicios Core',
+    'Sprint 7 Integración y Pruebas Backend',
+    'Sprint 8 Desarrollo Frontend',
+    'Sprint 9 Desarrollo de Chatbot Telegram',
+    'Sprint 10 Integración de Componentes',
+    'Sprint 11 Pruebas Exhaustivas',
+    'Sprint 12 c',
+    'Sprint 13 correction de bugs',
+    'Sprint 14 Despliegue Final',
+    'Sprint 15 Documentación y Entrega'
+  ];
