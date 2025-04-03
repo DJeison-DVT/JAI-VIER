@@ -52,11 +52,11 @@ public class TaskMessageModel implements MessageModel<Task> {
             if (projectEntity.getStatusCodeValue() != 200) {
                 continue;
             }
-            Project project = projectEntity.getBody();
-            for (Task task : project.getTasks()) {
-                sb.append(task.publicDescription());
-                sb.append("\n");
-            }
+            // Project project = projectEntity.getBody();
+            // for (Task task : project.getTasks()) {
+            // sb.append(task.publicDescription());
+            // sb.append("\n");
+            // }
         }
 
         return sb.toString();

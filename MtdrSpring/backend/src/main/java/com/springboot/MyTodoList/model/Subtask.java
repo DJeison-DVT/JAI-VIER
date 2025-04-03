@@ -23,7 +23,7 @@ public class Subtask {
     OffsetDateTime updated_at;
     @Column(name = "STATUS")
     int status;
-    @JsonBackReference
+    @JsonBackReference(value = "task-subtasks")
     @ManyToOne
     @JoinColumn(name = "TASK_ID", nullable = false)
     private Task task;

@@ -32,7 +32,6 @@ public class TaskBuilder implements TypeBuilder<Task> {
         if (!fields.containsKey("project_id")) {
             throw new IllegalArgumentException("Project ID is required");
         }
-        task.setProject_id(Integer.parseInt(fields.get("project_id")));
         return task;
     }
 }

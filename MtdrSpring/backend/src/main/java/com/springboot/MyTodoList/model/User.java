@@ -21,8 +21,6 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "PASSWORD_HASH")
     String password_hash;
-    @Column(name = "ROLE")
-    String role;
     @Column(name = "WORK_MODE")
     String work_mode;
     @Column(name = "CREATED_AT")
@@ -33,18 +31,22 @@ public class User {
     OffsetDateTime last_login;
     @Column(name = "ACTIVE")
     boolean active;
+    @ManyToOne
+    @JoinColumn(name = "selected_project_id")
+    private Project selectedProject;
+    @Transient
+    private Integer selectedProject_id;
 
     public User() {
     }
 
-    public User(int ID, String username, String email, String full_name, String password_hash, String role,
+    public User(int ID, String username, String email, String full_name, String password_hash,
             String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active) {
         this.ID = ID;
         this.username = username;
         this.email = email;
         this.full_name = full_name;
         this.password_hash = password_hash;
-        this.role = role;
         this.work_mode = work_mode;
         this.created_at = created_at;
         this.updated_at = updated_at;
@@ -91,14 +93,6 @@ public class User {
         this.password_hash = password_hash;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getWork_mode() {
         return work_mode;
     }
@@ -139,6 +133,22 @@ public class User {
         this.active = active;
     }
 
+    public Project getSelectedProject() {
+        return selectedProject;
+    }
+
+    public void setSelectedProject(Project selectedProject) {
+        this.selectedProject = selectedProject;
+    }
+
+    public Integer getSelectedProject_id() {
+        return selectedProject_id;
+    }
+
+    public void setSelectedProject_id(Integer selectedProject_id) {
+        this.selectedProject_id = selectedProject_id;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -147,21 +157,20 @@ public class User {
                 ", email='" + email + '\'' +
                 ", full_name='" + full_name + '\'' +
                 ", password_hash='" + password_hash + '\'' +
-                ", role='" + role + '\'' +
                 ", work_mode='" + work_mode + '\'' +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", active=" + active +
+                ", selectedProject=" + selectedProject +
                 '}';
     }
 
     public String publicDescription() {
         return String.format("👤 *User Profile*\n" + "🆔 ID: %d\n" + "👤 Username: %s\n" + "📧 Email: %s\n"
-                + "👨‍💼 Full Name: %s\n" + "🛠 Role: %s\n" + "🌍 Work Mode: %s\n" + ID, username, email, full_name,
-                role, work_mode);
+                + "👨‍💼 Full Name: %s\n" + "🌍 Work Mode: %s\n" + ID, username, email, full_name, work_mode);
     }
 
     public String quickDescription() {
-        return String.format("👤 %s, | 👨‍💼 %s | 🛠 %s", username, full_name, role);
+        return String.format("👤 %s, | 👨‍💼 %s", username, full_name);
     }
 }

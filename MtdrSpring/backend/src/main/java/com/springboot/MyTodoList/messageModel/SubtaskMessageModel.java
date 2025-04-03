@@ -11,7 +11,6 @@ import com.springboot.MyTodoList.controller.SubtaskController;
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.model.Subtask;
-import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
 
 @Service
@@ -53,15 +52,15 @@ public class SubtaskMessageModel implements MessageModel<Subtask> {
             if (projectEntity.getStatusCodeValue() != 200) {
                 continue;
             }
-            Project project = projectEntity.getBody();
-            for (Task task : project.getTasks()) {
-                sb.append(task.quickDescription());
-                sb.append("\n");
-                for (Subtask subtask : task.getSubtasks()) {
-                    sb.append(subtask.publicDescription());
-                    sb.append("\n");
-                }
-            }
+            // Project project = projectEntity.getBody();
+            // for (Task task : project.getSprints()) {
+            // sb.append(task.quickDescription());
+            // sb.append("\n");
+            // for (Subtask subtask : task.getSubtasks()) {
+            // sb.append(subtask.publicDescription());
+            // sb.append("\n");
+            // }
+            // }
         }
 
         return sb.toString();

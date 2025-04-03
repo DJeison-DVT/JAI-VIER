@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.OffsetDateTime;
@@ -18,6 +19,7 @@ public class Comment {
     @Column(name = "CREATED_AT")
     OffsetDateTime created_at;
 
+    @JsonBackReference(value = "task-comments")
     @ManyToOne
     @JoinColumn(name = "TASK_ID", nullable = false)
     private Task task;

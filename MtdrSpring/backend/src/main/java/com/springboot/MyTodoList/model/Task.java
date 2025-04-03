@@ -31,22 +31,27 @@ public class Task {
     int status;
     @Column(name = "ESTIMATED_HOURS")
     int estimated_hours;
-    @JsonManagedReference
+    @JsonManagedReference(value = "task-subtasks")
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subtask> subtasks;
-    @JsonBackReference
+    @JsonManagedReference(value = "task-comments")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+    @JsonBackReference(value = "sprint-tasks")
     @ManyToOne
-    @JoinColumn(name = "PROJECT_ID", nullable = false)
-    private Project project;
+    @JoinColumn(name = "SPRINT_ID", nullable = false)
+    private Sprint sprint;
     @Transient
-    private int project_id;
+    private int sprint_id;
 
     public Task() {
     }
 
     public Task(int ID, String title, String description, OffsetDateTime created_at, OffsetDateTime updated_at,
-            OffsetDateTime due_date, int priority, int status, int estimated_hours, List<Subtask> subtasks) {
+            OffsetDateTime due_date, int priority, int status, int estimated_hours, List<Subtask> subtasks,
+            Sprint sprint) {
         this.ID = ID;
+        this.sprint = sprint;
         this.title = title;
         this.description = description;
         this.created_at = created_at;
@@ -138,20 +143,28 @@ public class Task {
         this.subtasks = subtasks;
     }
 
-    public Project getProject() {
-        return project;
+    public Sprint getSprint() {
+        return sprint;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setSprint(Sprint sprint) {
+        this.sprint = sprint;
     }
 
-    public int getProject_id() {
-        return project != null ? project.getID() : project_id;
+    public int getSprint_id() {
+        return sprint_id;
     }
 
-    public void setProject_id(int project_id) {
-        this.project_id = project_id;
+    public void setSprint_id(int sprint_id) {
+        this.sprint_id = sprint_id;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
@@ -167,7 +180,8 @@ public class Task {
                 ", status=" + status +
                 ", estimated_hours=" + estimated_hours +
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
-                ", project_id=" + project_id +
+                ", comments=" + (comments != null ? comments.toString() : "[]") +
+                ", project_id=" + sprint_id +
                 '}';
     }
 

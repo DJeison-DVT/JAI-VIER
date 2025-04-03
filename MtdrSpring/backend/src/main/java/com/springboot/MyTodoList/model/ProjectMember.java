@@ -12,12 +12,15 @@ public class ProjectMember {
 
     @Column(name = "JOINED_DATE")
     private OffsetDateTime joined_date;
+    @Column(name = "ROLE")
+    private String role;
 
     public ProjectMember() {
     }
 
-    public ProjectMember(int project_id, int user_id, OffsetDateTime joined_date) {
-        this.id = new ProjectMemberId(project_id, user_id); // ✅ Initialize ID
+    public ProjectMember(int project_id, int user_id, OffsetDateTime joined_date, String role) {
+        this.role = role;
+        this.id = new ProjectMemberId(project_id, user_id); // Composite key
         this.joined_date = joined_date;
     }
 
@@ -53,12 +56,21 @@ public class ProjectMember {
         this.joined_date = joined_date;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "ProjectMember{" +
                 "project=" + id.getProjectId() +
                 ", user=" + id.getUserId() +
                 ", joined_date=" + joined_date +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
