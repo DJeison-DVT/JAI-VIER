@@ -27,7 +27,7 @@ public class Sprint {
     OffsetDateTime created_at;
     @Column(name = "UPDATED_AT")
     OffsetDateTime updated_at;
-    @JsonBackReference
+    @JsonBackReference(value = "project-sprints")
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID", nullable = false)
     private Project project;

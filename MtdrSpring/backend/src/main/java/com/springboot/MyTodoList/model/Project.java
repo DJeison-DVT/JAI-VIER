@@ -27,9 +27,10 @@ public class Project {
     OffsetDateTime created_at;
     @Column(name = "UPDATED_AT")
     OffsetDateTime updated_at;
-    @JsonManagedReference
+    @JsonManagedReference(value = "project-tasks")
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Task> tasks;
+    @JsonManagedReference(value = "project-sprints")
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Sprint> sprints;
 

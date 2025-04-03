@@ -34,7 +34,7 @@ public class Task {
     @JsonManagedReference
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subtask> subtasks;
-    @JsonBackReference
+    @JsonBackReference(value = "project-tasks")
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID", nullable = false)
     private Project project;
