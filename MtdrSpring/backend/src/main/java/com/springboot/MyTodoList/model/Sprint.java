@@ -2,14 +2,14 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "PROJECT")
-public class Project {
+@Table(name = "SPRINT")
+public class Sprint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
@@ -27,18 +27,19 @@ public class Project {
     OffsetDateTime created_at;
     @Column(name = "UPDATED_AT")
     OffsetDateTime updated_at;
-    @JsonManagedReference
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Task> tasks;
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Sprint> sprints;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "PROJECT_ID", nullable = false)
+    private Project project;
+    @Transient
+    private int project_id;
 
-    public Project() {
+    public Sprint() {
     }
 
-    public Project(int ID, String name, String description, OffsetDateTime start_date, OffsetDateTime end_date,
+    public Sprint(int ID, String name, String description, OffsetDateTime start_date, OffsetDateTime end_date,
             int status,
-            OffsetDateTime created_at, OffsetDateTime updated_at, List<Task> tasks, List<Sprint> sprints) {
+            OffsetDateTime created_at, OffsetDateTime updated_at, Project project) {
         this.ID = ID;
         this.name = name;
         this.description = description;
@@ -47,8 +48,7 @@ public class Project {
         this.status = status;
         this.created_at = created_at;
         this.updated_at = updated_at;
-        this.tasks = tasks;
-        this.sprints = sprints;
+        this.project = project;
     }
 
     public int getID() {
@@ -115,25 +115,25 @@ public class Project {
         this.updated_at = updated_at;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public Project getProject() {
+        return project;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public List<Sprint> getSprints() {
-        return sprints;
+    public int getProject_id() {
+        return project_id;
     }
 
-    public void setSprints(List<Sprint> sprints) {
-        this.sprints = sprints;
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
     @Override
     public String toString() {
-        return "Project{" +
+        return "Sprint{" +
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -142,54 +142,38 @@ public class Project {
                 ", status=" + status +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
-                (tasks != null ? ", tasks=" + tasks.toString() : "") +
-                (sprints != null ? ", sprints=" + sprints.toString() : "") +
+                ", project_id=" + project_id +
                 '}';
     }
 
-    public String publicDescription() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format(
-                "📂 *Project:* %s, 🆔 ID: %d\n" +
-                        "   📝 Description: %s\n" +
-                        "   📅 Start: %s | ⏳ End: %s\n" +
-                        "   🔄 Status: %s\n",
-                name, ID, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText()));
-
-        if (tasks != null && !tasks.isEmpty()) {
-            sb.append("📌 *Tasks:*\n");
-            for (Task task : tasks) {
-                sb.append(task.quickDescription()).append("\n");
-            }
-        } else {
-            sb.append("📌 No tasks assigned yet.\n");
-        }
-
-        return sb.toString();
+    public String description() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String start = start_date != null ? start_date.format(formatter) : "N/A";
+        String end = end_date != null ? end_date.format(formatter) : "N/A";
+        return String.format(
+                "📦 *Sprint:* %s\n" +
+                        "📝 *Description:* %s\n" +
+                        "🕒 *Start:* %s | 🕒 *End:* %s\n" +
+                        "📊 *Status:* %s",
+                name,
+                description != null ? description : "No description provided",
+                start,
+                end,
+                statusText());
     }
 
-    public String quickDescription() {
-        return String.format("🆔 ID: %d, 📂 *Project:* %s\n" +
-                "   📝 Description: %s\n" +
-                "   📅 Start: %s | ⏳ End: %s\n" +
-                "   🔄 Status: %s\n",
-                name, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText());
-    }
-
-    // Helper method to convert status to text
     private String statusText() {
         switch (status) {
             case 0:
-                return "📋 Planning";
+                return "📋 Planned";
             case 1:
                 return "🚧 In Progress";
             case 2:
                 return "✅ Completed";
             case 3:
-                return "⏸️ On Hold";
+                return "❌ Canceled";
             default:
-                return "⚠️ Unknown";
+                return "❓ Unknown";
         }
     }
-
 }
