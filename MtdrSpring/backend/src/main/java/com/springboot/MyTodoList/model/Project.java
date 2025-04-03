@@ -27,9 +27,6 @@ public class Project {
     OffsetDateTime created_at;
     @Column(name = "UPDATED_AT")
     OffsetDateTime updated_at;
-    @JsonManagedReference(value = "project-tasks")
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Task> tasks;
     @JsonManagedReference(value = "project-sprints")
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Sprint> sprints;
@@ -48,7 +45,6 @@ public class Project {
         this.status = status;
         this.created_at = created_at;
         this.updated_at = updated_at;
-        this.tasks = tasks;
         this.sprints = sprints;
     }
 
@@ -116,14 +112,6 @@ public class Project {
         this.updated_at = updated_at;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
     public List<Sprint> getSprints() {
         return sprints;
     }
@@ -143,8 +131,7 @@ public class Project {
                 ", status=" + status +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
-                (tasks != null ? ", tasks=" + tasks.toString() : "") +
-                (sprints != null ? ", sprints=" + sprints.toString() : "") +
+                ", sprints=" + sprints +
                 '}';
     }
 
@@ -157,14 +144,14 @@ public class Project {
                         "   🔄 Status: %s\n",
                 name, ID, description, start_date, (end_date != null ? end_date : "Ongoing"), statusText()));
 
-        if (tasks != null && !tasks.isEmpty()) {
-            sb.append("📌 *Tasks:*\n");
-            for (Task task : tasks) {
-                sb.append(task.quickDescription()).append("\n");
-            }
-        } else {
-            sb.append("📌 No tasks assigned yet.\n");
-        }
+        // if (tasks != null && !tasks.isEmpty()) {
+        // sb.append("📌 *Tasks:*\n");
+        // for (Task task : tasks) {
+        // sb.append(task.quickDescription()).append("\n");
+        // }
+        // } else {
+        // sb.append("📌 No tasks assigned yet.\n");
+        // }
 
         return sb.toString();
     }

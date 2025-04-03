@@ -28,8 +28,6 @@ public class UserBuilder implements TypeBuilder<User> {
         }
         user.setFull_name(fields.get("full_name"));
 
-        user.setRole(fields.getOrDefault("role", "DEVELOPER"));
-
         user.setWork_mode(fields.getOrDefault("work_mode", "NORMAL"));
 
         return user;

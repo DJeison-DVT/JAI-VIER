@@ -3,9 +3,11 @@ package com.springboot.MyTodoList.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Entity
 @Table(name = "SPRINT")
@@ -33,13 +35,17 @@ public class Sprint {
     private Project project;
     @Transient
     private int project_id;
+    @JsonManagedReference(value = "sprint-tasks")
+    @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Task> tasks;
 
     public Sprint() {
     }
 
     public Sprint(int ID, String name, String description, OffsetDateTime start_date, OffsetDateTime end_date,
             int status,
-            OffsetDateTime created_at, OffsetDateTime updated_at, Project project) {
+            OffsetDateTime created_at, OffsetDateTime updated_at, Project project, List<Task> tasks) {
+        this.tasks = tasks;
         this.ID = ID;
         this.name = name;
         this.description = description;
@@ -131,6 +137,14 @@ public class Sprint {
         this.project_id = project_id;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     @Override
     public String toString() {
         return "Sprint{" +
@@ -143,6 +157,7 @@ public class Sprint {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", project_id=" + project_id +
+                ", tasks=" + tasks +
                 '}';
     }
 

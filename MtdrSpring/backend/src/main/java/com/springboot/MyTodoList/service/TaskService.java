@@ -1,8 +1,8 @@
 package com.springboot.MyTodoList.service;
 
-import com.springboot.MyTodoList.model.Project;
+import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Task;
-import com.springboot.MyTodoList.repository.ProjectRepository;
+import com.springboot.MyTodoList.repository.SprintRepository;
 import com.springboot.MyTodoList.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private ProjectRepository projectRepository;
+    private SprintRepository sprintRepository;
 
     public List<Task> findAll() {
         List<Task> tasks = taskRepository.findAll();
@@ -36,14 +36,15 @@ public class TaskService {
     }
 
     public Task addTask(Task task) {
-        if (task.getProject_id() == 0) {
-            throw new IllegalArgumentException("Task must be linked to an existing Project.");
+        int sprintId = task.getSprint_id();
+        if (sprintId == 0) {
+            throw new IllegalArgumentException("Task must be linked to an existing Sprint.");
         }
 
-        Project existingProject = projectRepository.findById(task.getProject_id()).orElseThrow(
-                () -> new IllegalArgumentException("Project not found with ID: " + task.getProject_id()));
+        Sprint existingSprint = sprintRepository.findById(sprintId).orElseThrow(
+                () -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
 
-        task.setProject(existingProject);
+        task.setSprint(existingSprint);
         task.setCreated_at(OffsetDateTime.now());
         task.setUpdated_at(OffsetDateTime.now());
 

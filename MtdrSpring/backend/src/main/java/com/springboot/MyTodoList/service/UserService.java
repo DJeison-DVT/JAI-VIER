@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.UserRepository;
 
 @Service
@@ -18,6 +21,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
+
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<User> findAll() {
@@ -88,9 +94,21 @@ public class UserService {
             existingUser.setUsername(user.getUsername());
             existingUser.setEmail(user.getEmail());
             existingUser.setFull_name(user.getFull_name());
-            existingUser.setRole(user.getRole());
             existingUser.setWork_mode(user.getWork_mode());
             existingUser.setUpdated_at(OffsetDateTime.now());
+            existingUser.setActive(user.isActive());
+            existingUser.setLast_login(user.getLast_login());
+            Integer project_id = user.getSelectedProject_id();
+            if (project_id != 0) {
+                Optional<Project> projectData = projectRepository.findById(project_id);
+                if (projectData.isPresent()) {
+                    // TODO Check if is project member
+                    Project existingProject = projectData.get();
+                    existingUser.setSelectedProject(existingProject);
+                } else {
+                    throw new IllegalArgumentException("Project not found with ID: " + project_id);
+                }
+            }
             return userRepository.save(existingUser);
         } else {
             return null;
