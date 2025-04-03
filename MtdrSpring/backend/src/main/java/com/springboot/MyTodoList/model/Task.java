@@ -31,9 +31,12 @@ public class Task {
     int status;
     @Column(name = "ESTIMATED_HOURS")
     int estimated_hours;
-    @JsonManagedReference
+    @JsonManagedReference(value = "task-subtasks")
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subtask> subtasks;
+    @JsonManagedReference(value = "task-comments")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comment> comments;
     @JsonBackReference(value = "project-tasks")
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID", nullable = false)
@@ -154,6 +157,14 @@ public class Task {
         this.project_id = project_id;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -167,6 +178,7 @@ public class Task {
                 ", status=" + status +
                 ", estimated_hours=" + estimated_hours +
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
+                ", comments=" + (comments != null ? comments.toString() : "[]") +
                 ", project_id=" + project_id +
                 '}';
     }
