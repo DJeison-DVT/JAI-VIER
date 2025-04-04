@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/userlist")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
             User us = userService.addUser(user);
             HttpHeaders responseHeaders = new HttpHeaders();
@@ -48,10 +48,9 @@ public class UserController {
             return ResponseEntity.created(location)
                     .headers(responseHeaders).build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

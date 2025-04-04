@@ -83,15 +83,28 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 		Optional<User> registeredUser = checkForChatId(chatId);
 
-		if (!registeredUser.isPresent()) {
-			if (update.getMessage().hasContact()) {
-				String phone = update.getMessage().getContact().getPhoneNumber();
-				userService.linkPhoneWithChatId(chatId, phone);
-				messageTextFromTelegram = BotLabels.MENU_SCREEN.getLabel();
-			} else {
-				requestContact(chatId);
-				return;
+		try {
+			if (!registeredUser.isPresent()) {
+				if (update.getMessage().hasContact()) {
+					String phone = update.getMessage().getContact().getPhoneNumber();
+					userService.linkPhoneWithChatId(chatId, phone);
+					messageTextFromTelegram = BotLabels.MENU_SCREEN.getLabel();
+				} else {
+					requestContact(chatId);
+					return;
+				}
 			}
+		} catch (NoSuchElementException e) {
+			SendMessage messageToTelegram = new SendMessage();
+			messageToTelegram.setChatId(chatId);
+			messageToTelegram.setText(BotMessages.PHONE_NOT_REGISTERED.getMessage());
+			try {
+				execute(messageToTelegram);
+			} catch (TelegramApiException e1) {
+				logger.error(e1.getLocalizedMessage(), e1);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		User user = registeredUser.get();
@@ -446,15 +459,6 @@ public class TaskBotController extends TelegramLongPollingBot {
 					logger.error(e1.getLocalizedMessage(), e1);
 				}
 
-			} catch (NoSuchElementException e) {
-				SendMessage messageToTelegram = new SendMessage();
-				messageToTelegram.setChatId(chatId);
-				messageToTelegram.setText(BotMessages.PHONE_NOT_REGISTERED.getMessage());
-				try {
-					execute(messageToTelegram);
-				} catch (TelegramApiException e1) {
-					logger.error(e1.getLocalizedMessage(), e1);
-				}
 			} catch (Exception e) {
 				SendMessage messageToTelegram = new SendMessage();
 				messageToTelegram.setChatId(chatId);
