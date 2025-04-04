@@ -33,9 +33,9 @@ public class User {
     boolean active;
     @ManyToOne
     @JoinColumn(name = "selected_project_id")
-    private Project selectedProject;
+    private Project selected_project;
     @Transient
-    private Integer selectedProject_id;
+    private Integer selected_project_id;
 
     public User() {
     }
@@ -134,19 +134,19 @@ public class User {
     }
 
     public Project getSelectedProject() {
-        return selectedProject;
+        return selected_project;
     }
 
-    public void setSelectedProject(Project selectedProject) {
-        this.selectedProject = selectedProject;
+    public void setSelectedProject(Project selected_project) {
+        this.selected_project = selected_project;
     }
 
     public Integer getSelectedProject_id() {
-        return selectedProject_id;
+        return selected_project_id;
     }
 
-    public void setSelectedProject_id(Integer selectedProject_id) {
-        this.selectedProject_id = selectedProject_id;
+    public void setSelectedProject_id(Integer selected_project_id) {
+        this.selected_project_id = selected_project_id;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class User {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", active=" + active +
-                ", selectedProject=" + selectedProject +
+                ", selected_project=" + selected_project +
                 '}';
     }
 

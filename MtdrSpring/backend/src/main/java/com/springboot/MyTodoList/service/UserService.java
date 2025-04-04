@@ -97,9 +97,8 @@ public class UserService {
             existingUser.setWork_mode(user.getWork_mode());
             existingUser.setUpdated_at(OffsetDateTime.now());
             existingUser.setActive(user.isActive());
-            existingUser.setLast_login(user.getLast_login());
             Integer project_id = user.getSelectedProject_id();
-            if (project_id != 0) {
+            if (project_id != null) {
                 Optional<Project> projectData = projectRepository.findById(project_id);
                 if (projectData.isPresent()) {
                     // TODO Check if is project member
