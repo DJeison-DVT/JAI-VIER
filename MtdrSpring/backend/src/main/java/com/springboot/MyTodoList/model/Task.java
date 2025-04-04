@@ -197,7 +197,7 @@ public class Task {
     public String quickDescription() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return String.format("🆔 ID: %d | 📝 %s | 📌 Due: %s | \n⚡ Priority: %s | 🔄 Status: %s", ID, title,
-                due_date.format(formatter),
+                (due_date != null ? due_date.format(formatter) : "No due date"),
                 priorityText(),
                 statusText());
     }

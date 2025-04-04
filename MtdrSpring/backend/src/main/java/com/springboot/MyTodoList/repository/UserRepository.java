@@ -20,6 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByPhone(String phone);
 
-    Optional<User> findByChatId(String chatId);
+    Optional<User> findByChatId(Long chatId);
 
 }

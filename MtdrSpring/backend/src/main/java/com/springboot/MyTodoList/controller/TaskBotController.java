@@ -1,9 +1,10 @@
 package com.springboot.MyTodoList.controller;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -17,12 +18,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.springboot.MyTodoList.messageModel.MessageModel;
 import com.springboot.MyTodoList.messageModel.MessageModelFactory;
-import com.springboot.MyTodoList.messageModel.TaskMessageModel;
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
@@ -72,13 +73,28 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
-		if (!update.hasMessage() || !update.getMessage().hasText()) {
+		if (!update.hasMessage() || (!update.getMessage().hasText() && !update.getMessage().hasContact())) {
 			return;
 		}
 
 		// Obtain message text, and chatId
 		String messageTextFromTelegram = update.getMessage().getText();
 		long chatId = update.getMessage().getChatId();
+
+		Optional<User> registeredUser = checkForChatId(chatId);
+
+		if (!registeredUser.isPresent()) {
+			if (update.getMessage().hasContact()) {
+				String phone = update.getMessage().getContact().getPhoneNumber();
+				userService.linkPhoneWithChatId(chatId, phone);
+				messageTextFromTelegram = BotLabels.MENU_SCREEN.getLabel();
+			} else {
+				requestContact(chatId);
+				return;
+			}
+		}
+
+		User user = registeredUser.get();
 
 		if (messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())
 				|| messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())) {
@@ -357,8 +373,6 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 		} else {
 			try {
-				User user = getUserById(1).getBody();
-
 				// use command parser
 				CommandParser commandParser = new CommandParser(messageTextFromTelegram);
 				String action = commandParser.getAction();
@@ -432,6 +446,15 @@ public class TaskBotController extends TelegramLongPollingBot {
 					logger.error(e1.getLocalizedMessage(), e1);
 				}
 
+			} catch (NoSuchElementException e) {
+				SendMessage messageToTelegram = new SendMessage();
+				messageToTelegram.setChatId(chatId);
+				messageToTelegram.setText(BotMessages.PHONE_NOT_REGISTERED.getMessage());
+				try {
+					execute(messageToTelegram);
+				} catch (TelegramApiException e1) {
+					logger.error(e1.getLocalizedMessage(), e1);
+				}
 			} catch (Exception e) {
 				SendMessage messageToTelegram = new SendMessage();
 				messageToTelegram.setChatId(chatId);
@@ -450,6 +473,34 @@ public class TaskBotController extends TelegramLongPollingBot {
 	@Override
 	public String getBotUsername() {
 		return botName;
+	}
+
+	private void requestContact(long chatId) {
+		SendMessage message = new SendMessage();
+		message.setChatId(chatId);
+		message.setText("Please share your phone number to link your account.");
+
+		ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+		KeyboardRow row = new KeyboardRow();
+		KeyboardButton phoneButton = new KeyboardButton("📱 Share Phone Number");
+		phoneButton.setRequestContact(true);
+		row.add(phoneButton);
+		keyboard.setKeyboard(List.of(row));
+		keyboard.setResizeKeyboard(true);
+		keyboard.setOneTimeKeyboard(true);
+
+		message.setReplyMarkup(keyboard);
+
+		try {
+			execute(message);
+		} catch (TelegramApiException e) {
+			logger.error(e.getLocalizedMessage(), e);
+		}
+	}
+
+	private Optional<User> checkForChatId(long chatId) {
+		ResponseEntity<User> existingUser = userService.getUserByChatId(chatId);
+		return existingUser.getBody() != null ? Optional.of(existingUser.getBody()) : Optional.empty();
 	}
 
 	// GET /tasklist

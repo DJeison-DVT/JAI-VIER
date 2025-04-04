@@ -37,7 +37,7 @@ public class User {
     @Transient
     private Integer selected_project_id;
     @Column(name = "CHAT_ID")
-    private String chatId;
+    private Long chatId;
     @Column(name = "PHONE")
     private String phone;
 
@@ -45,7 +45,7 @@ public class User {
     }
 
     public User(int ID, String username, String email, String full_name, String password_hash,
-            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active, String chat_id,
+            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active, Long chat_id,
             String phone) {
         this.ID = ID;
         this.username = username;
@@ -154,11 +154,12 @@ public class User {
         this.selected_project_id = selected_project_id;
     }
 
-    public String getChat_id() {
+    @JsonProperty("chat_id")
+    public Long getChatId() {
         return chatId;
     }
 
-    public void setChat_id(String chatId) {
+    public void setChatId(Long chatId) {
         this.chatId = chatId;
     }
 

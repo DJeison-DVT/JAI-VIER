@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,18 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private boolean userExists(String username, String email, String phone, String chat_id) {
+    public void linkPhoneWithChatId(long chat_id, String phone) {
+        Optional<User> userData = userRepository.findByPhone(phone);
+        if (userData.isPresent()) {
+            User existingUser = userData.get();
+            existingUser.setChatId(chat_id);
+            userRepository.save(existingUser);
+        } else {
+            throw new NoSuchElementException("No user found with phone number: " + phone);
+        }
+    }
+
+    private boolean userExists(String username, String email, String phone, Long chat_id) {
         if (userRepository.findByUsername(username).isPresent()) {
             return true;
         }
@@ -74,7 +86,10 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<User> getUserByChatId(String chat_id) {
+    public ResponseEntity<User> getUserByChatId(Long chat_id) {
+        if (chat_id == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Optional<User> userData = userRepository.findByChatId(chat_id);
         if (userData.isPresent()) {
             return new ResponseEntity<>(userData.get(), HttpStatus.OK);
@@ -84,7 +99,7 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        if (userExists(user.getUsername(), user.getEmail(), user.getPhone(), user.getChat_id())) {
+        if (userExists(user.getUsername(), user.getEmail(), user.getPhone(), user.getChatId())) {
             throw new IllegalArgumentException("User with the same username, email, phone or chat_id already exists.");
         }
         user.setPassword_hash(hashPassword(user.getPassword_hash()));
@@ -129,7 +144,7 @@ public class UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setFull_name(user.getFull_name());
             existingUser.setWork_mode(user.getWork_mode());
-            existingUser.setChat_id(user.getChat_id());
+            existingUser.setChatId(user.getChatId());
             existingUser.setPhone(user.getPhone());
             existingUser.setUpdated_at(OffsetDateTime.now());
             existingUser.setActive(user.isActive());

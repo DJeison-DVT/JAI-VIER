@@ -1,7 +1,8 @@
 package com.springboot.MyTodoList.util;
 
 public enum BotMessages {
-
+	PHONE_NOT_REGISTERED(
+			"Your phone number is not registered! Please tell your manager to register you!"),
 	BOT_WELCOME(
 			"👋 Hello! I'm JAI-VIERbot! 🤖\n\n"
 					+ "You can create a Task or Subtask using the `/create` command:\n\n"
