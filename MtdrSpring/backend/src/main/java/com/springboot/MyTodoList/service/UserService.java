@@ -26,6 +26,31 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private boolean userExists(String username, String email, String phone, String chat_id) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return true;
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
+            return true;
+        }
+        if (phone != null && userRepository.findByPhone(phone).isPresent()) {
+            return true;
+        }
+        if (chat_id != null && userRepository.findByChatId(chat_id).isPresent()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private String hashPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    private boolean checkPassword(String rawPassword, String hashedPassword) {
+        return passwordEncoder.matches(rawPassword, hashedPassword);
+    }
+
     public List<User> findAll() {
         List<User> users = userRepository.findAll();
         return users;
@@ -40,20 +65,29 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<User> getUserByPhone(String phone) {
+        Optional<User> userData = userRepository.findByPhone(phone);
+        if (userData.isPresent()) {
+            return new ResponseEntity<>(userData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<User> getUserByChatId(String chat_id) {
+        Optional<User> userData = userRepository.findByChatId(chat_id);
+        if (userData.isPresent()) {
+            return new ResponseEntity<>(userData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public User addUser(User user) {
-        Optional<User> existingUsername = userRepository.findByUsername(user.getUsername());
-        if (existingUsername.isPresent()) {
-            throw new IllegalArgumentException("Username already exists");
+        if (userExists(user.getUsername(), user.getEmail(), user.getPhone(), user.getChat_id())) {
+            throw new IllegalArgumentException("User with the same username, email, phone or chat_id already exists.");
         }
-
-        Optional<User> existingEmail = userRepository.findByEmail(user.getEmail());
-        if (existingEmail.isPresent()) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-
-        System.out.println("Hashing: " + user.getPassword_hash());
-        String hashedPassword = passwordEncoder.encode(user.getPassword_hash());
-        user.setPassword_hash(hashedPassword);
+        user.setPassword_hash(hashPassword(user.getPassword_hash()));
         user.setCreated_at(OffsetDateTime.now());
         user.setUpdated_at(OffsetDateTime.now());
         user.setActive(true);
@@ -69,7 +103,7 @@ public class UserService {
             }
             existing_user.setLast_login(OffsetDateTime.now());
             userRepository.save(existing_user);
-            return passwordEncoder.matches(password, existing_user.getPassword_hash());
+            return checkPassword(password, existing_user.getPassword_hash());
         } else {
             return false;
         }
@@ -95,8 +129,13 @@ public class UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setFull_name(user.getFull_name());
             existingUser.setWork_mode(user.getWork_mode());
+            existingUser.setChat_id(user.getChat_id());
+            existingUser.setPhone(user.getPhone());
             existingUser.setUpdated_at(OffsetDateTime.now());
             existingUser.setActive(user.isActive());
+            if (user.getPassword_hash() != null && !user.getPassword_hash().isEmpty()) {
+                existingUser.setPassword_hash(hashPassword(user.getPassword_hash()));
+            }
             Integer project_id = user.getSelectedProject_id();
             if (project_id != null) {
                 Optional<Project> projectData = projectRepository.findById(project_id);

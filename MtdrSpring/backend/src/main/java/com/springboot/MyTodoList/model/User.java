@@ -32,16 +32,21 @@ public class User {
     @Column(name = "ACTIVE")
     boolean active;
     @ManyToOne
-    @JoinColumn(name = "selected_project_id")
+    @JoinColumn(name = "SELECTED_PROJECT_ID")
     private Project selected_project;
     @Transient
     private Integer selected_project_id;
+    @Column(name = "CHAT_ID")
+    private String chatId;
+    @Column(name = "PHONE")
+    private String phone;
 
     public User() {
     }
 
     public User(int ID, String username, String email, String full_name, String password_hash,
-            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active) {
+            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active, String chat_id,
+            String phone) {
         this.ID = ID;
         this.username = username;
         this.email = email;
@@ -149,6 +154,22 @@ public class User {
         this.selected_project_id = selected_project_id;
     }
 
+    public String getChat_id() {
+        return chatId;
+    }
+
+    public void setChat_id(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -162,6 +183,8 @@ public class User {
                 ", updated_at=" + updated_at +
                 ", active=" + active +
                 ", selected_project=" + selected_project +
+                ", chat_id='" + chatId + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 

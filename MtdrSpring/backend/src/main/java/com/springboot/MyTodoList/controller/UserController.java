@@ -36,17 +36,23 @@ public class UserController {
         }
     }
 
-    // @CrossOrigin
     @PostMapping(value = "/userlist")
-    public ResponseEntity<User> addUser(@RequestBody User user) throws Exception {
-        User us = userService.addUser(user);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + us.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
-        URI location = URI.create("" + us.getID());
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        try {
+            User us = userService.addUser(user);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("location", String.valueOf(us.getID()));
+            responseHeaders.set("Access-Control-Expose-Headers", "location");
+            URI location = URI.create(String.valueOf(us.getID()));
 
-        return ResponseEntity.created(location)
-                .headers(responseHeaders).build();
+            return ResponseEntity.created(location)
+                    .headers(responseHeaders).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Unexpected error: " + e.getMessage());
+        }
     }
 
     // @CrossOrigin
