@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/tasklist/21",
+							"raw": "http://localhost:8081/tasklist/42",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -23,7 +23,7 @@
 							"port": "8081",
 							"path": [
 								"tasklist",
-								"21"
+								"42"
 							]
 						}
 					},
@@ -56,7 +56,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Get Pizza\",\r\n  \"description\": \"For the party\",\r\n  \"due_date\": \"2024-04-14T15:00:00Z\",\r\n  \"priority\": 3,\r\n  \"status\": 1,\r\n  \"estimated_hours\": 8,\r\n  \"project_id\": 1,\r\n  \"subtasks\": [\r\n    {\r\n      \"title\": \"Outline key points\",\r\n      \"description\": \"Decide on the main topics to cover\",\r\n      \"created_at\": \"2024-03-11T12:10:00Z\",\r\n      \"updated_at\": \"2024-03-11T12:10:00Z\",\r\n      \"status\": 0\r\n    },\r\n    {\r\n      \"title\": \"Design slides\",\r\n      \"description\": \"Create slides with visuals and explanations\",\r\n      \"created_at\": \"2024-03-11T12:20:00Z\",\r\n      \"updated_at\": \"2024-03-11T12:20:00Z\",\r\n      \"status\": 0\r\n    }\r\n  ]\r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"Upload Models\",\r\n  \"description\": \"\",\r\n  \"due_date\": \"2024-04-14T15:00:00Z\",\r\n  \"priority\": 3,\r\n  \"status\": 1,\r\n  \"estimated_hours\": 8,\r\n  \"project_id\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -85,7 +85,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Move Along\",\r\n    \"description\": \"Setup DevOps pipeline\",\r\n    \"created_at\": \"2025-03-12T20:47:44.729965-06:00\",\r\n    \"updated_at\": \"2025-03-12T20:47:44.729965-06:00\",\r\n    \"due_date\": \"2024-03-15T17:59:59-06:00\",\r\n    \"priority\": 3,\r\n    \"status\": 2,\r\n    \"estimated_hours\": 20\r\n}",
+							"raw": "{\r\n  \"title\": \"Create Models\",\r\n  \"description\": \"New description\",\r\n  \"due_date\": \"2024-04-14T15:00:00Z\",\r\n  \"priority\": 3,\r\n  \"status\": 1,\r\n  \"estimated_hours\": 8\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -93,7 +93,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/tasklist/21",
+							"raw": "http://localhost:8081/tasklist/42",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -101,7 +101,7 @@
 							"port": "8081",
 							"path": [
 								"tasklist",
-								"21"
+								"42"
 							]
 						}
 					},
@@ -118,22 +118,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/commentlist/1",
+							"raw": "http://localhost:8081/commentlist",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"commentlist",
-								"1"
+								"commentlist"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GetComment Copy",
+					"name": "GetTaskComment",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -162,7 +161,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"content\": \"No cuento con acceso\",\r\n  \"task_id\": 23,\r\n  \"user_id\": 1\r\n}\r\n",
+							"raw": "{\r\n  \"content\": \"Ya lo recibi\",\r\n  \"task_id\": 23,\r\n  \"user_id\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -468,7 +467,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"DJeison-DVT\",\r\n    \"email\": \"diegovt.arbt@gmail.com\",\r\n    \"full_name\": \"Diego Villanueva Terrazas\",\r\n    \"password_hash\": \"Hello123\",\r\n    \"role\": \"DEVELOPER\",\r\n    \"work_mode\": \"REMOTE\"\r\n}",
+							"raw": "{\r\n    \"username\": \"DJeison-DVT\",\r\n    \"email\": \"diegovt.arbt@gmail.com\",\r\n    \"full_name\": \"Diego Villanueva Terrazas\",\r\n    \"password_hash\": \"Hello123\",\r\n    \"work_mode\": \"REMOTE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
