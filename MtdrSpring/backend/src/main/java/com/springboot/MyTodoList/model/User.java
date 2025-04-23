@@ -2,6 +2,7 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.OffsetDateTime;
@@ -32,16 +33,21 @@ public class User {
     @Column(name = "ACTIVE")
     boolean active;
     @ManyToOne
-    @JoinColumn(name = "selected_project_id")
-    private Project selectedProject;
+    @JoinColumn(name = "SELECTED_PROJECT_ID")
+    private Project selected_project;
     @Transient
-    private Integer selectedProject_id;
+    private Integer selected_project_id;
+    @Column(name = "CHAT_ID")
+    private Long chatId;
+    @Column(name = "PHONE")
+    private String phone;
 
     public User() {
     }
 
     public User(int ID, String username, String email, String full_name, String password_hash,
-            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active) {
+            String work_mode, OffsetDateTime created_at, OffsetDateTime updated_at, boolean active, Long chat_id,
+            String phone) {
         this.ID = ID;
         this.username = username;
         this.email = email;
@@ -133,20 +139,38 @@ public class User {
         this.active = active;
     }
 
+    @JsonIgnore
     public Project getSelectedProject() {
-        return selectedProject;
+        return selected_project;
     }
 
-    public void setSelectedProject(Project selectedProject) {
-        this.selectedProject = selectedProject;
+    public void setSelectedProject(Project selected_project) {
+        this.selected_project = selected_project;
     }
 
     public Integer getSelectedProject_id() {
-        return selectedProject_id;
+        return (selected_project != null) ? selected_project.getID() : null;
     }
 
-    public void setSelectedProject_id(Integer selectedProject_id) {
-        this.selectedProject_id = selectedProject_id;
+    public void setSelectedProject_id(Integer selected_project_id) {
+        this.selected_project_id = selected_project_id;
+    }
+
+    @JsonProperty("chat_id")
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
@@ -161,7 +185,9 @@ public class User {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", active=" + active +
-                ", selectedProject=" + selectedProject +
+                ", selected_project_id=" + (selected_project != null ? selected_project.getID() : "null") +
+                ", chat_id='" + chatId + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 

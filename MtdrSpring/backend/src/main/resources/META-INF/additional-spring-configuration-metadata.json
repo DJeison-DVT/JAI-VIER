@@ -1,0 +1,19 @@
+{
+	"properties": [
+		{
+			"name": "jwt.secret",
+			"type": "java.lang.String",
+			"description": "Secret key used for signing JWT tokens."
+		},
+		{
+			"name": "jwt.expiration",
+			"type": "java.lang.Long",
+			"description": "JWT access token expiration time in milliseconds."
+		},
+		{
+			"name": "jwt.refreshExpiration",
+			"type": "java.lang.Long",
+			"description": "JWT refresh token expiration time in milliseconds."
+		}
+	]
+}

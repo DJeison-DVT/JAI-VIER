@@ -5,25 +5,21 @@ import java.util.List;
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.http.ResponseEntity;
 
-import com.springboot.MyTodoList.controller.ProjectController;
-import com.springboot.MyTodoList.controller.ProjectMemberController;
+import com.springboot.MyTodoList.controller.SprintController;
 import com.springboot.MyTodoList.controller.SubtaskController;
-import com.springboot.MyTodoList.model.Project;
-import com.springboot.MyTodoList.model.ProjectMember;
+import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Subtask;
+import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
 
 @Service
 public class SubtaskMessageModel implements MessageModel<Subtask> {
     private SubtaskController subtaskController;
-    private ProjectMemberController projectMemberController;
-    private ProjectController projectController;
+    private SprintController sprintController;
 
-    public SubtaskMessageModel(SubtaskController subtaskController, ProjectMemberController projectMemberController,
-            ProjectController projectController) {
+    public SubtaskMessageModel(SubtaskController subtaskController, SprintController sprintController) {
         this.subtaskController = subtaskController;
-        this.projectMemberController = projectMemberController;
-        this.projectController = projectController;
+        this.sprintController = sprintController;
     }
 
     @Override
@@ -39,28 +35,22 @@ public class SubtaskMessageModel implements MessageModel<Subtask> {
 
     @Override
     public String reportAll(User user) {
-        List<ProjectMember> projectMembers = projectMemberController.getProjectMembersByUserId(user.getID());
-        if (projectMembers.size() == 0) {
-            return "El usuario no tiene tareas";
-        }
-
         StringBuilder sb = new StringBuilder();
 
-        for (ProjectMember projectMember : projectMembers) {
-            int project_id = projectMember.getProject_id();
-            ResponseEntity<Project> projectEntity = projectController.getProjectById(project_id);
-            if (projectEntity.getStatusCodeValue() != 200) {
-                continue;
+        List<Sprint> sprints = sprintController.getActiveSprints(user.getSelectedProject_id());
+        if (sprints.size() == 0) {
+            return "No hay sprints activos en el proyecto";
+        }
+
+        for (Sprint sprint : sprints) {
+            for (Task task : sprint.getTasks()) {
+                sb.append(task.quickDescription());
+                sb.append("\n");
+                for (Subtask subtask : task.getSubtasks()) {
+                    sb.append(subtask.publicDescription());
+                    sb.append("\n");
+                }
             }
-            // Project project = projectEntity.getBody();
-            // for (Task task : project.getSprints()) {
-            // sb.append(task.quickDescription());
-            // sb.append("\n");
-            // for (Subtask subtask : task.getSubtasks()) {
-            // sb.append(subtask.publicDescription());
-            // sb.append("\n");
-            // }
-            // }
         }
 
         return sb.toString();

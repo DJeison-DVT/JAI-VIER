@@ -166,11 +166,12 @@ public class Sprint {
         String start = start_date != null ? start_date.format(formatter) : "N/A";
         String end = end_date != null ? end_date.format(formatter) : "N/A";
         return String.format(
-                "📦 *Sprint:* %s\n" +
-                        "📝 *Description:* %s\n" +
-                        "🕒 *Start:* %s | 🕒 *End:* %s\n" +
-                        "📊 *Status:* %s",
+                "📦 Sprint: %s | ID: %d\n" +
+                        "📝 Description: %s\n" +
+                        "🕒 Start: %s | 🕒 End: %s\n" +
+                        "📊 Status: %s",
                 name,
+                ID,
                 description != null ? description : "No description provided",
                 start,
                 end,

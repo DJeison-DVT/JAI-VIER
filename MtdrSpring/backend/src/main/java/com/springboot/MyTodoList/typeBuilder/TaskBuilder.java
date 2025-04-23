@@ -28,10 +28,10 @@ public class TaskBuilder implements TypeBuilder<Task> {
         task.setPriority(Integer.parseInt(fields.getOrDefault("priority", "1")));
         task.setStatus(Integer.parseInt(fields.getOrDefault("status", "0")));
         task.setEstimated_hours(Integer.parseInt(fields.getOrDefault("estimated_hours", "0")));
-
-        if (!fields.containsKey("project_id")) {
-            throw new IllegalArgumentException("Project ID is required");
+        if (!fields.containsKey("sprint_id")) {
+            throw new IllegalArgumentException("Sprint ID is required");
         }
+        task.setSprint_id(Integer.parseInt(fields.get("sprint_id")));
         return task;
     }
 }

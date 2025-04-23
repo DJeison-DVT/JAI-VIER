@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.springboot.MyTodoList.dto.LoginRequest;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.service.UserService;
 
@@ -36,27 +35,21 @@ public class UserController {
         }
     }
 
-    // @CrossOrigin
     @PostMapping(value = "/userlist")
-    public ResponseEntity<User> addUser(@RequestBody User user) throws Exception {
-        User us = userService.addUser(user);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("location", "" + us.getID());
-        responseHeaders.set("Access-Control-Expose-Headers", "location");
-        URI location = URI.create("" + us.getID());
-
-        return ResponseEntity.created(location)
-                .headers(responseHeaders).build();
-    }
-
-    // @CrossOrigin
-    @PostMapping(value = "/userlist/login")
-    public ResponseEntity<Boolean> checkUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
-            boolean check = userService.checkUser(loginRequest.getUsername(), loginRequest.getPassword());
-            return new ResponseEntity<>(check, HttpStatus.OK);
+            User us = userService.addUser(user);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("location", String.valueOf(us.getID()));
+            responseHeaders.set("Access-Control-Expose-Headers", "location");
+            URI location = URI.create(String.valueOf(us.getID()));
+
+            return ResponseEntity.created(location)
+                    .headers(responseHeaders).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

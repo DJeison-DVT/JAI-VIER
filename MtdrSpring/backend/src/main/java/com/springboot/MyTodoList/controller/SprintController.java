@@ -36,6 +36,16 @@ public class SprintController {
         }
     }
 
+    @GetMapping(value = "/sprintlist/{id}")
+    public ResponseEntity<Sprint> getSprintById(@PathVariable int id) {
+        try {
+            ResponseEntity<Sprint> responseEntity = sprintService.getItemById(id);
+            return new ResponseEntity<Sprint>(responseEntity.getBody(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     // @CrossOrigin
     @GetMapping(value = "/sprintlist/active")
     public List<Sprint> getActiveSprints(@RequestParam(value = "project_id") int projectId) {
