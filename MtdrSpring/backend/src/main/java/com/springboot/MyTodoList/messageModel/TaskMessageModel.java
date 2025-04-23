@@ -5,25 +5,21 @@ import java.util.List;
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.http.ResponseEntity;
 
-import com.springboot.MyTodoList.controller.ProjectController;
-import com.springboot.MyTodoList.controller.ProjectMemberController;
+import com.springboot.MyTodoList.controller.SprintController;
 import com.springboot.MyTodoList.controller.TaskController;
-import com.springboot.MyTodoList.model.Project;
-import com.springboot.MyTodoList.model.ProjectMember;
+import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
 
 @Service
 public class TaskMessageModel implements MessageModel<Task> {
     private TaskController taskController;
-    private ProjectMemberController projectMemberController;
-    private ProjectController projectController;
+    private SprintController sprintController;
 
-    public TaskMessageModel(TaskController taskController, ProjectMemberController projectMemberController,
-            ProjectController projectController) {
+    public TaskMessageModel(TaskController taskController,
+            SprintController sprintController) {
+        this.sprintController = sprintController;
         this.taskController = taskController;
-        this.projectMemberController = projectMemberController;
-        this.projectController = projectController;
     }
 
     @Override
@@ -39,24 +35,18 @@ public class TaskMessageModel implements MessageModel<Task> {
 
     @Override
     public String reportAll(User user) {
-        List<ProjectMember> projectMembers = projectMemberController.getProjectMembersByUserId(user.getID());
-        if (projectMembers.size() == 0) {
-            return "El usuario no tiene tareas";
-        }
-
         StringBuilder sb = new StringBuilder();
 
-        for (ProjectMember projectMember : projectMembers) {
-            int project_id = projectMember.getProject_id();
-            ResponseEntity<Project> projectEntity = projectController.getProjectById(project_id);
-            if (projectEntity.getStatusCodeValue() != 200) {
-                continue;
+        List<Sprint> sprints = sprintController.getActiveSprints(user.getSelectedProject_id());
+        if (sprints.size() == 0) {
+            return "No hay sprints activos en el proyecto";
+        }
+
+        for (Sprint sprint : sprints) {
+            for (Task task : sprint.getTasks()) {
+                sb.append(task.publicDescription());
+                sb.append("\n");
             }
-            // Project project = projectEntity.getBody();
-            // for (Task task : project.getTasks()) {
-            // sb.append(task.publicDescription());
-            // sb.append("\n");
-            // }
         }
 
         return sb.toString();
@@ -78,12 +68,14 @@ public class TaskMessageModel implements MessageModel<Task> {
         try {
             System.out.println(task.toString());
             ResponseEntity<Task> taskEntity = taskController.addTask(task);
+            System.out.println("Result" + taskEntity.getStatusCodeValue());
             if (taskEntity.getStatusCodeValue() == 201) {
                 return "Tarea creada";
             } else {
                 return "No se pudo crear la tarea";
             }
         } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             return "No se pudo crear la tarea";
         }
     }

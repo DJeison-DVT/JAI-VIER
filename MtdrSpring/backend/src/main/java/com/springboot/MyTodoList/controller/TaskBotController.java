@@ -24,9 +24,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.springboot.MyTodoList.messageModel.MessageModel;
 import com.springboot.MyTodoList.messageModel.MessageModelFactory;
+import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.service.SprintService;
 import com.springboot.MyTodoList.service.SubtaskService;
 import com.springboot.MyTodoList.service.TaskService;
 import com.springboot.MyTodoList.service.UserService;
@@ -45,17 +47,15 @@ public class TaskBotController extends TelegramLongPollingBot {
 	private SubtaskService subtaskService;
 	private UserService userService;
 	private String botName;
+	private SprintService sprintService;
 
 	private TaskController taskController;
 	private SubtaskController subtaskController;
-	private UserController userController;
-	private ProjectController projectController;
-	private ProjectMemberController projectMemberController;
+	private SprintController sprintController;
 
-	public TaskBotController(String botToken, String botName, TaskService taskService, SubtaskService subtaskService,
-			UserService userService, TaskController taskController, SubtaskController subtaskController,
-			UserController userController, ProjectController projectController,
-			ProjectMemberController projectMemberController) {
+	public TaskBotController(String botToken, String botName, TaskService taskService,
+			SubtaskService subtaskService, UserService userService, TaskController taskController,
+			SubtaskController subtaskController, SprintController sprintController, SprintService sprintService) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
@@ -63,12 +63,10 @@ public class TaskBotController extends TelegramLongPollingBot {
 		this.subtaskService = subtaskService;
 		this.userService = userService;
 		this.botName = botName;
-
 		this.taskController = taskController;
 		this.subtaskController = subtaskController;
-		this.userController = userController;
-		this.projectController = projectController;
-		this.projectMemberController = projectMemberController;
+		this.sprintService = sprintService;
+		this.sprintController = sprintController;
 	}
 
 	@Override
@@ -81,7 +79,9 @@ public class TaskBotController extends TelegramLongPollingBot {
 		String messageTextFromTelegram = update.getMessage().getText();
 		long chatId = update.getMessage().getChatId();
 
+		System.out.println("Getting user");
 		Optional<User> registeredUser = checkForChatId(chatId);
+		System.out.println("User: " + registeredUser.toString());
 
 		try {
 			if (!registeredUser.isPresent()) {
@@ -97,6 +97,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 		} catch (NoSuchElementException e) {
 			SendMessage messageToTelegram = new SendMessage();
 			messageToTelegram.setChatId(chatId);
+			// update message to default to main screen
 			messageToTelegram.setText(BotMessages.PHONE_NOT_REGISTERED.getMessage());
 			try {
 				execute(messageToTelegram);
@@ -108,6 +109,8 @@ public class TaskBotController extends TelegramLongPollingBot {
 		}
 
 		User user = registeredUser.get();
+		System.out.println(user.toString());
+		System.out.println("Selected project id: " + user.getSelectedProject_id());
 
 		if (messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())
 				|| messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())) {
@@ -249,7 +252,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 		} else if (messageTextFromTelegram.equals(BotCommands.TASK_LIST.getCommand())
 				|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_TASKS.getLabel())) {
 
-			List<Task> allItems = getAllTasks();
+			List<Sprint> sprints = getActiveTasks(user.getSelectedProject_id());
 			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 			List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -264,36 +267,47 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 			StringBuilder sb = new StringBuilder();
 
-			List<Task> activeItems = allItems.stream()
-					.filter(item -> item.getStatus() == 0 || item.getStatus() == 1 || item.getStatus() == 2)
-					.collect(Collectors.toList());
-
-			if (activeItems.size() > 0) {
-				sb.append("Active Tasks: \n");
-			}
-			for (Task item : activeItems) {
-				KeyboardRow currentRow = new KeyboardRow();
-				currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
-				currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.LIST_ALL_SUBTASKS.getLabel());
-				keyboard.add(currentRow);
-				sb.append(item.quickDescription() + "\n");
+			if (sprints.isEmpty()) {
+				sb.append("🚧 No active sprints found for your selected project.\n");
 			}
 
-			List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == 3)
-					.collect(Collectors.toList());
+			System.out.println("Active sprints: " + sprints.toString());
 
-			if (doneItems.size() > 0) {
-				sb.append("Done Tasks: \n");
-			}
-			for (Task item : doneItems) {
-				KeyboardRow currentRow = new KeyboardRow();
-				currentRow.add(item.getTitle());
-				currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
-				currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
-				keyboard.add(currentRow);
-				sb.append(item.quickDescription() + "\n");
-			}
+			for (Sprint sprint : sprints) {
+				List<Task> allItems = sprint.getTasks();
+				sb.append(sprint.description() + "\n");
 
+				List<Task> activeItems = allItems.stream()
+						.filter(item -> item.getStatus() == 0 || item.getStatus() == 1 || item.getStatus() == 2)
+						.collect(Collectors.toList());
+
+				if (activeItems.size() > 0) {
+					sb.append("Active Tasks: \n");
+				}
+				for (Task item : activeItems) {
+					KeyboardRow currentRow = new KeyboardRow();
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.LIST_ALL_SUBTASKS.getLabel());
+					keyboard.add(currentRow);
+					sb.append(item.quickDescription() + "\n");
+				}
+
+				List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == 3)
+						.collect(Collectors.toList());
+
+				if (doneItems.size() > 0) {
+					sb.append("Done Tasks: \n");
+				}
+				for (Task item : doneItems) {
+					KeyboardRow currentRow = new KeyboardRow();
+					currentRow.add(item.getTitle());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
+					keyboard.add(currentRow);
+					sb.append(item.quickDescription() + "\n");
+				}
+
+			}
 			// command back to main screen
 			KeyboardRow mainScreenRowBottom = new KeyboardRow();
 			mainScreenRowBottom.add(BotLabels.MENU_SCREEN.getLabel());
@@ -303,7 +317,11 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 			SendMessage messageToTelegram = new SendMessage();
 			messageToTelegram.setChatId(chatId);
-			messageToTelegram.setText(sb.toString());
+			String text = sb.toString().trim();
+			if (text.isEmpty()) {
+				text = "No hay tareas activas ni finalizadas registradas en tu(s) sprint(s).";
+			}
+			messageToTelegram.setText(text);
 			messageToTelegram.setReplyMarkup(keyboardMarkup);
 
 			try {
@@ -396,9 +414,8 @@ public class TaskBotController extends TelegramLongPollingBot {
 				System.out.println("Type: " + type);
 				System.out.println("Parameters: " + parameters);
 
-				MessageModelFactory messageModelFactory = new MessageModelFactory(taskController,
-						projectMemberController,
-						projectController, subtaskController, userController);
+				MessageModelFactory messageModelFactory = new MessageModelFactory(taskController, subtaskController,
+						sprintController);
 				MessageModel<?> messageModel = messageModelFactory.getMessageModel(type);
 				TypeBuilder<?> typeBuilder = TypeBuilderFactory.getBuilder(type);
 
@@ -502,14 +519,15 @@ public class TaskBotController extends TelegramLongPollingBot {
 		}
 	}
 
-	private Optional<User> checkForChatId(long chatId) {
+	public Optional<User> checkForChatId(long chatId) {
+		System.out.println("Checking for chatId: " + chatId);
 		ResponseEntity<User> existingUser = userService.getUserByChatId(chatId);
+		System.out.println("Existing user: " + existingUser.toString());
 		return existingUser.getBody() != null ? Optional.of(existingUser.getBody()) : Optional.empty();
 	}
 
-	// GET /tasklist
-	public List<Task> getAllTasks() {
-		return taskService.findAll();
+	public List<Sprint> getActiveTasks(int project_id) {
+		return sprintService.findActiveSprintsByProjectId(project_id);
 	}
 
 	// GET BY ID /tasklist/{id}

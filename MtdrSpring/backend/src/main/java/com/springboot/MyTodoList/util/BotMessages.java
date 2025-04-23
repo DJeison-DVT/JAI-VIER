@@ -7,7 +7,7 @@ public enum BotMessages {
 			"👋 Hello! I'm JAI-VIERbot! 🤖\n\n"
 					+ "You can create a Task or Subtask using the `/create` command:\n\n"
 					+ "📌 Create a Task: \n"
-					+ "/create task --name=\"Undo project documentation\" --description=\"Document all API endpoints and database schema\" --due_date=\"2025-03-20\" --priority=\"2\" --status=\"0\" --estimated_hours=\"5\" --project_id=\"1\" \n"
+					+ "/create task --name=\"Undo project documentation\" --description=\"Document all API endpoints and database schema\" --due_date=\"2025-03-20\" --estimated_hours=\"5\" --sprint_id=\"1\" \n"
 					+ "🚀 Press the send button (blue arrow) once you type your task or select an option below!"),
 	BOT_REGISTERED_STARTED("Bot registered and started succesfully!"),
 	REPORT_INSTRUCTIONS(
@@ -22,7 +22,7 @@ public enum BotMessages {
 					+ "`--priority=0-3` (higher is more important)\n"
 					+ "`--status=0-3` (0: In Progress, 3: Done)\n"
 					+ "`--estimated_hours=hours` (optional)\n"
-					+ "`--project_id=project_id`\n\n"
+					+ "`--sprint_id=sprint_id`\n\n"
 					+ "📎 Update a Subtask: \n"
 					+ "`/update subtask --id=subtask_id --name=\"Subtask name\" --description=\"Subtask description\"`\n"
 					+ "`--status=0-3` (0: In Progress, 3: Done)\n"

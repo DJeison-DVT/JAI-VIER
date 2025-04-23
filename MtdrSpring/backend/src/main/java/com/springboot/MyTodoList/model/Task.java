@@ -180,7 +180,7 @@ public class Task {
                 ", status=" + status +
                 ", estimated_hours=" + estimated_hours +
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
-                ", comments=" + (comments != null ? comments.toString() : "[]") +
+                // ", comments=" + (comments != null ? comments.toString() : "[]") +
                 ", project_id=" + sprint_id +
                 '}';
     }

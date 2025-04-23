@@ -131,7 +131,7 @@ public class Project {
                 ", status=" + status +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
-                ", sprints=" + sprints +
+                ", sprints=" + (sprints != null ? sprints : "null") +
                 '}';
     }
 

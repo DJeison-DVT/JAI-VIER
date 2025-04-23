@@ -11,12 +11,11 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import com.springboot.MyTodoList.controller.ProjectController;
-import com.springboot.MyTodoList.controller.ProjectMemberController;
+import com.springboot.MyTodoList.controller.SprintController;
 import com.springboot.MyTodoList.controller.SubtaskController;
 import com.springboot.MyTodoList.controller.TaskBotController;
 import com.springboot.MyTodoList.controller.TaskController;
-import com.springboot.MyTodoList.controller.UserController;
+import com.springboot.MyTodoList.service.SprintService;
 import com.springboot.MyTodoList.service.SubtaskService;
 import com.springboot.MyTodoList.service.TaskService;
 import com.springboot.MyTodoList.service.UserService;
@@ -38,14 +37,15 @@ public class MyTodoListApplication implements CommandLineRunner {
 
 	@Autowired
 	private TaskController taskController;
+	
 	@Autowired
 	private SubtaskController subtaskController;
+	
 	@Autowired
-	private UserController userController;
+	private SprintService sprintService;
+	
 	@Autowired
-	private ProjectController projectController;
-	@Autowired
-	private ProjectMemberController projectMemberController;
+	private SprintController sprintController;
 
 	@Value("${telegram.bot.token}")
 	private String telegramBotToken;
@@ -63,8 +63,7 @@ public class MyTodoListApplication implements CommandLineRunner {
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 			telegramBotsApi.registerBot(
 					new TaskBotController(telegramBotToken, botName, taskService, subtaskService, userService,
-							taskController, subtaskController, userController, projectController,
-							projectMemberController));
+							taskController, subtaskController, sprintController, sprintService));
 			logger.info(BotMessages.BOT_REGISTERED_STARTED.getMessage());
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

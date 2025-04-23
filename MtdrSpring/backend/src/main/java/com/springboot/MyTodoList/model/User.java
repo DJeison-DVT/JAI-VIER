@@ -147,7 +147,7 @@ public class User {
     }
 
     public Integer getSelectedProject_id() {
-        return selected_project_id;
+        return (selected_project != null) ? selected_project.getID() : null;
     }
 
     public void setSelectedProject_id(Integer selected_project_id) {
@@ -183,7 +183,7 @@ public class User {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 ", active=" + active +
-                ", selected_project=" + selected_project +
+                ", selected_project_id=" + (selected_project != null ? selected_project.getID() : "null") +
                 ", chat_id='" + chatId + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';

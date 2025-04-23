@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
 
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.Sprint;
@@ -38,6 +40,19 @@ public class SprintService {
             }
         }
         return sprints;
+    }
+
+    public ResponseEntity<Sprint> getItemById(int id) {
+        Optional<Sprint> sprintData = sprintRepository.findById(id);
+        if (sprintData.isPresent()) {
+            Sprint sprint = sprintData.get();
+            if (sprint.getProject() != null) {
+                sprint.setProject_id(sprint.getProject().getID());
+            }
+            return new ResponseEntity<>(sprint, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     public List<Sprint> findActiveSprintsByProjectId(int projectId) {

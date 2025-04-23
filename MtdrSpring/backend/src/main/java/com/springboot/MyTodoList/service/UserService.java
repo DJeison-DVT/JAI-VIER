@@ -90,7 +90,9 @@ public class UserService {
         if (chat_id == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        System.out.println("Fetching user by chat_id: " + chat_id);
         Optional<User> userData = userRepository.findByChatId(chat_id);
+        System.out.println("User data: " + userData);
         if (userData.isPresent()) {
             return new ResponseEntity<>(userData.get(), HttpStatus.OK);
         } else {
