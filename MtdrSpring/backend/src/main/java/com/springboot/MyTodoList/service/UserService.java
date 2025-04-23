@@ -108,6 +108,27 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ResponseEntity<User> getUserByUsername(String username) {
+        Optional<User> userData = userRepository.findByUsername(username);
+        if (userData.isPresent()) {
+            return new ResponseEntity<>(userData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Void> generateLogin(String username) {
+        Optional<User> userData = userRepository.findByUsername(username);
+        if (userData.isPresent()) {
+            User existingUser = userData.get();
+            existingUser.setLast_login(OffsetDateTime.now());
+            userRepository.save(existingUser);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public User addUser(User user) {
         if (userExists(user.getUsername(), user.getEmail(), user.getPhone(), user.getChatId())) {
             throw new IllegalArgumentException("User with the same username, email, phone or chat_id already exists.");

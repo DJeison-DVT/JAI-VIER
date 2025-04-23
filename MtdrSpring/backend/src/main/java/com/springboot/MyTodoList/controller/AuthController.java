@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.MyTodoList.dto.LoginRequest;
 import com.springboot.MyTodoList.dto.LoginResponse;
+import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.security.JwtService;
 import com.springboot.MyTodoList.service.UserService;
 
@@ -39,6 +40,7 @@ public class AuthController {
         // Generate JWT tokens
         String accessToken = jwtService.generateToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
+        userService.generateLogin(userDetails.getUsername());
 
         return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken));
     }
@@ -55,6 +57,8 @@ public class AuthController {
             }
 
             String newAccessToken = jwtService.generateToken(userDetails);
+            userService.generateLogin(username);
+
             return ResponseEntity.ok(new LoginResponse(newAccessToken, refreshToken));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -72,6 +76,28 @@ public class AuthController {
             UserDetails user = userService.loadUserByUsername(username);
             if (jwtService.isTokenValid(token, user)) {
                 return ResponseEntity.ok().build();
+            }
+        } catch (Exception ignored) {
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String token = authHeader.substring(7);
+        try {
+            String username = jwtService.extractUsername(token);
+            User user = userService.getUserByUsername(username).getBody();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            UserDetails userDetails = userService.loadUserByUsername(username);
+
+            if (jwtService.isTokenValid(token, userDetails)) {
+                return ResponseEntity.ok(user);
             }
         } catch (Exception ignored) {
         }

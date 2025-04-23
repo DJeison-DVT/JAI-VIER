@@ -411,7 +411,6 @@
 							"path": [
 								"projectlist",
 								"41"
-
 							]
 						}
 					},
@@ -505,7 +504,6 @@
 						},
 						"url": {
 							"raw": "http://localhost:8081/userlist/41",
-
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -809,13 +807,55 @@
 					"response": []
 				},
 				{
+					"name": "User Info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"djeison\",\r\n    \"password\": \"Hello123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/auth/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Refresh",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"refreshToken\": \"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJkamVpc29uIiwiaWF0IjoxNzQ1NDM5ODg5LCJleHAiOjE3NDYwNDQ2ODl9._MFF3ZTT62cQzO0COSSlS78XAkNZr5FA9taa3GpiLO0IhD0wgfO5t5An3IKAvroo\",\r\n}",
+							"raw": "{\r\n        \"refreshToken\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
