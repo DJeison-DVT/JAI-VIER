@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/tasklist/42",
+							"raw": "http://localhost:8081/tasklist/23",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -23,7 +23,7 @@
 							"port": "8081",
 							"path": [
 								"tasklist",
-								"42"
+								"23"
 							]
 						}
 					},
@@ -56,7 +56,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Upload Models\",\r\n  \"description\": \"\",\r\n  \"due_date\": \"2024-04-14T15:00:00Z\",\r\n  \"priority\": 3,\r\n  \"status\": 1,\r\n  \"estimated_hours\": 8,\r\n  \"project_id\": 1\r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"Upload Models\",\r\n  \"description\": \"\",\r\n  \"due_date\": \"2024-04-14T15:00:00Z\",\r\n  \"priority\": 3,\r\n  \"status\": 1,\r\n  \"estimated_hours\": 8,\r\n  \"sprint_id\": 21\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -325,7 +325,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/projectlist/1",
+							"raw": "http://localhost:8081/projectlist/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -333,7 +333,7 @@
 							"port": "8081",
 							"path": [
 								"projectlist",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -365,7 +365,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Do Homework\",\r\n  \"description\": \"You know it, maths sucks\",\r\n  \"start_date\": \"2024-03-11T12:00:00Z\",\r\n  \"end_date\": \"2024-03-14T15:00:00Z\",\r\n  \"status\": 1\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"Chatbot Creation trial\",\r\n  \"description\": \"just checking out funcitonality\",\r\n  \"start_date\": \"2024-03-11T12:00:00Z\",\r\n  \"end_date\": \"2024-03-14T15:00:00Z\",\r\n  \"status\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -394,7 +394,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Destroy Chatbot\",\r\n  \"description\": \"Create slides for the upcoming meeting\",\r\n  \"start_date\": \"2024-03-10T12:00:00Z\",\r\n  \"end_date\": \"2024-03-18T15:00:00Z\",\r\n  \"status\": 1,\r\n  \"created_at\": \"2024-03-11T12:00:00Z\",\r\n  \"updated_at\": \"2024-03-11T12:00:00Z\"\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"Chatbot Creation trial\",\r\n  \"description\": \"just checking out funcitonality\",\r\n  \"start_date\": \"2024-03-11T12:00:00Z\",\r\n  \"end_date\": \"2024-03-14T15:00:00Z\",\r\n  \"status\": 2\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -402,7 +402,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/projectlist/1",
+							"raw": "http://localhost:8081/projectlist/41",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -410,7 +410,7 @@
 							"port": "8081",
 							"path": [
 								"projectlist",
-								"1"
+								"41"
 							]
 						}
 					},
@@ -446,7 +446,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/userlist/1",
+							"raw": "http://localhost:8081/userlist/41",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -454,7 +454,7 @@
 							"port": "8081",
 							"path": [
 								"userlist",
-								"1"
+								"41"
 							]
 						}
 					},
@@ -467,7 +467,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"DJeison-DVT\",\r\n    \"email\": \"diegovt.arbt@gmail.com\",\r\n    \"full_name\": \"Diego Villanueva Terrazas\",\r\n    \"password_hash\": \"Hello123\",\r\n    \"work_mode\": \"REMOTE\"\r\n}",
+							"raw": "{\r\n    \"username\": \"Alfredo-Fonseca2\",\r\n    \"email\": \"alfredo2@gmail.com\",\r\n    \"full_name\": \"Alfredo Fonseca\",\r\n    \"password_hash\": \"Hello123\",\r\n    \"work_mode\": \"REMOTE\",\r\n    \"phone\": \"6145542249\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,7 +495,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"DJeison-DVT\",\r\n    \"email\": \"diegovt.arbt@gmail.com\",\r\n    \"full_name\": \"Diego Villanueva Terrazas\",\r\n    \"role\": \"MANAGER\",\r\n    \"work_mode\": \"REMOTE\"\r\n}",
+							"raw": "{\r\n    \"username\": \"Alfredo-Fonseca\",\r\n    \"email\": \"alfredo@gmail.com\",\r\n    \"full_name\": \"Alfredo Fonseca\",\r\n    \"work_mode\": \"REMOTE\",\r\n    \"phone\": \"+526145542247\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -503,7 +503,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/userlist/1",
+							"raw": "http://localhost:8081/userlist/41",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -511,7 +511,7 @@
 							"port": "8081",
 							"path": [
 								"userlist",
-								"1"
+								"41"
 							]
 						}
 					},
@@ -548,7 +548,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\r\n        \"id\": {\r\n            \"projectId\": 21,\r\n            \"userId\": 1\r\n        },\r\n        \"project_id\": 21,\r\n        \"user_id\": 1\r\n    }",
+							"raw": "    {\r\n        \"id\": {\r\n            \"projectId\": 41,\r\n            \"userId\": 41\r\n        },\r\n        \"project_id\": 41,\r\n        \"user_id\": 41\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -695,7 +695,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"start_date\": \"2025-04-02T00:00:00-06:00\",\r\n    \"end_date\": \"2025-04-10T23:59:59-06:00\",\r\n    \"status\": 2\r\n}",
+							"raw": "    {\r\n        \"name\": \"Sprint 0: Planning\",\r\n        \"description\": \"Determining key functionality\",\r\n        \"start_date\": \"2025-03-28T00:00:00-06:00\",\r\n        \"end_date\": \"2025-04-10T23:59:59-06:00\",\r\n        \"status\": 0,\r\n        \"project_id\": 41\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -703,7 +703,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/sprintlist/1",
+							"raw": "http://localhost:8081/sprintlist/21",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -711,7 +711,7 @@
 							"port": "8081",
 							"path": [
 								"sprintlist",
-								"1"
+								"21"
 							]
 						}
 					},
@@ -767,6 +767,69 @@
 									"key": "project_id",
 									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"djeison\",\r\n    \"password\": \"Hello123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"refreshToken\": \"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJkamVpc29uIiwiaWF0IjoxNzQ1NDM5ODg5LCJleHAiOjE3NDYwNDQ2ODl9._MFF3ZTT62cQzO0COSSlS78XAkNZr5FA9taa3GpiLO0IhD0wgfO5t5An3IKAvroo\",\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"auth",
+								"refresh"
 							]
 						}
 					},

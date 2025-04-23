@@ -1,6 +1,7 @@
 package com.springboot.MyTodoList.service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -8,22 +9,29 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.MyTodoList.model.Project;
+import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectMemberService projectMemberService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -59,7 +67,7 @@ public class UserService {
         return passwordEncoder.encode(password);
     }
 
-    private boolean checkPassword(String rawPassword, String hashedPassword) {
+    public boolean checkPassword(String rawPassword, String hashedPassword) {
         return passwordEncoder.matches(rawPassword, hashedPassword);
     }
 
@@ -111,19 +119,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public boolean checkUser(String username, String password) {
-        Optional<User> userData = userRepository.findByUsername(username);
-        if (userData.isPresent()) {
-            User existing_user = userData.get();
-            if (!existing_user.isActive()) {
-                return false;
-            }
-            existing_user.setLast_login(OffsetDateTime.now());
-            userRepository.save(existing_user);
-            return checkPassword(password, existing_user.getPassword_hash());
-        } else {
-            return false;
-        }
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+        User u = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user: " + username));
+
+        List<GrantedAuthority> auths = new ArrayList<>();
+        List<ProjectMember> projectMemberships = projectMemberService.getProjectMembersByUserId(u.getID());
+        // extract roles from project memberships
+
+        return org.springframework.security.core.userdetails.User.withUsername(u.getUsername())
+                .password(u.getPassword_hash())
+                .authorities(auths)
+                .credentialsExpired(false).disabled(!u.isActive()).build();
+
     }
 
     public boolean deleteUser(int id) {
