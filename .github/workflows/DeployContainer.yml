@@ -1,72 +1,72 @@
 name: Build and Publish Docker Image
 
 on:
-    push:
-        branches: ["main"]
-    pull_request:
-        branches: ["main"]
-    # Permite ejecutar este workflow manualmente desde la pestaña Actions
-    workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # Permite ejecutar este workflow manualmente desde la pestaña Actions
+  workflow_dispatch:
 
 env:
-    # Usa docker.io para DockerHub
-    REGISTRY: docker.io
-    # Tu usuario/organización de DockerHub
-    IMAGE_NAME: ${{ github.repository_owner }}/jai-vier-backend
-
+  # Usa docker.io para DockerHub
+  REGISTRY: docker.io
+  # Tu usuario/organización de DockerHub
+  IMAGE_NAME: ${{ github.repository_owner }}/jai-vier-backend
+  
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-            - name: Set up JDK 11
-              uses: actions/setup-java@v3
-              with:
-                  java-version: "11"
-                  distribution: "temurin"
-                  cache: maven
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
 
-            - name: Build with Maven
-              run: |
-                  cd MtdrSpring/backend
-                  mvn clean package -DskipTests
+      - name: Build with Maven
+        run: |
+          cd MtdrSpring/backend
+          mvn clean package -DskipTests
 
-            # Inicio de sesión en DockerHub
-            - name: Login to DockerHub
-              uses: docker/login-action@v2
-              with:
-                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Inicio de sesión en DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            # Configura buildx para construcciones multi-plataforma
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v2
+      # Configura buildx para construcciones multi-plataforma
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-            # Extraer metadatos para las etiquetas de Docker
-            - name: Extract Docker metadata
-              id: meta
-              uses: docker/metadata-action@v4
-              with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                  tags: |
-                      type=semver,pattern={{version}}
-                      type=semver,pattern={{major}}.{{minor}}
-                      type=sha,format=short
-                      type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-
-            # Construir y publicar la imagen Docker
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v4
-              with:
-                  context: ./MtdrSpring/backend
-                  push: ${{ github.event_name != 'pull_request' }}
-                  tags: ${{ steps.meta.outputs.tags }}
-                  labels: ${{ steps.meta.outputs.labels }}
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
+      # Extraer metadatos para las etiquetas de Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=short
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+      
+      # Construir y publicar la imagen Docker
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./MtdrSpring/backend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
