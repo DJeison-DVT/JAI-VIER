@@ -1,9 +1,9 @@
 spring:
     datasource:
         driver_class_name: oracle.jdbc.OracleDriver
-        password: PeterSong123
-        url: jdbc:oracle:thin:@petertestdb_medium?TNS_ADMIN=/Users/psong/Downloads/Wallet_petertestDB
-        username: TODOUSER
+        password: ${BD_PASSWORD}
+        url: ${BD_URL}
+        username: ${BD_USER}
     jpa:
         database: ORACLE
         database-platform: org.hibernate.dialect.Oracle12cDialect
@@ -18,3 +18,7 @@ jwt:
     secret: ${JWT_SECRET:default_development_secret}
     expiration: ${JWT_EXPIRATION:3600000}
     refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800000}
+telegram:
+    bot:
+        token: ${TELEGRAM_BOT_TOKEN}
+        name: ${TELEGRAM_BOT_NAME}

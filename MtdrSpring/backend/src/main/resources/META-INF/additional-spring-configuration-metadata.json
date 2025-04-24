@@ -14,6 +14,16 @@
 			"name": "jwt.refreshExpiration",
 			"type": "java.lang.Long",
 			"description": "JWT refresh token expiration time in milliseconds."
+		},
+		{
+			"name": "telegram.bot.token",
+			"type": "java.lang.String",
+			"description": "Telegram bot token."
+		},
+		{
+			"name": "telegram.bot.name",
+			"type": "java.lang.String",
+			"description": "Telegram bot name."
 		}
 	]
 }
