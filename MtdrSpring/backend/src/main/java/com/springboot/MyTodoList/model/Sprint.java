@@ -178,6 +178,21 @@ public class Sprint {
                 statusText());
     }
 
+    public String kpiStatus() {
+        StringBuilder sb = new StringBuilder();
+
+        int totalTasks = tasks.size();
+        long completedTasks = tasks.stream().filter(task -> task.getStatus() == 3).count();
+        long otherTasks = totalTasks - completedTasks;
+
+        sb.append("📊 Sprint KPI Status:\n")
+                .append("Total Tasks: ").append(totalTasks).append("\n")
+                .append("Tasks Status: ").append(completedTasks).append(" Completed, ")
+                .append(otherTasks).append(" In Progress\n");
+
+        return sb.toString();
+    }
+
     private String statusText() {
         switch (status) {
             case 0:

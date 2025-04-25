@@ -134,11 +134,23 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 			SendMessage messageToTelegram = new SendMessage();
 			messageToTelegram.setChatId(chatId);
-			messageToTelegram.setText(BotMessages.BOT_WELCOME.getMessage());
+
+			List<Sprint> sprints = getActiveTasks(user.getSelectedProject_id());
+			if (sprints.size() == 0) {
+				messageToTelegram.setText(BotMessages.BOT_WELCOME.getMessage() + "\n\n" +
+						"🚧 No active sprints found for your selected project.\n");
+			} else {
+				StringBuilder sb = new StringBuilder();
+				for (Sprint sprint : sprints) {
+					sb.append(sprint.description() + "\n");
+					sb.append(sprint.kpiStatus());
+				}
+				messageToTelegram.setText(BotMessages.BOT_WELCOME.getMessage() + "\n\n" +
+						sb.toString());
+			}
 
 			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
 			List<KeyboardRow> keyboard = new ArrayList<>();
-
 			// first row
 			KeyboardRow row = new KeyboardRow();
 			row.add(BotLabels.LIST_ALL_TASKS.getLabel());
@@ -296,6 +308,15 @@ public class TaskBotController extends TelegramLongPollingBot {
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
 					keyboard.add(currentRow);
 					sb.append(item.quickDescription() + "\n");
+
+					List<Asignee> asignees = asigneeService.getAsigneesByTaskId(item.getID());
+					if (asignees.size() > 0) {
+						sb.append("👥 Asignees: \n");
+						for (Asignee asignee : asignees) {
+							User assignedUser = userService.getItemById(asignee.getId().getUserId()).getBody();
+							sb.append("- " + assignedUser.getUsername() + "\n");
+						}
+					}
 				}
 
 				List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == 3)
