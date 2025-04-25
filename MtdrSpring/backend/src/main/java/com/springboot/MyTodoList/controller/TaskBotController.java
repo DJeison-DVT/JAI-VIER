@@ -484,6 +484,52 @@ public class TaskBotController extends TelegramLongPollingBot {
 				logger.error(e.getLocalizedMessage(), e);
 			}
 
+		} else if (messageTextFromTelegram.indexOf(BotCommands.ASIGNED_TASK_LIST.getCommand()) != -1) {
+			List<Sprint> sprints = getActiveTasks(user.getSelectedProject_id());
+			List<Integer> sprint_ids = sprints.stream().map(Sprint::getID).collect(Collectors.toList());
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("Asigned tasks: \n");
+
+			List<Asignee> asignees = asigneeService.getAsigneesByUserId(user.getID());
+			boolean found = false;
+
+			for (Asignee asignee : asignees) {
+				Task task = taskService.getItemById(asignee.getId().getTaskId()).getBody();
+				System.out.println("Task sprint: " + task.getSprint().toString());
+				if (task != null && task.getStatus() != 3 && sprint_ids.contains(task.getSprint().getID())) {
+					sb.append(task.quickDescription() + "\n");
+					found = true;
+				}
+			}
+
+			if (!found) {
+				// no tasks matched → clear and show the fallback message
+				sb.setLength(0);
+				sb.append("No assigned tasks available");
+			}
+
+			// list asignees on the menu and show command to add asignee
+			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+			List<KeyboardRow> keyboard = new ArrayList<>();
+			KeyboardRow mainScreenRowTop = new KeyboardRow();
+			mainScreenRowTop.add(BotLabels.MENU_SCREEN.getLabel());
+			keyboard.add(mainScreenRowTop);
+			KeyboardRow firstRow = new KeyboardRow();
+			firstRow.add(BotLabels.ADD_NEW_TASK.getLabel());
+			keyboard.add(firstRow);
+			keyboardMarkup.setKeyboard(keyboard);
+
+			SendMessage messageToTelegram = new SendMessage();
+			messageToTelegram.setChatId(chatId);
+			messageToTelegram.setReplyMarkup(keyboardMarkup);
+			messageToTelegram.setText(sb.toString());
+
+			try {
+				execute(messageToTelegram);
+			} catch (TelegramApiException e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
 		} else {
 			try {
 				// use command parser

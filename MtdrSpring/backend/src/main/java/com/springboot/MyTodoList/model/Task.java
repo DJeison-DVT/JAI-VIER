@@ -181,16 +181,14 @@ public class Task {
                 ", estimated_hours=" + estimated_hours +
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
                 // ", comments=" + (comments != null ? comments.toString() : "[]") +
-                ", project_id=" + sprint_id +
+                ", sprint_id=" + sprint_id +
                 '}';
     }
 
     public String publicDescription() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return String.format(
-                "📝 %s, 🆔 ID: %d\n" +
-                        "   📝 Description: %s\n" +
-                        "   📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
+                "📝 %s, 🆔 ID: %d | 📝 Description: %s | 📌 Due: %s | ⚡ Priority: %s | 🔄 Status: %s\n",
                 title, ID, description, due_date.format(formatter), priorityText(), statusText());
     }
 
