@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
@@ -45,7 +46,7 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken));
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refresh(@RequestBody String refreshToken) {
         try {
@@ -65,6 +66,7 @@ public class AuthController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/validate")
     public ResponseEntity<Void> validateToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

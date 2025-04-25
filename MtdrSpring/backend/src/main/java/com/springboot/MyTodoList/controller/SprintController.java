@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.service.SprintService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ public class SprintController {
     @Autowired
     private SprintService sprintService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/sprintlist")
     public List<Sprint> getAllSprints(@RequestParam(value = "project_id", required = false) Integer projectId) {
         if (projectId != null) {
@@ -36,6 +37,7 @@ public class SprintController {
         }
     }
 
+    @CrossOrigin
     @GetMapping(value = "/sprintlist/{id}")
     public ResponseEntity<Sprint> getSprintById(@PathVariable int id) {
         try {
@@ -46,13 +48,13 @@ public class SprintController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/sprintlist/active")
     public List<Sprint> getActiveSprints(@RequestParam(value = "project_id") int projectId) {
         return sprintService.findActiveSprintsByProjectId(projectId);
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/sprintlist")
     public ResponseEntity<Sprint> addSprint(@RequestBody Sprint sprint) throws Exception {
         System.out.println("Received sprint: " + sprint.toString());
@@ -67,7 +69,7 @@ public class SprintController {
 
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "sprintlist/{id}")
     public ResponseEntity<Sprint> updateSprint(@RequestBody Sprint sprint, @PathVariable int id) {
         try {
@@ -79,7 +81,7 @@ public class SprintController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "sprintlist/{id}")
     public ResponseEntity<Boolean> deleteSprint(@PathVariable("id") int id) {
         Boolean flag = false;

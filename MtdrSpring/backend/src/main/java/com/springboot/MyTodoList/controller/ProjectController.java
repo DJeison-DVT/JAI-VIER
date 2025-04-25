@@ -17,13 +17,13 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectlist")
     public List<Project> getAllProjects() {
         return projectService.findAll();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectlist/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable int id) {
         try {
@@ -34,7 +34,7 @@ public class ProjectController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/projectlist")
     public ResponseEntity<Project> addProject(@RequestBody Project project) throws Exception {
         Project pr = projectService.addProject(project);
@@ -47,7 +47,7 @@ public class ProjectController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "projectlist/{id}")
     public ResponseEntity<Project> updateProject(@RequestBody Project project, @PathVariable int id) {
         try {
@@ -59,7 +59,7 @@ public class ProjectController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/projectlist/{id}")
     public ResponseEntity<Boolean> deleteProject(@PathVariable("id") int id) {
         try {

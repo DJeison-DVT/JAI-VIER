@@ -18,7 +18,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/commentlist/{id}")
     public ResponseEntity<Comment> getCommentById(@PathVariable int id) {
         try {
@@ -29,7 +29,7 @@ public class CommentController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/commentlist/task/{taskId}")
     public ResponseEntity<List<Comment>> getCommentsByTaskId(@PathVariable int taskId) {
         try {
@@ -40,7 +40,7 @@ public class CommentController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/commentlist")
     public ResponseEntity<Comment> addComment(@RequestBody Comment comment) throws Exception {
         Comment c = commentService.addComment(comment);
@@ -53,7 +53,7 @@ public class CommentController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "commentlist/{id}")
     public ResponseEntity<Comment> updateComment(@RequestBody Comment comment, @PathVariable int id) {
         try {
@@ -65,7 +65,7 @@ public class CommentController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/commentlist/{id}")
     public ResponseEntity<Boolean> deleteComment(@PathVariable("id") int id) {
         try {

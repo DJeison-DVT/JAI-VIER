@@ -18,13 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/userlist")
     public List<User> getAllUsers() {
         return userService.findAll();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/userlist/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
@@ -35,6 +35,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/userlist")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
@@ -53,7 +54,7 @@ public class UserController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "userlist/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable int id) {
         try {
@@ -65,7 +66,7 @@ public class UserController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/userlist/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable int id) {
         try {

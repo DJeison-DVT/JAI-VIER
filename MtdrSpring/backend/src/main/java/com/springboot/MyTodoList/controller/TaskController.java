@@ -16,13 +16,13 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/tasklist")
     public List<Task> getAllTasks() {
         return taskService.findAll();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/tasklist/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable int id) {
         try {
@@ -33,7 +33,7 @@ public class TaskController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/tasklist")
     public ResponseEntity<Task> addTask(@RequestBody Task task) throws Exception {
         System.out.println("Received task: " + task.toString());
@@ -47,7 +47,7 @@ public class TaskController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "tasklist/{id}")
     public ResponseEntity<Task> updateTask(@RequestBody Task task, @PathVariable int id) {
         try {
@@ -59,7 +59,7 @@ public class TaskController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "tasklist/{id}")
     public ResponseEntity<Boolean> deleteTask(@PathVariable("id") int id) {
         Boolean flag = false;

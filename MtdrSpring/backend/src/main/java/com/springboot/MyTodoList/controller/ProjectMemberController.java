@@ -17,25 +17,25 @@ public class ProjectMemberController {
     @Autowired
     private ProjectMemberService projectMemberService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectmember")
     public List<ProjectMember> getAllProjectMembers() {
         return projectMemberService.findAll();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectmember/project/{projectId}")
     public List<ProjectMember> getProjectMembersByProjectId(@PathVariable int projectId) {
         return projectMemberService.getProjectMembersByProjectId(projectId);
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectmember/user/{userId}")
     public List<ProjectMember> getProjectMembersByUserId(@PathVariable int userId) {
         return projectMemberService.getProjectMembersByUserId(userId);
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/projectmember/{projectId}/{userId}")
     public ResponseEntity<ProjectMember> getProjectMemberById(@PathVariable int projectId, @PathVariable int userId) {
         try {
@@ -46,7 +46,7 @@ public class ProjectMemberController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/projectmember")
     public ResponseEntity<ProjectMember> addProjectMember(@RequestBody ProjectMember projectMember) throws Exception {
         ProjectMember pr = projectMemberService.addProjectMember(projectMember);
@@ -59,7 +59,7 @@ public class ProjectMemberController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/projectmember/{projectId}/{userId}")
     public ResponseEntity<ProjectMember> deleteProjectMember(@PathVariable int projectId, @PathVariable int userId) {
         try {

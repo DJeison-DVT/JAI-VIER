@@ -17,25 +17,25 @@ public class AsigneeController {
     @Autowired
     private AsigneeService asigneeService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/asignee")
     public List<Asignee> getAllAsignees() {
         return asigneeService.findAll();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/asignee/task/{taskId}")
     public List<Asignee> getAsigneesByTaskId(@PathVariable int taskId) {
         return asigneeService.getAsigneesByTaskId(taskId);
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/asignee/user/{userId}")
     public List<Asignee> getAsigneesByUserId(@PathVariable int userId) {
         return asigneeService.getAsigneesByUserId(userId);
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/asignee/{taskId}/{userId}")
     public ResponseEntity<Asignee> getAsigneeById(@PathVariable int taskId, @PathVariable int userId) {
         try {
@@ -46,7 +46,7 @@ public class AsigneeController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/asignee")
     public ResponseEntity<Asignee> addAsignee(@RequestBody Asignee asignee) throws Exception {
         Asignee asg = asigneeService.addAsignee(asignee);
@@ -59,7 +59,7 @@ public class AsigneeController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/asignee/{taskId}/{userId}")
     public ResponseEntity<Asignee> deleteAsignee(@PathVariable int taskId, @PathVariable int userId) {
         try {

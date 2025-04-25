@@ -17,7 +17,7 @@ public class SubtaskController {
     @Autowired
     private SubtaskService subtaskService;
 
-    // @CrossOrigin
+    @CrossOrigin
     @GetMapping(value = "/subtasklist/{id}")
     public ResponseEntity<Subtask> getSubtaskById(@PathVariable int id) {
         try {
@@ -28,7 +28,7 @@ public class SubtaskController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PostMapping(value = "/subtasklist")
     public ResponseEntity<Subtask> addSubtask(@RequestBody Subtask subtask) throws Exception {
         Subtask st = subtaskService.addSubtask(subtask);
@@ -41,7 +41,7 @@ public class SubtaskController {
                 .headers(responseHeaders).build();
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @PutMapping(value = "subtasklist/{id}")
     public ResponseEntity<Subtask> updateSubtask(@RequestBody Subtask subtask, @PathVariable int id) {
         try {
@@ -53,7 +53,7 @@ public class SubtaskController {
         }
     }
 
-    // @CrossOrigin
+    @CrossOrigin
     @DeleteMapping(value = "/subtasklist/{id}")
     public ResponseEntity<Boolean> deleteSubtask(@PathVariable("id") int id) {
         try {
