@@ -24,10 +24,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.springboot.MyTodoList.messageModel.MessageModel;
 import com.springboot.MyTodoList.messageModel.MessageModelFactory;
+import com.springboot.MyTodoList.model.Asignee;
+import com.springboot.MyTodoList.model.AsigneeId;
 import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Subtask;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.service.AsigneeService;
 import com.springboot.MyTodoList.service.SprintService;
 import com.springboot.MyTodoList.service.SubtaskService;
 import com.springboot.MyTodoList.service.TaskService;
@@ -45,9 +48,10 @@ public class TaskBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 	private TaskService taskService;
 	private SubtaskService subtaskService;
-	private UserService userService;
-	private String botName;
 	private SprintService sprintService;
+	private UserService userService;
+	private AsigneeService asigneeService;
+	private String botName;
 
 	private TaskController taskController;
 	private SubtaskController subtaskController;
@@ -55,7 +59,8 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 	public TaskBotController(String botToken, String botName, TaskService taskService,
 			SubtaskService subtaskService, UserService userService, TaskController taskController,
-			SubtaskController subtaskController, SprintController sprintController, SprintService sprintService) {
+			SubtaskController subtaskController, SprintController sprintController, SprintService sprintService,
+			AsigneeService asigneeService) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
@@ -67,6 +72,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 		this.subtaskController = subtaskController;
 		this.sprintService = sprintService;
 		this.sprintController = sprintController;
+		this.asigneeService = asigneeService;
 	}
 
 	@Override
@@ -137,6 +143,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 			KeyboardRow row = new KeyboardRow();
 			row.add(BotLabels.LIST_ALL_TASKS.getLabel());
 			row.add(BotLabels.ADD_NEW_TASK.getLabel());
+			row.add(BotLabels.ASIGN_USER_TO_TASK.getLabel());
 			// Add the first row to the keyboard
 			keyboard.add(row);
 
@@ -287,7 +294,6 @@ public class TaskBotController extends TelegramLongPollingBot {
 				for (Task item : activeItems) {
 					KeyboardRow currentRow = new KeyboardRow();
 					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.LIST_ALL_SUBTASKS.getLabel());
 					keyboard.add(currentRow);
 					sb.append(item.quickDescription() + "\n");
 				}
@@ -398,6 +404,61 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 				execute(messageToTelegram);
 
+			} catch (Exception e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+		} else if (messageTextFromTelegram.indexOf(BotCommands.ASIGNEE_LIST.getCommand()) != -1
+				|| messageTextFromTelegram
+						.indexOf(BotLabels.ASIGN_USER_TO_TASK.getLabel()) != -1) {
+			// list asignees on the menu and show command to add asignee
+			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+			List<KeyboardRow> keyboard = new ArrayList<>();
+			KeyboardRow mainScreenRowTop = new KeyboardRow();
+			mainScreenRowTop.add(BotLabels.MENU_SCREEN.getLabel());
+			keyboard.add(mainScreenRowTop);
+			KeyboardRow firstRow = new KeyboardRow();
+			firstRow.add(BotLabels.ADD_NEW_TASK.getLabel());
+			keyboard.add(firstRow);
+			keyboardMarkup.setKeyboard(keyboard);
+
+			SendMessage messageToTelegram = new SendMessage();
+			messageToTelegram.setChatId(chatId);
+			messageToTelegram.setText(BotMessages.ADD_ASIGNEE_INSTRUCTIONS.getMessage());
+			messageToTelegram.setReplyMarkup(keyboardMarkup);
+
+			try {
+				execute(messageToTelegram);
+			} catch (TelegramApiException e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+		} else if (messageTextFromTelegram.indexOf(BotLabels.ASIGNEE.getLabel()) != -1) {
+			String[] parts = messageTextFromTelegram
+					.split(BotLabels.DASH.getLabel(), 3);
+			try {
+				if (parts.length == 3 && BotLabels.ASIGNEE.getLabel().equals(parts[2])) {
+					Integer taskId = Integer.valueOf(parts[0]);
+					String username = parts[1];
+
+					System.out.println("Task id: " + taskId);
+					System.out.println("Username: " + username);
+					Task task = getTaskById(taskId).getBody();
+					User asignedUser = userService.getUserByUsername(username).getBody();
+
+					if (asignedUser == null || task == null) {
+						BotHelper.sendMessageToTelegram(chatId, BotMessages.INVALID_COMMAND.getMessage(), this);
+						return;
+					}
+
+					AsigneeId asigneeId = new AsigneeId(taskId, asignedUser.getID());
+					Asignee asignee = new Asignee();
+					asignee.setId(asigneeId);
+
+					asigneeService.addAsignee(asignee);
+					BotHelper.sendMessageToTelegram(chatId, BotMessages.ASIGNEE_ADDED.getMessage(), this);
+
+				} else {
+					BotHelper.sendMessageToTelegram(chatId, BotMessages.INVALID_COMMAND.getMessage(), this);
+				}
 			} catch (Exception e) {
 				logger.error(e.getLocalizedMessage(), e);
 			}
@@ -528,6 +589,16 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 	public List<Sprint> getActiveTasks(int project_id) {
 		return sprintService.findActiveSprintsByProjectId(project_id);
+	}
+
+	public ResponseEntity<Asignee> addAsignee(@RequestBody Asignee asignee) throws Exception {
+		Asignee td = asigneeService.addAsignee(asignee);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("location", "" + td.getId());
+		responseHeaders.set("Access-Control-Expose-Headers", "location");
+		// URI location = URI.create(""+td.getID())
+
+		return ResponseEntity.ok().headers(responseHeaders).build();
 	}
 
 	// GET BY ID /tasklist/{id}

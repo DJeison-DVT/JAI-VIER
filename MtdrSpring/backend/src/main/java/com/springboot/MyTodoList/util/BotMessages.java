@@ -45,8 +45,10 @@ public enum BotMessages {
 			"subtask deleted! Select /subtasklist to return to the list of todo subtasks, or /start to go to the main screen."),
 	NEW_SUBTASK_ADDED(
 			"New subtask added! Select /subtasklist to return to the list of todo subtasks, or /start to go to the main screen."),
+	ADD_ASIGNEE_INSTRUCTIONS("To add an asignee to a task or subtask use the command <taskId>-<username>-ASIGN."),
 	INVALID_COMMAND("Invalid command! Please try again!"),
 	SUCCESFUL_COMMAND("Command executed!"),
+	ASIGNEE_ADDED("Asignee added!"),
 	BYE("Bye! Select /start to resume!");
 
 	private String message;

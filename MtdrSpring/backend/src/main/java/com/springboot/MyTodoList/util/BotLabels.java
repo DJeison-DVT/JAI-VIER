@@ -13,11 +13,14 @@ public enum BotLabels {
 	CHECK("CHECK"),
 	UNCHECK("UNCHECK"),
 	DELETE_SUBTASK("DELETE_SUB"),
+	// asignee related
+	ASIGNEE("ASIGN"),
 
 	// unchecked
 	HIDE_MAIN_SCREEN("Hide Main Screen"),
 	LIST_ALL_TASKS("List All Tasks"),
 	ADD_NEW_TASK("Add New Item"),
+	ASIGN_USER_TO_TASK("Add Asignee"),
 	DASH("-");
 
 	private String label;

@@ -4,6 +4,7 @@ public enum BotCommands {
 	// checked
 	START_COMMAND("/start"),
 	TASK_LIST("/task"),
+	ASIGNEE_LIST("/asignee"),
 
 	// unchecked
 	SUBTASK_LIST("/subtask"),
