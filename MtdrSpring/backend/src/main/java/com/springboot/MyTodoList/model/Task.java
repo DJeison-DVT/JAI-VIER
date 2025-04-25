@@ -201,7 +201,7 @@ public class Task {
     }
 
     // Helper method to convert priority to text
-    private String priorityText() {
+    public String priorityText() {
         switch (priority) {
             case 1:
                 return "🟢 Low";
@@ -215,7 +215,7 @@ public class Task {
     }
 
     // Helper method to convert status to text
-    private String statusText() {
+    public String statusText() {
         switch (status) {
             case 0:
                 return "📝 TODO"; // Task needs to be done
