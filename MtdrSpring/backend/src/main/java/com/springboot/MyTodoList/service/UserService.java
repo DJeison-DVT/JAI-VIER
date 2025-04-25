@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.MyTodoList.model.Project;
-import com.springboot.MyTodoList.model.ProjectMember;
+// import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.UserRepository;
@@ -30,8 +30,8 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private ProjectRepository projectRepository;
-    @Autowired
-    private ProjectMemberService projectMemberService;
+    // @Autowired
+    // private ProjectMemberService projectMemberService;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -148,7 +148,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user: " + username));
 
         List<GrantedAuthority> auths = new ArrayList<>();
-        List<ProjectMember> projectMemberships = projectMemberService.getProjectMembersByUserId(u.getID());
+        // List<ProjectMember> projectMemberships =
+        // projectMemberService.getProjectMembersByUserId(u.getID());
         // extract roles from project memberships
 
         return org.springframework.security.core.userdetails.User.withUsername(u.getUsername())

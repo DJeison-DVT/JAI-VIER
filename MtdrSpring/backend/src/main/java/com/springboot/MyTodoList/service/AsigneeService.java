@@ -1,0 +1,78 @@
+package com.springboot.MyTodoList.service;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.springboot.MyTodoList.model.Asignee;
+import com.springboot.MyTodoList.model.AsigneeId;
+import com.springboot.MyTodoList.model.Task;
+import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.repository.AsigneeRepository;
+import com.springboot.MyTodoList.repository.TaskRepository;
+import com.springboot.MyTodoList.repository.UserRepository;
+
+@Service
+public class AsigneeService {
+    @Autowired
+    private AsigneeRepository asigneeRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+
+    public List<Asignee> findAll() {
+        List<Asignee> asignees = asigneeRepository.findAll();
+        return asignees;
+    }
+
+    public List<Asignee> getAsigneesByTaskId(int taskId) {
+        List<Asignee> asignees = asigneeRepository.findById_TaskId(taskId);
+        return asignees;
+    }
+
+    public List<Asignee> getAsigneesByUserId(int userId) {
+        List<Asignee> asignees = asigneeRepository.findById_UserId(userId);
+        return asignees;
+    }
+
+    public ResponseEntity<Asignee> getItemById(int taskId, int userId) {
+        AsigneeId asigneeId = new AsigneeId(taskId, userId);
+        Optional<Asignee> asigneeData = asigneeRepository.findById(asigneeId);
+        if (asigneeData.isPresent()) {
+            return new ResponseEntity<>(asigneeData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public Asignee addAsignee(Asignee asignee) {
+        Optional<User> user = userRepository.findById(asignee.getUser_id());
+        Optional<Task> task = taskRepository.findById(asignee.getTask_id());
+
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User with ID " + asignee.getUser_id() + " does not exist.");
+        }
+        if (task.isEmpty()) {
+            throw new IllegalArgumentException("Task with ID " + asignee.getTask_id() + " does not exist.");
+        }
+
+        asignee.setCreated_at(OffsetDateTime.now());
+        return asigneeRepository.save(asignee);
+    }
+
+    public boolean deleteAsignee(int taskId, int userId) {
+        try {
+            AsigneeId asigneeId = new AsigneeId(taskId, userId);
+            asigneeRepository.deleteById(asigneeId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
