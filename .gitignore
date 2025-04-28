@@ -30,6 +30,7 @@ frontend/.pnp
 .pnp.js
 
 # testing
+test.txt
 frontend/coverage
 
 # production
