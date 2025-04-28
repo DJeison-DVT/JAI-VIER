@@ -1,6 +1,7 @@
 package com.springboot.MyTodoList.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -460,8 +461,6 @@ public class TaskBotController extends TelegramLongPollingBot {
 					Integer taskId = Integer.valueOf(parts[0]);
 					String username = parts[1];
 
-					System.out.println("Task id: " + taskId);
-					System.out.println("Username: " + username);
 					Task task = getTaskById(taskId).getBody();
 					User asignedUser = userService.getUserByUsername(username).getBody();
 
@@ -481,6 +480,118 @@ public class TaskBotController extends TelegramLongPollingBot {
 					BotHelper.sendMessageToTelegram(chatId, BotMessages.INVALID_COMMAND.getMessage(), this);
 				}
 			} catch (Exception e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+
+		} else if (messageTextFromTelegram.indexOf(BotCommands.ASIGNED_TASK_LIST.getCommand()) != -1) {
+			List<Sprint> sprints = getActiveTasks(user.getSelectedProject_id());
+			List<Integer> sprint_ids = sprints.stream().map(Sprint::getID).collect(Collectors.toList());
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("Asigned tasks: \n");
+
+			List<Asignee> asignees = asigneeService.getAsigneesByUserId(user.getID());
+			boolean found = false;
+
+			for (Asignee asignee : asignees) {
+				Task task = taskService.getItemById(asignee.getId().getTaskId()).getBody();
+				if (task != null && task.getStatus() != 3 && sprint_ids.contains(task.getSprint().getID())) {
+					sb.append(task.quickDescription() + "\n");
+					found = true;
+				}
+			}
+
+			if (!found) {
+				// no tasks matched → clear and show the fallback message
+				sb.setLength(0);
+				sb.append("No assigned tasks available");
+			}
+
+			// list asignees on the menu and show command to add asignee
+			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+			List<KeyboardRow> keyboard = new ArrayList<>();
+			KeyboardRow mainScreenRowTop = new KeyboardRow();
+			mainScreenRowTop.add(BotLabels.MENU_SCREEN.getLabel());
+			keyboard.add(mainScreenRowTop);
+			KeyboardRow firstRow = new KeyboardRow();
+			firstRow.add(BotLabels.ADD_NEW_TASK.getLabel());
+			keyboard.add(firstRow);
+			keyboardMarkup.setKeyboard(keyboard);
+
+			SendMessage messageToTelegram = new SendMessage();
+			messageToTelegram.setChatId(chatId);
+			messageToTelegram.setReplyMarkup(keyboardMarkup);
+			messageToTelegram.setText(sb.toString());
+
+			try {
+				execute(messageToTelegram);
+			} catch (TelegramApiException e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+		} else if (messageTextFromTelegram.indexOf(BotCommands.SHOW_KPI.getCommand()) != -1) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("User's KPIs: \n");
+
+			List<Asignee> asignees = asigneeService.getAsigneesByUserId(user.getID());
+			boolean found = false;
+
+			List<Integer> hours = new ArrayList<>();
+			Map<Integer, Integer> status = new HashMap<>();
+			Map<Integer, Integer> priorities = new HashMap<>();
+
+			for (Asignee asignee : asignees) {
+				Task task = taskService.getItemById(asignee.getId().getTaskId()).getBody();
+				if (task != null) {
+					hours.add(task.getEstimated_hours());
+					status.put(task.getStatus(), status.getOrDefault(task.getStatus(), 0) + 1);
+					priorities.put(task.getPriority(),
+							priorities.getOrDefault(task.getPriority(), 0) + 1);
+					found = true;
+				}
+			}
+
+			if (found) {
+				sb.append("Average Task Hours: " + hours.stream()
+						.mapToInt(Integer::intValue)
+						.average()
+						.orElse(0.0) + "\n");
+				sb.append("Task Status: \n");
+				Task task = new Task();
+				for (Map.Entry<Integer, Integer> entry : status.entrySet()) {
+					task.setStatus(entry.getKey());
+					sb.append(task.statusText() + ": " + entry.getValue() + "\n");
+				}
+				sb.append("Task Priorities: \n");
+				for (Map.Entry<Integer, Integer> entry : priorities.entrySet()) {
+					task.setPriority(entry.getKey());
+					sb.append(task.priorityText() + ": " + entry.getValue() + "\n");
+				}
+
+			} else {
+				// no tasks matched → clear and show the fallback message
+				sb.setLength(0);
+				sb.append("No available KPIs");
+			}
+
+			// list asignees on the menu and show command to add asignee
+			ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+			List<KeyboardRow> keyboard = new ArrayList<>();
+			KeyboardRow mainScreenRowTop = new KeyboardRow();
+			mainScreenRowTop.add(BotLabels.MENU_SCREEN.getLabel());
+			keyboard.add(mainScreenRowTop);
+			KeyboardRow firstRow = new KeyboardRow();
+			firstRow.add(BotLabels.ADD_NEW_TASK.getLabel());
+			keyboard.add(firstRow);
+			keyboardMarkup.setKeyboard(keyboard);
+
+			SendMessage messageToTelegram = new SendMessage();
+			messageToTelegram.setChatId(chatId);
+			messageToTelegram.setReplyMarkup(keyboardMarkup);
+			messageToTelegram.setText(sb.toString());
+
+			try {
+				execute(messageToTelegram);
+			} catch (TelegramApiException e) {
 				logger.error(e.getLocalizedMessage(), e);
 			}
 
