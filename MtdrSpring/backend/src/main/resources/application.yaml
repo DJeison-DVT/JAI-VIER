@@ -1,24 +1,24 @@
 spring:
-    datasource:
-        driver_class_name: oracle.jdbc.OracleDriver
-        password: ${BD_PASSWORD}
-        url: ${BD_URL}
-        username: ${BD_USER}
-    jpa:
-        database: ORACLE
-        database-platform: org.hibernate.dialect.Oracle12cDialect
-        hibernate:
-            ddl-auto: none
-        show-sql: true
-    security:
-        user:
-            name: ${ui_username}
-            password: ${ui_password}
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    password: ${DB_PASSWORD}
+    url: ${DB_WALLET}
+    username: ${DB_USER}
+  jpa:
+    database: ORACLE
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  security:
+    user:
+      name: ${ui_username}
+      password: ${ui_password}
 jwt:
-    secret: ${JWT_SECRET:default_development_secret}
-    expiration: ${JWT_EXPIRATION:3600000}
-    refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800000}
+  secret: ${JWT_SECRET:default_development_secret}
+  expiration: ${JWT_EXPIRATION:3600000}
+  refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800000}
 telegram:
-    bot:
-        token: ${TELEGRAM_BOT_TOKEN}
-        name: ${TELEGRAM_BOT_NAME}
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN}
+    name: ${TELEGRAM_BOT_NAME}
