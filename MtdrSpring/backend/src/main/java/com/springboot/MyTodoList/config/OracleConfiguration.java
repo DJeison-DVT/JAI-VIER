@@ -40,6 +40,7 @@ public class OracleConfiguration {
             logger.info("Using Username: " + env.getProperty("DB_USER"));
             
             ds.setPassword(env.getProperty("DB_PASSWORD"));
+            logger.info("Password set successfully");
             
             // Configurar propiedades adicionales
             Properties props = new Properties();
