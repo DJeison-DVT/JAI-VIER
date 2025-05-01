@@ -1,32 +1,19 @@
 FROM maven:3.8-openjdk-11 as builder
 
-# Directorio de trabajo
 WORKDIR /app
 
-# Copiar pom.xml para descargar dependencias
-
-# Copiar el código fuente
-
-# Construir la aplicación
-
-# Imagen final
-
-# Crear directorio de trabajo
-WORKDIR /app
-
-# Copiar el JAR compilado desde la etapa de construcción
+# Copy the Spring Boot JAR file
 COPY target/MyTodoList-0.0.1-SNAPSHOT.jar app.jar
 
-# Crear directorio para la wallet
+# Create a directory for the wallet
 RUN mkdir -p /app/wallet
 
-# Copiar la wallet desde la máquina local al contenedor
-COPY src/main/resources/wallet /app/wallet
-
+# Set the environment variable for the DB wallet
 ENV DB_WALLET_LOCATION=/app/wallet
 
-# Exponer el puerto
+# Expose the port your Spring Boot app is running on
 EXPOSE 8081
 
-# Comando para ejecutar la aplicación
+# Command to run the application
 CMD ["java", "-jar", "app.jar"]
+
