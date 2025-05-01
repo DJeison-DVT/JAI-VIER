@@ -2,18 +2,15 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "tellez" ]
   pull_request:
-    branches: [ "main" ]
-  # Permite ejecutar este workflow manualmente desde la pestaña Actions
+    branches: [ "tellez" ]
   workflow_dispatch:
 
 env:
-  # Usa docker.io para DockerHub
   REGISTRY: docker.io
-  # Tu usuario/organización de DockerHub
-  IMAGE_NAME: ${{ github.repository_owner }}/jai-vier-backend
-  
+  IMAGE_NAME: ${{ secrets.DOCKER_USER }}/{{ secrets.DOCKER_IMAGE}}
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -37,18 +34,15 @@ jobs:
           cd MtdrSpring/backend
           mvn clean package -DskipTests
 
-      # Inicio de sesión en DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-      # Configura buildx para construcciones multi-plataforma
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Extraer metadatos para las etiquetas de Docker
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -59,8 +53,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha,format=short
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-      
-      # Construir y publicar la imagen Docker
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -70,3 +63,17 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    # Solo ejecutar este job si el paso de build fue ejecutado (solo en push a main/master)
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up kubeconfig
+        run: |
+          echo "${{ secrets.KUBE_B64 }}" | base64 -d > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl get pods
