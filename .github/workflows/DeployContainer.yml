@@ -81,6 +81,6 @@ jobs:
           echo "${{ secrets.KUBE_B64 }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
           cat ~/.kube/config
-          export KUBECONFIG=~/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
           kubectl get pods
           
