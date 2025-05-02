@@ -78,7 +78,7 @@ jobs:
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_B64 }}" | base64 -d > ~/.kube/config
+          echo "${{ secrets.KUBE_B64 }}" | base64 -d > $PWD/.kube/config
           chmod 600 ~/.kube/config
           cat ~/.kube/config
           export KUBECONFIG=$PWD/.kube/config
