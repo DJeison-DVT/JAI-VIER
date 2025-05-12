@@ -70,6 +70,10 @@ public class User {
                 .collect(Collectors.toList());
     }
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Asignee> asignees = new HashSet<>();
+
     public User() {
     }
 

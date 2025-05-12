@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.springboot.MyTodoList.dto.UserSummary;
 import com.springboot.MyTodoList.model.Asignee;
 import com.springboot.MyTodoList.model.AsigneeId;
 import com.springboot.MyTodoList.model.Task;
@@ -31,8 +32,8 @@ public class AsigneeService {
         return asignees;
     }
 
-    public List<Asignee> getAsigneesByTaskId(int taskId) {
-        List<Asignee> asignees = asigneeRepository.findById_TaskId(taskId);
+    public List<UserSummary> getAsigneesByTaskId(int taskId) {
+        List<UserSummary> asignees = asigneeRepository.findUserSummariesByTaskId(taskId);
         return asignees;
     }
 

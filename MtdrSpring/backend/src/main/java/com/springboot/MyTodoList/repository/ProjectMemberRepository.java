@@ -18,27 +18,27 @@ import javax.transaction.Transactional;
 @Transactional
 @EnableTransactionManagement
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, ProjectMemberId> {
-    List<ProjectMember> findById_ProjectId(int projectId);
+        List<ProjectMember> findById_ProjectId(int projectId);
 
-    List<ProjectMember> findById_UserId(int userId);
+        List<ProjectMember> findById_UserId(int userId);
 
-    @Query("SELECT new com.springboot.MyTodoList.dto.ProjectSummary(" +
-            "  p.ID, p.name, p.description, " +
-            "  p.start_date, p.end_date, p.status, " +
-            "  p.created_at, p.updated_at" +
-            ") " +
-            "FROM ProjectMember pm " +
-            "JOIN pm.project p ")
-    List<ProjectSummary> findAllProjectSummaries();
+        @Query("SELECT new com.springboot.MyTodoList.dto.ProjectSummary(" +
+                        "  p.ID, p.name, p.description, " +
+                        "  p.start_date, p.end_date, p.status, " +
+                        "  p.created_at, p.updated_at" +
+                        ") " +
+                        "FROM ProjectMember pm " +
+                        "JOIN pm.project p ")
+        List<ProjectSummary> findAllProjectSummaries();
 
-    @Query("SELECT new com.springboot.MyTodoList.dto.ProjectSummary(" +
-            "  p.ID, p.name, p.description, " +
-            "  p.start_date, p.end_date, p.status, " +
-            "  p.created_at, p.updated_at" +
-            ") " +
-            "FROM ProjectMember pm " +
-            "JOIN pm.project p " +
-            "WHERE pm.id.userId = :userId")
-    List<ProjectSummary> findSummariesByUserId(@Param("userId") int userId);
+        @Query("SELECT new com.springboot.MyTodoList.dto.ProjectSummary(" +
+                        "  p.ID, p.name, p.description, " +
+                        "  p.start_date, p.end_date, p.status, " +
+                        "  p.created_at, p.updated_at" +
+                        ") " +
+                        "FROM ProjectMember pm " +
+                        "JOIN pm.project p " +
+                        "WHERE pm.id.userId = :userId")
+        List<ProjectSummary> findSummariesByUserId(@Param("userId") int userId);
 
 }
