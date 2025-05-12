@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.springboot.MyTodoList.controller.ProjectController;
 import com.springboot.MyTodoList.controller.ProjectMemberController;
 import com.springboot.MyTodoList.controller.UserController;
+import com.springboot.MyTodoList.dto.ProjectSummary;
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.model.User;
@@ -38,15 +39,15 @@ public class UserMessageModel implements MessageModel<User> {
 
     @Override
     public String reportAll(User user) {
-        List<ProjectMember> projectMembers = projectMemberController.getProjectMembersByUserId(user.getID());
-        if (projectMembers.size() == 0) {
+        List<ProjectSummary> projects = projectMemberController.getProjectMembersByUserId(user.getID());
+        if (projects.size() == 0) {
             return "El usuario no tiene proyectos";
         }
 
         StringBuilder sb = new StringBuilder();
 
-        for (ProjectMember projectMember : projectMembers) {
-            int project_id = projectMember.getProject_id();
+        for (ProjectSummary projectMember : projects) {
+            int project_id = projectMember.getId();
             ResponseEntity<Project> projectEntity = projectController.getProjectById(project_id);
             if (projectEntity.getStatusCodeValue() != 200) {
                 continue;

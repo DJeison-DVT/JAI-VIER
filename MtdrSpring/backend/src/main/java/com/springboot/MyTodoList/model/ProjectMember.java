@@ -2,6 +2,8 @@ package com.springboot.MyTodoList.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.OffsetDateTime;
 
 @Entity
@@ -14,6 +16,18 @@ public class ProjectMember {
     private OffsetDateTime joined_date;
     @Column(name = "ROLE")
     private String role;
+
+    @ManyToOne()
+    @MapsId("projectId")
+    @JoinColumn(name = "PROJECT_ID")
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "sprints" })
+    private Project project;
+
+    @ManyToOne()
+    @MapsId("userId")
+    @JoinColumn(name = "USER_ID")
+    // @JsonIgnore
+    private User user;
 
     public ProjectMember() {
     }
@@ -62,6 +76,22 @@ public class ProjectMember {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
