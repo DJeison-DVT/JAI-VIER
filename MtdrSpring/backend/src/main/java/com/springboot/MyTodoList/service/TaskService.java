@@ -72,6 +72,7 @@ public class TaskService {
             task.setPriority(td.getPriority());
             task.setStatus(td.getStatus());
             task.setEstimated_hours(td.getEstimated_hours());
+            task.setReal_hours(td.getReal_hours());
             return taskRepository.save(task);
         } else {
             return null;

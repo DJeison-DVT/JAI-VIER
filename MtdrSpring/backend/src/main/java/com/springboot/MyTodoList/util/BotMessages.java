@@ -57,6 +57,12 @@ public enum BotMessages {
 		this.message = enumMessage;
 	}
 
+	public static String missingRealHours(int id) {
+		return "Missing real hours for task with id " + id
+				+ ". Please update the task with the real hours worked. " + id + BotLabels.DASH.getLabel()
+				+ BotLabels.DONE.getLabel() + BotLabels.DASH.getLabel() + "{real_hours}";
+	}
+
 	public String getMessage() {
 		return message;
 	}

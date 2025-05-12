@@ -37,6 +37,8 @@ public class Task {
     int status;
     @Column(name = "ESTIMATED_HOURS")
     int estimated_hours;
+    @Column(name = "REAL_HOURS", nullable = true)
+    Integer real_hours;
     @JsonManagedReference(value = "task-subtasks")
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Subtask> subtasks;
@@ -161,6 +163,14 @@ public class Task {
         this.estimated_hours = estimated_hours;
     }
 
+    public Integer getReal_hours() {
+        return real_hours;
+    }
+
+    public void setReal_hours(Integer real_hours) {
+        this.real_hours = real_hours;
+    }
+
     public List<Subtask> getSubtasks() {
         return subtasks;
     }
@@ -205,6 +215,7 @@ public class Task {
                 ", priority=" + priority +
                 ", status=" + status +
                 ", estimated_hours=" + estimated_hours +
+                ", real_hours=" + real_hours +
                 ", subtasks=" + (subtasks != null ? subtasks.toString() : "[]") +
                 // ", comments=" + (comments != null ? comments.toString() : "[]") +
                 ", sprint_id=" + sprint_id +

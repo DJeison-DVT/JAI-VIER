@@ -179,19 +179,24 @@ public class TaskBotController extends TelegramLongPollingBot {
 			}
 
 		} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
+			String[] parts = messageTextFromTelegram.split(BotLabels.DASH.getLabel());
+			Integer id = Integer.valueOf(parts[0]);
 
-			String done = messageTextFromTelegram.substring(0,
-					messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
-			Integer id = Integer.valueOf(done);
+			if (parts.length < 3) {
+				BotHelper.sendMessageToTelegram(chatId, BotMessages.missingRealHours(id), this);
+			} else {
 
-			try {
+				try {
+					Integer realHours = Integer.parseInt(parts[2]);
 
-				Task item = getTaskById(id).getBody();
-				item.setStatus(3);
-				updateTask(item, id);
-				BotHelper.sendMessageToTelegram(chatId, BotMessages.TASK_DONE.getMessage(), this);
-			} catch (Exception e) {
-				logger.error(e.getLocalizedMessage(), e);
+					Task item = getTaskById(id).getBody();
+					item.setStatus(3);
+					item.setReal_hours(realHours);
+					updateTask(item, id);
+					BotHelper.sendMessageToTelegram(chatId, BotMessages.TASK_DONE.getMessage(), this);
+				} catch (Exception e) {
+					logger.error(e.getLocalizedMessage(), e);
+				}
 			}
 
 		} else if (messageTextFromTelegram.indexOf(BotLabels.UNDO.getLabel()) != -1) {
@@ -307,7 +312,9 @@ public class TaskBotController extends TelegramLongPollingBot {
 				}
 				for (Task item : activeItems) {
 					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+					currentRow.add(item.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel()
+							+ BotLabels.DASH.getLabel()
+							+ "{real hours}");
 					keyboard.add(currentRow);
 					sb.append(item.quickDescription() + "\n");
 
