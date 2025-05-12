@@ -32,6 +32,16 @@
 				{
 					"name": "GetTasks",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -342,6 +352,16 @@
 				{
 					"name": "GetProjects",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -424,6 +444,16 @@
 				{
 					"name": "GetUsers",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -443,10 +473,20 @@
 				{
 					"name": "GetUser",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/userlist/41",
+							"raw": "http://localhost:8081/userlist/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -454,7 +494,7 @@
 							"port": "8081",
 							"path": [
 								"userlist",
-								"41"
+								"7"
 							]
 						}
 					},
@@ -525,6 +565,16 @@
 				{
 					"name": "GetProjectMembers",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -572,10 +622,20 @@
 				{
 					"name": "GetProjectMembersByProject",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/projectmember/project/21",
+							"raw": "http://localhost:8081/projectmember/user/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -583,8 +643,8 @@
 							"port": "8081",
 							"path": [
 								"projectmember",
-								"project",
-								"21"
+								"user",
+								"7"
 							]
 						}
 					},
@@ -606,6 +666,100 @@
 								"projectmember",
 								"user",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Asignee",
+			"item": [
+				{
+					"name": "GetAsignees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"asignee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostAsignee",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": {\r\n            \"taskId\": 81,\r\n            \"userId\": 62\r\n        },\r\n        \"task_id\": 81,\r\n        \"user_id\": 62\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/asignee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"asignee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAsigneeByTask",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignee/task/81",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"asignee",
+								"task",
+								"81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAsigneeByUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/asignee/user/62",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"asignee",
+								"user",
+								"62"
 							]
 						}
 					},
@@ -817,7 +971,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -878,6 +1032,64 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Health check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/health-check",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"health-check"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "default"
 		}
 	]
 }

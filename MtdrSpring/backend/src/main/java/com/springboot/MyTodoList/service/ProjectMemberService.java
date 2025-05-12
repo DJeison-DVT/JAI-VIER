@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.springboot.MyTodoList.dto.ProjectSummary;
 import com.springboot.MyTodoList.model.Project;
 import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.model.ProjectMemberId;
@@ -36,8 +37,8 @@ public class ProjectMemberService {
         return projectMembers;
     }
 
-    public List<ProjectMember> getProjectMembersByUserId(int userId) {
-        List<ProjectMember> projectMembers = projectMemberRepository.findById_UserId(userId);
+    public List<ProjectSummary> getProjectMembersByUserId(int userId) {
+        List<ProjectSummary> projectMembers = projectMemberRepository.findSummariesByUserId(userId);
         return projectMembers;
     }
 

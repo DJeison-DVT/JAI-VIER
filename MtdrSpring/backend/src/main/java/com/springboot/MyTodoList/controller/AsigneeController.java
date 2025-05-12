@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.springboot.MyTodoList.dto.UserSummary;
 import com.springboot.MyTodoList.model.Asignee;
 import com.springboot.MyTodoList.service.AsigneeService;
 
@@ -25,7 +26,7 @@ public class AsigneeController {
 
     @CrossOrigin
     @GetMapping(value = "/asignee/task/{taskId}")
-    public List<Asignee> getAsigneesByTaskId(@PathVariable int taskId) {
+    public List<UserSummary> getAsigneesByTaskId(@PathVariable int taskId) {
         return asigneeService.getAsigneesByTaskId(taskId);
     }
 

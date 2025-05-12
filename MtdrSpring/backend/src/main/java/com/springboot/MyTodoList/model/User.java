@@ -4,8 +4,13 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springboot.MyTodoList.dto.ProjectSummary;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "USERS")
@@ -41,6 +46,33 @@ public class User {
     private Long chatId;
     @Column(name = "PHONE")
     private String phone;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<ProjectMember> memberships = new HashSet<>();
+
+    @Transient
+    @JsonProperty("projects")
+    public List<ProjectSummary> getProjects() {
+        return memberships.stream()
+                .map(pm -> {
+                    Project p = pm.getProject();
+                    return new ProjectSummary(
+                            p.getID(),
+                            p.getName(),
+                            p.getDescription(),
+                            p.getStart_date(),
+                            p.getEnd_date(),
+                            p.getStatus(),
+                            p.getCreated_at(),
+                            p.getUpdated_at());
+                })
+                .collect(Collectors.toList());
+    }
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Asignee> asignees = new HashSet<>();
 
     public User() {
     }

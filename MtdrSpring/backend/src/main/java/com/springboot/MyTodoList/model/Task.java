@@ -3,11 +3,17 @@ package com.springboot.MyTodoList.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springboot.MyTodoList.dto.UserSummary;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "TASK")
@@ -43,6 +49,26 @@ public class Task {
     private Sprint sprint;
     @Transient
     private int sprint_id;
+
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Asignee> asignees = new HashSet<>();
+
+    @Transient
+    @JsonProperty("asignees")
+    public Set<UserSummary> getAsignees() {
+        return asignees.stream()
+                .map(a -> {
+                    User u = a.getUser();
+                    return new UserSummary(
+                            u.getID(),
+                            u.getUsername(),
+                            u.getFull_name(),
+                            u.getEmail(),
+                            u.getPhone());
+                })
+                .collect(Collectors.toSet());
+    }
 
     public Task() {
     }

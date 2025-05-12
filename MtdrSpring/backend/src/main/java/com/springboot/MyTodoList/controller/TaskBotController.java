@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.springboot.MyTodoList.dto.UserSummary;
 import com.springboot.MyTodoList.messageModel.MessageModel;
 import com.springboot.MyTodoList.messageModel.MessageModelFactory;
 import com.springboot.MyTodoList.model.Asignee;
@@ -310,11 +311,11 @@ public class TaskBotController extends TelegramLongPollingBot {
 					keyboard.add(currentRow);
 					sb.append(item.quickDescription() + "\n");
 
-					List<Asignee> asignees = asigneeService.getAsigneesByTaskId(item.getID());
+					List<UserSummary> asignees = asigneeService.getAsigneesByTaskId(item.getID());
 					if (asignees.size() > 0) {
 						sb.append("👥 Asignees: \n");
-						for (Asignee asignee : asignees) {
-							User assignedUser = userService.getItemById(asignee.getId().getUserId()).getBody();
+						for (UserSummary asignee : asignees) {
+							User assignedUser = userService.getItemById(asignee.getId()).getBody();
 							sb.append("- " + assignedUser.getUsername() + "\n");
 						}
 					}

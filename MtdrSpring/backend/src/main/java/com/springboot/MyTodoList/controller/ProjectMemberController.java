@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.springboot.MyTodoList.dto.ProjectSummary;
 import com.springboot.MyTodoList.model.ProjectMember;
 import com.springboot.MyTodoList.service.ProjectMemberService;
 
@@ -31,7 +32,7 @@ public class ProjectMemberController {
 
     @CrossOrigin
     @GetMapping(value = "/projectmember/user/{userId}")
-    public List<ProjectMember> getProjectMembersByUserId(@PathVariable int userId) {
+    public List<ProjectSummary> getProjectMembersByUserId(@PathVariable int userId) {
         return projectMemberService.getProjectMembersByUserId(userId);
     }
 

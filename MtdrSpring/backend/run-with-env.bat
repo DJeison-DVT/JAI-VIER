@@ -1,7 +1,7 @@
 @echo off
 REM ─────────────────────────────────────────────────────────────────────────────
 REM run-with-env.bat
-REM ── Load every KEY=VALUE from .env into environment, then exec Java with args
+REM ── Load every KEY=VALUE from .env into environment, then exec Maven
 REM ─────────────────────────────────────────────────────────────────────────────
 
 REM 1. Locate .env (script dir or current dir)
@@ -20,7 +20,9 @@ for /f "usebackq tokens=1* delims== eol=#" %%A in ("%ENV_FILE%") do (
 )
 
 :run
-REM 3. Execute Java (or Maven) with whatever args you passed
-REM    e.g. run-with-env.bat -jar target\myapp.jar
-REM         run-with-env.bat mvn spring-boot:run
-%*
+REM 3. Execute mvn spring-boot:run by default, appending any optional args
+if "%~1"=="" (
+  mvn spring-boot:run
+) else (
+  mvn spring-boot:run %*
+)

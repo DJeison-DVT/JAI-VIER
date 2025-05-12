@@ -13,6 +13,16 @@ public class Asignee {
     @Column(name = "CREATED_AT")
     private OffsetDateTime created_at;
 
+    @ManyToOne()
+    @MapsId("taskId")
+    @JoinColumn(name = "TASK_ID")
+    private Task task;
+
+    @ManyToOne()
+    @MapsId("userId")
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
     public Asignee() {
     }
 
@@ -51,6 +61,22 @@ public class Asignee {
 
     public void setCreated_at(OffsetDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

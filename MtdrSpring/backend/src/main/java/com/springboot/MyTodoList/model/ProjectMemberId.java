@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Embeddable
 public class ProjectMemberId implements Serializable {
     private int projectId;
     private int userId;
 
-    // Default constructor (required by JPA)
     public ProjectMemberId() {
     }
 
@@ -18,7 +19,7 @@ public class ProjectMemberId implements Serializable {
         this.userId = userId;
     }
 
-    // Getters and Setters
+    @JsonIgnore
     public int getProjectId() {
         return projectId;
     }
@@ -27,6 +28,7 @@ public class ProjectMemberId implements Serializable {
         this.projectId = projectId;
     }
 
+    @JsonIgnore
     public int getUserId() {
         return userId;
     }
