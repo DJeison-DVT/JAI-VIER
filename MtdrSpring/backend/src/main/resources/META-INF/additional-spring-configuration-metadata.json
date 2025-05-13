@@ -16,6 +16,11 @@
 			"description": "JWT refresh token expiration time in milliseconds."
 		},
 		{
+			"name": "jwt.master-secret",
+			"type": "java.lang.String",
+			"description": "Secret key used for signing JWT master tokens."
+		},
+		{
 			"name": "telegram.bot.token",
 			"type": "java.lang.String",
 			"description": "Telegram bot token."

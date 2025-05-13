@@ -26,6 +26,14 @@ public class TaskService {
         return tasks;
     }
 
+    public List<Task> getTasksByUserId(int userId) {
+        return taskRepository.findDistinctBySprint_Project_Memberships_User_ID(userId);
+    }
+
+    public List<Task> getTasksByProjectId(int projectId) {
+        return taskRepository.findDistinctBySprint_Project_ID(projectId);
+    }
+
     public ResponseEntity<Task> getItemById(int id) {
         Optional<Task> taskData = taskRepository.findById(id);
         if (taskData.isPresent()) {

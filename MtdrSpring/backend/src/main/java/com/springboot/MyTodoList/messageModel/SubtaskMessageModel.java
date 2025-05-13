@@ -16,10 +16,12 @@ import com.springboot.MyTodoList.model.User;
 public class SubtaskMessageModel implements MessageModel<Subtask> {
     private SubtaskController subtaskController;
     private SprintController sprintController;
+    private String token;
 
-    public SubtaskMessageModel(SubtaskController subtaskController, SprintController sprintController) {
+    public SubtaskMessageModel(SubtaskController subtaskController, SprintController sprintController, String token) {
         this.subtaskController = subtaskController;
         this.sprintController = sprintController;
+        this.token = token;
     }
 
     @Override

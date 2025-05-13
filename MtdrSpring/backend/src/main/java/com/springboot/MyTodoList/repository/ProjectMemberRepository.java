@@ -41,4 +41,5 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Pr
                         "WHERE pm.id.userId = :userId")
         List<ProjectSummary> findSummariesByUserId(@Param("userId") int userId);
 
+        boolean existsByProjectIDAndUserID(Integer projectId, Integer userId);
 }

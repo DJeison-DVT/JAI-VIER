@@ -15,12 +15,12 @@ public class MessageModelFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> MessageModel<T> getMessageModel(String type) {
+    public <T> MessageModel<T> getMessageModel(String type, String token) {
         switch (type.toLowerCase()) {
             case "task":
-                return (MessageModel<T>) new TaskMessageModel(taskController, sprintController);
+                return (MessageModel<T>) new TaskMessageModel(taskController, sprintController, token);
             case "subtask":
-                return (MessageModel<T>) new SubtaskMessageModel(subtaskController, sprintController);
+                return (MessageModel<T>) new SubtaskMessageModel(subtaskController, sprintController, token);
             default:
                 throw new IllegalArgumentException("Unsupported model type: " + type);
         }
