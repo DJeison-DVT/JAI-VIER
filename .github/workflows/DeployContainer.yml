@@ -69,12 +69,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
-    # Solo ejecutar este job si el paso de build fue ejecutado (solo en push a main/master)
-    if: github.event_name == 'push'
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
