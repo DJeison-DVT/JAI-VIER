@@ -39,7 +39,7 @@ public class SubtaskMessageModel implements MessageModel<Subtask> {
     public String reportAll(User user) {
         StringBuilder sb = new StringBuilder();
 
-        List<Sprint> sprints = sprintController.getActiveSprints(user.getSelectedProject_id());
+        List<Sprint> sprints = sprintController.getActiveSprints(token, user.getSelectedProject_id());
         if (sprints.size() == 0) {
             return "No hay sprints activos en el proyecto";
         }

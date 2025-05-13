@@ -33,13 +33,10 @@ public class TaskController {
             @RequestHeader("Authorization") String authHeader,
             @RequestParam(name = "admin", required = false, defaultValue = "false") boolean isAdmin) {
 
-        System.out.println("Obtaining user from auth header: " + authHeader);
         User user = authContext.getCurrentUser(authHeader);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
-
-        System.out.println("User: " + user.getID() + " is admin: " + isAdmin);
 
         if (isAdmin) {
             if (authContext.isAdmin(user)) {
@@ -49,7 +46,6 @@ public class TaskController {
         }
 
         Project selectedProject = user.getSelectedProject();
-        System.out.println("Selected project: " + selectedProject);
         if (selectedProject != null) {
             if (authContext.isMember(user.getID(), selectedProject.getID())) {
                 return taskService.getTasksByProjectId(selectedProject.getID());
@@ -140,8 +136,6 @@ public class TaskController {
     }
 
     private void ensureMember(String authHeader, Task task) {
-        System.out.println("Obtaining project ID from task: " + task);
-
         ResponseEntity<Sprint> spr = sprintService.getItemById(task.getSprint_id());
         if (spr.getStatusCode() == HttpStatus.NOT_FOUND) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sprint not found");
@@ -151,7 +145,7 @@ public class TaskController {
         Integer projectId = sprint.getProject().getID();
 
         User user = authContext.getCurrentUser(authHeader);
-        if (authContext.isMember(user.getID(), projectId)) {
+        if (!authContext.isMember(user.getID(), projectId)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Not a member of project " + projectId);
