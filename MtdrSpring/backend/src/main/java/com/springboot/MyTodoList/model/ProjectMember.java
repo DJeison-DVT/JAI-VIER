@@ -30,6 +30,7 @@ public class ProjectMember {
     private User user;
 
     public ProjectMember() {
+        this.id = new ProjectMemberId();
     }
 
     public ProjectMember(int project_id, int user_id, OffsetDateTime joined_date, String role) {
