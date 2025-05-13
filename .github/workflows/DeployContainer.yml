@@ -80,5 +80,5 @@ jobs:
           chmod 600 ~/.kube/config
           cat ~/.kube/config
           export KUBECONFIG=$HOME/.kube/config
-          kubectl get pods
+          kubectl rollout restart deployment backend
           
