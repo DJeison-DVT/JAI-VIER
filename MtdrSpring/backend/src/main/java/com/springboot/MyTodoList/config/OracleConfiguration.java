@@ -38,14 +38,14 @@ public class OracleConfiguration {
             OracleDataSource ds = new OracleDataSource();
             
             // Intenta obtener valores de las variables de entorno primero
-            if (env.getProperty("db_user") != null) {
+            if (env.getProperty("DB_USER") != null) {
                 ds.setDriverType(env.getProperty("driver_class_name"));
                 logger.info("Using Driver " + env.getProperty("driver_class_name"));
-                ds.setURL(env.getProperty("db_url"));
-                logger.info("Using URL: " + env.getProperty("db_url"));
-                ds.setUser(env.getProperty("db_user"));
-                logger.info("Using Username " + env.getProperty("db_user"));
-                ds.setPassword(env.getProperty("dbpassword"));
+                ds.setURL(env.getProperty("DB_URL"));
+                logger.info("Using URL: " + env.getProperty("DB_URL"));
+                ds.setUser(env.getProperty("DB_USER"));
+                logger.info("Using Username " + env.getProperty("DB_USER"));
+                ds.setPassword(env.getProperty("DB_PASSWORD"));
             } 
             // Si no hay variables de entorno, usa la configuración específica para Oracle Cloud
             else {
