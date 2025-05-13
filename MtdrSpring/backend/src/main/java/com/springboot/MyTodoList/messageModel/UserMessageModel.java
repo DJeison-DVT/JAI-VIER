@@ -18,6 +18,7 @@ public class UserMessageModel implements MessageModel<User> {
     private UserController userController;
     private ProjectMemberController projectMemberController;
     private ProjectController projectController;
+    private String token;
 
     public UserMessageModel(UserController userController, ProjectMemberController projectMemberController,
             ProjectController projectController) {
@@ -48,7 +49,7 @@ public class UserMessageModel implements MessageModel<User> {
 
         for (ProjectSummary projectMember : projects) {
             int project_id = projectMember.getId();
-            ResponseEntity<Project> projectEntity = projectController.getProjectById(project_id);
+            ResponseEntity<Project> projectEntity = projectController.getProjectById(token, project_id);
             if (projectEntity.getStatusCodeValue() != 200) {
                 continue;
             }

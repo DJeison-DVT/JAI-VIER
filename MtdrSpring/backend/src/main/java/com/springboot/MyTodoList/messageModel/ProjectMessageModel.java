@@ -15,10 +15,13 @@ import com.springboot.MyTodoList.model.User;
 public class ProjectMessageModel implements MessageModel<Project> {
     private ProjectController projectController;
     private ProjectMemberController projectMemberController;
+    private String token;
 
-    public ProjectMessageModel(ProjectController projectController, ProjectMemberController projectMemberController) {
+    public ProjectMessageModel(ProjectController projectController, ProjectMemberController projectMemberController,
+            String token) {
         this.projectController = projectController;
         this.projectMemberController = projectMemberController;
+        this.token = token;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
             return "El usuario no tiene acceso a este proyecto";
         }
 
-        ResponseEntity<Project> projectEntity = projectController.getProjectById(id);
+        ResponseEntity<Project> projectEntity = projectController.getProjectById(token, id);
         if (projectEntity.getStatusCodeValue() == 200) {
             Project exisitngProject = projectEntity.getBody();
             return exisitngProject.publicDescription();
@@ -52,7 +55,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
 
         for (ProjectSummary pr : projects) {
             int project_id = pr.getId();
-            ResponseEntity<Project> projectEntity = projectController.getProjectById(project_id);
+            ResponseEntity<Project> projectEntity = projectController.getProjectById(token, project_id);
             if (projectEntity.getStatusCodeValue() != 200) {
                 continue;
             }
@@ -66,7 +69,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
 
     @Override
     public String reportSpecific(int id) {
-        ResponseEntity<Project> projectEntity = projectController.getProjectById(id);
+        ResponseEntity<Project> projectEntity = projectController.getProjectById(token, id);
         if (projectEntity.getStatusCodeValue() == 200) {
             Project project = projectEntity.getBody();
             return project.publicDescription();
@@ -78,7 +81,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
     @Override
     public String post(Project project) {
         try {
-            ResponseEntity<Project> projectEntity = projectController.addProject(project);
+            ResponseEntity<Project> projectEntity = projectController.addProject(token, project);
             if (projectEntity.getStatusCodeValue() == 201) {
                 return "Proyecto creado";
             } else {
@@ -91,7 +94,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
 
     @Override
     public String update(int id, Project project) {
-        ResponseEntity<Project> projectEntity = projectController.updateProject(project, id);
+        ResponseEntity<Project> projectEntity = projectController.updateProject(token, project, id);
         if (projectEntity.getStatusCodeValue() == 200) {
             return "Proyecto actualizado";
         } else {
@@ -101,7 +104,7 @@ public class ProjectMessageModel implements MessageModel<Project> {
 
     @Override
     public String delete(int id) {
-        ResponseEntity<Boolean> projectEntity = projectController.deleteProject(id);
+        ResponseEntity<Boolean> projectEntity = projectController.deleteProject(token, id);
         if (projectEntity.getStatusCodeValue() == 200) {
             return "Proyecto eliminado";
         } else {
