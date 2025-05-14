@@ -13,18 +13,21 @@ import com.springboot.MyTodoList.model.User;
 
 @Service
 public class TaskMessageModel implements MessageModel<Task> {
+
     private TaskController taskController;
     private SprintController sprintController;
+    private String token;
 
     public TaskMessageModel(TaskController taskController,
-            SprintController sprintController) {
+            SprintController sprintController, String token) {
         this.sprintController = sprintController;
         this.taskController = taskController;
+        this.token = token;
     }
 
     @Override
     public String reportSingle(int id, User user) {
-        ResponseEntity<Task> taskEntity = taskController.getTaskById(id);
+        ResponseEntity<Task> taskEntity = taskController.getTaskById(token, id);
         if (taskEntity.getStatusCodeValue() == 200) {
             Task exisitngTask = taskEntity.getBody();
             return exisitngTask.publicDescription();
@@ -37,7 +40,7 @@ public class TaskMessageModel implements MessageModel<Task> {
     public String reportAll(User user) {
         StringBuilder sb = new StringBuilder();
 
-        List<Sprint> sprints = sprintController.getActiveSprints(user.getSelectedProject_id());
+        List<Sprint> sprints = sprintController.getActiveSprints(token, user.getSelectedProject_id());
         if (sprints.size() == 0) {
             return "No hay sprints activos en el proyecto";
         }
@@ -54,7 +57,7 @@ public class TaskMessageModel implements MessageModel<Task> {
 
     @Override
     public String reportSpecific(int id) {
-        ResponseEntity<Task> taskEntity = taskController.getTaskById(id);
+        ResponseEntity<Task> taskEntity = taskController.getTaskById(token, id);
         if (taskEntity.getStatusCodeValue() == 200) {
             Task task = taskEntity.getBody();
             return task.publicDescription();
@@ -67,7 +70,7 @@ public class TaskMessageModel implements MessageModel<Task> {
     public String post(Task task) {
         try {
             System.out.println(task.toString());
-            ResponseEntity<Task> taskEntity = taskController.addTask(task);
+            ResponseEntity<Task> taskEntity = taskController.addTask(token, task);
             System.out.println("Result" + taskEntity.getStatusCodeValue());
             if (taskEntity.getStatusCodeValue() == 201) {
                 return "Tarea creada";
@@ -82,7 +85,7 @@ public class TaskMessageModel implements MessageModel<Task> {
 
     @Override
     public String update(int id, Task task) {
-        ResponseEntity<Task> taskEntity = taskController.updateTask(task, id);
+        ResponseEntity<Task> taskEntity = taskController.updateTask(token, task, id);
         if (taskEntity.getStatusCodeValue() == 200) {
             return "Tarea actualizada";
         } else {
@@ -92,7 +95,7 @@ public class TaskMessageModel implements MessageModel<Task> {
 
     @Override
     public String delete(int id) {
-        ResponseEntity<Boolean> taskEntity = taskController.deleteTask(id);
+        ResponseEntity<Boolean> taskEntity = taskController.deleteTask(token, id);
         if (taskEntity.getStatusCodeValue() == 200) {
             return "Tarea eliminada";
         } else {

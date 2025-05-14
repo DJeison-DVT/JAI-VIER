@@ -42,6 +42,10 @@ public class ProjectMemberService {
         return projectMembers;
     }
 
+    public boolean isMember(Integer userId, Integer projectId) {
+        return projectMemberRepository.existsByProjectIDAndUserID(userId, projectId);
+    }
+
     public ResponseEntity<ProjectMember> getItemById(int projectId, int userId) {
         ProjectMemberId projectMemberId = new ProjectMemberId(projectId, userId);
         Optional<ProjectMember> projectMemberData = projectMemberRepository.findById(projectMemberId);
@@ -53,18 +57,23 @@ public class ProjectMemberService {
     }
 
     public ProjectMember addProjectMember(ProjectMember projectMember) {
-        Optional<User> user = userRepository.findById(projectMember.getUser_id());
-        Optional<Project> project = projectRepository.findById(projectMember.getProject_id());
+        User user = userRepository.findById(projectMember.getUser_id()).orElseThrow(
+                () -> new IllegalArgumentException("User with ID " + projectMember.getUser_id() + " does not exist."));
+        Project project = projectRepository.findById(projectMember.getProject_id()).orElseThrow(
+                () -> new IllegalArgumentException(
+                        "Project with ID " + projectMember.getProject_id() + " does not exist."));
 
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + projectMember.getUser_id() + " does not exist.");
-        }
-        if (project.isEmpty()) {
-            throw new IllegalArgumentException("Project with ID " + projectMember.getProject_id() + " does not exist.");
-        }
+        ProjectMemberId projectMemberId = new ProjectMemberId(projectMember.getProject_id(),
+                projectMember.getUser_id());
 
-        projectMember.setJoined_date(OffsetDateTime.now());
-        return projectMemberRepository.save(projectMember);
+        ProjectMember pm = new ProjectMember();
+        pm.setId(projectMemberId);
+        pm.setProject(project);
+        pm.setUser(user);
+        pm.setRole(projectMember.getRole());
+        pm.setJoined_date(OffsetDateTime.now());
+
+        return projectMemberRepository.save(pm);
     }
 
     public boolean deleteProjectMember(int projectId, int userId) {

@@ -53,18 +53,20 @@ public class AsigneeService {
     }
 
     public Asignee addAsignee(Asignee asignee) {
-        Optional<User> user = userRepository.findById(asignee.getUser_id());
-        Optional<Task> task = taskRepository.findById(asignee.getTask_id());
+        User user = userRepository.findById(asignee.getUser_id()).orElseThrow(
+                () -> new IllegalArgumentException("User with ID " + asignee.getUser_id() + " does not exist."));
+        Task task = taskRepository.findById(asignee.getTask_id()).orElseThrow(
+                () -> new IllegalArgumentException("Task with ID " + asignee.getTask_id() + " does not exist."));
 
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + asignee.getUser_id() + " does not exist.");
-        }
-        if (task.isEmpty()) {
-            throw new IllegalArgumentException("Task with ID " + asignee.getTask_id() + " does not exist.");
-        }
+        AsigneeId asigneeId = new AsigneeId(asignee.getTask_id(), asignee.getUser_id());
 
-        asignee.setCreated_at(OffsetDateTime.now());
-        return asigneeRepository.save(asignee);
+        Asignee as = new Asignee();
+        as.setId(asigneeId);
+        as.setUser(user);
+        as.setTask(task);
+        as.setCreated_at(OffsetDateTime.now());
+
+        return asigneeRepository.save(as);
     }
 
     public boolean deleteAsignee(int taskId, int userId) {

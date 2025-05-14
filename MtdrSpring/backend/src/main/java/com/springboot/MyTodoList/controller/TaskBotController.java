@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.springboot.MyTodoList.dto.LoginResponse;
 import com.springboot.MyTodoList.dto.UserSummary;
 import com.springboot.MyTodoList.messageModel.MessageModel;
 import com.springboot.MyTodoList.messageModel.MessageModelFactory;
@@ -58,11 +60,15 @@ public class TaskBotController extends TelegramLongPollingBot {
 	private TaskController taskController;
 	private SubtaskController subtaskController;
 	private SprintController sprintController;
+	private AuthController authController;
+
+	@Value("${jwt.master-secret}")
+	private String masterSecret;
 
 	public TaskBotController(String botToken, String botName, TaskService taskService,
 			SubtaskService subtaskService, UserService userService, TaskController taskController,
 			SubtaskController subtaskController, SprintController sprintController, SprintService sprintService,
-			AsigneeService asigneeService) {
+			AsigneeService asigneeService, AuthController authController) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
@@ -75,6 +81,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 		this.sprintService = sprintService;
 		this.sprintController = sprintController;
 		this.asigneeService = asigneeService;
+		this.authController = authController;
 	}
 
 	@Override
@@ -617,7 +624,9 @@ public class TaskBotController extends TelegramLongPollingBot {
 
 				MessageModelFactory messageModelFactory = new MessageModelFactory(taskController, subtaskController,
 						sprintController);
-				MessageModel<?> messageModel = messageModelFactory.getMessageModel(type);
+				ResponseEntity<LoginResponse> responseEntity = authController.loginBot(masterSecret, user.getID());
+				String token = responseEntity.getBody().getAccessToken();
+				MessageModel<?> messageModel = messageModelFactory.getMessageModel(type, token);
 				TypeBuilder<?> typeBuilder = TypeBuilderFactory.getBuilder(type);
 
 				logger.info("Created TypeBuilder instance: {}", typeBuilder.getClass().getSimpleName());

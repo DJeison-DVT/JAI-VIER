@@ -21,4 +21,6 @@ public interface SprintRepository extends JpaRepository<Sprint, Integer> {
 
     @Query("SELECT s FROM Sprint s WHERE s.project.ID = :projectId AND :now BETWEEN s.start_date AND s.end_date")
     List<Sprint> findActiveSprintsByProjectId(@Param("projectId") int projectId, @Param("now") OffsetDateTime now);
+
+    List<Sprint> findDistinctByProject_Memberships_User_ID(Integer userId);
 }

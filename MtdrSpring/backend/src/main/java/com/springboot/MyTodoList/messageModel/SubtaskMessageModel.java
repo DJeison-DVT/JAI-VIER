@@ -16,10 +16,12 @@ import com.springboot.MyTodoList.model.User;
 public class SubtaskMessageModel implements MessageModel<Subtask> {
     private SubtaskController subtaskController;
     private SprintController sprintController;
+    private String token;
 
-    public SubtaskMessageModel(SubtaskController subtaskController, SprintController sprintController) {
+    public SubtaskMessageModel(SubtaskController subtaskController, SprintController sprintController, String token) {
         this.subtaskController = subtaskController;
         this.sprintController = sprintController;
+        this.token = token;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class SubtaskMessageModel implements MessageModel<Subtask> {
     public String reportAll(User user) {
         StringBuilder sb = new StringBuilder();
 
-        List<Sprint> sprints = sprintController.getActiveSprints(user.getSelectedProject_id());
+        List<Sprint> sprints = sprintController.getActiveSprints(token, user.getSelectedProject_id());
         if (sprints.size() == 0) {
             return "No hay sprints activos en el proyecto";
         }

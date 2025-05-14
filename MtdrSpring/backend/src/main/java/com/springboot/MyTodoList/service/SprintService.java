@@ -42,6 +42,16 @@ public class SprintService {
         return sprints;
     }
 
+    public List<Sprint> findByUser_ID(int user_id) {
+        List<Sprint> sprints = sprintRepository.findDistinctByProject_Memberships_User_ID(user_id);
+        for (Sprint sprint : sprints) {
+            if (sprint.getProject() != null) {
+                sprint.setProject_id(sprint.getProject().getID());
+            }
+        }
+        return sprints;
+    }
+
     public ResponseEntity<Sprint> getItemById(int id) {
         Optional<Sprint> sprintData = sprintRepository.findById(id);
         if (sprintData.isPresent()) {

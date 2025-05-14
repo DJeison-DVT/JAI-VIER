@@ -31,6 +31,10 @@ public class ProjectService {
         }
     }
 
+    public List<Project> getProjectByUserID(Integer userId) {
+        return projectRepository.findDistinctByMemberships_User_ID(userId);
+    }
+
     public Project addProject(Project project) {
         project.setCreated_at(OffsetDateTime.now());
         project.setUpdated_at(OffsetDateTime.now());
