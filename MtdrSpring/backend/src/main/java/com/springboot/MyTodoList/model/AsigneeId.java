@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Embeddable
 public class AsigneeId implements Serializable {
     private int taskId;
@@ -17,7 +19,7 @@ public class AsigneeId implements Serializable {
         this.userId = userId;
     }
 
-    // Getters and Setters
+    @JsonIgnore
     public int getTaskId() {
         return taskId;
     }
@@ -26,6 +28,7 @@ public class AsigneeId implements Serializable {
         this.taskId = taskId;
     }
 
+    @JsonIgnore
     public int getUserId() {
         return userId;
     }

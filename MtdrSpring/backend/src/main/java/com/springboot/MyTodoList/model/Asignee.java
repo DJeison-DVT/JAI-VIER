@@ -24,6 +24,7 @@ public class Asignee {
     private User user;
 
     public Asignee() {
+        this.id = new AsigneeId();
     }
 
     public Asignee(int task_id, int user_id, OffsetDateTime created_at) {

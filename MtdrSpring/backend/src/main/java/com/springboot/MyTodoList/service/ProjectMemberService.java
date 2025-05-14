@@ -18,8 +18,6 @@ import com.springboot.MyTodoList.repository.ProjectMemberRepository;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 import com.springboot.MyTodoList.repository.UserRepository;
 
-import oracle.net.aso.l;
-
 @Service
 public class ProjectMemberService {
     @Autowired
@@ -64,9 +62,6 @@ public class ProjectMemberService {
         Project project = projectRepository.findById(projectMember.getProject_id()).orElseThrow(
                 () -> new IllegalArgumentException(
                         "Project with ID " + projectMember.getProject_id() + " does not exist."));
-
-        System.out
-                .println("Adding user " + projectMember.getUser_id() + " to project " + projectMember.getProject_id());
 
         ProjectMemberId projectMemberId = new ProjectMemberId(projectMember.getProject_id(),
                 projectMember.getUser_id());
