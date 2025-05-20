@@ -28,7 +28,7 @@ import com.springboot.MyTodoList.service.UserService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Value("${jwt.master-secret}")
+    @Value("/eFwrx2uALiUc9Ekaz2JLrKWCzqfXtqngaPPhOZk8G0=")
     private String masterSecret;
 
     @Autowired

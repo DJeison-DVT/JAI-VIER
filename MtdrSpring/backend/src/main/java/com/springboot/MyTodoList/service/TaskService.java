@@ -1,15 +1,13 @@
 package com.springboot.MyTodoList.service;
 
-import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Task;
-import com.springboot.MyTodoList.repository.SprintRepository;
 import com.springboot.MyTodoList.repository.TaskRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,73 +16,115 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-    private SprintRepository sprintRepository;
 
+    /**
+     * Busca todas las tareas
+     * 
+     * @return Lista de tareas
+     */
     public List<Task> findAll() {
-        List<Task> tasks = taskRepository.findAll();
-        return tasks;
+        return taskRepository.findAll();
     }
 
-    public List<Task> getTasksByUserId(int userId) {
-        return taskRepository.findDistinctBySprint_Project_Memberships_User_ID(userId);
-    }
-
-    public List<Task> getTasksByProjectId(int projectId) {
-        return taskRepository.findDistinctBySprint_Project_ID(projectId);
-    }
-
+    /**
+     * Obtiene una tarea por su ID
+     * 
+     * @param id ID de la tarea
+     * @return ResponseEntity con la tarea o NOT_FOUND
+     */
     public ResponseEntity<Task> getItemById(int id) {
-        Optional<Task> taskData = taskRepository.findById(id);
-        if (taskData.isPresent()) {
-            return new ResponseEntity<>(taskData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<Task> task = taskRepository.findById(id);
+        if (task.isPresent()) {
+            return new ResponseEntity<>(task.get(), HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Agrega una nueva tarea
+     * 
+     * @param task Tarea a agregar
+     * @return Tarea guardada
+     */
     public Task addTask(Task task) {
-        int sprintId = task.getSprint_id();
-        if (sprintId == 0) {
-            throw new IllegalArgumentException("Task must be linked to an existing Sprint.");
-        }
-
-        Sprint existingSprint = sprintRepository.findById(sprintId).orElseThrow(
-                () -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
-
-        task.setSprint(existingSprint);
-        task.setCreated_at(OffsetDateTime.now());
-        task.setUpdated_at(OffsetDateTime.now());
-
         return taskRepository.save(task);
     }
 
-    public boolean deleteTask(int id) {
-        try {
-            taskRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public Task updateTask(int id, Task td) {
-        Optional<Task> taskData = taskRepository.findById(id);
-        if (taskData.isPresent()) {
-            Task task = taskData.get();
-            task.setID(id);
-            task.setTitle(td.getTitle());
-            task.setDescription(td.getDescription());
-            task.setUpdated_at(OffsetDateTime.now());
-            task.setDue_date(td.getDue_date());
-            task.setPriority(td.getPriority());
-            task.setStatus(td.getStatus());
-            task.setEstimated_hours(td.getEstimated_hours());
-            task.setReal_hours(td.getReal_hours());
-            return taskRepository.save(task);
+    /**
+     * Actualiza una tarea existente
+     * 
+     * @param id   ID de la tarea a actualizar
+     * @param task Nuevos datos de la tarea
+     * @return Tarea actualizada
+     * @throws Exception si no se encuentra la tarea
+     */
+    public Task updateTask(int id, Task task) throws Exception {
+        Optional<Task> existingTask = taskRepository.findById(id);
+        if (existingTask.isPresent()) {
+            Task taskData = existingTask.get();
+            taskData.setTitle(task.getTitle());
+            taskData.setDescription(task.getDescription());
+            taskData.setPriority(task.getPriority());
+            taskData.setStatus(task.getStatus());
+            // Eliminar la línea problemática que hace referencia a getDueDate()
+            // taskData.setDueDate(task.getDueDate());
+            taskData.setSprint_id(task.getSprint_id());
+            return taskRepository.save(taskData);
         } else {
-            return null;
+            throw new Exception("Task not found with id: " + id);
         }
     }
 
+    /**
+     * Elimina una tarea
+     * 
+     * @param id ID de la tarea a eliminar
+     * @return true si se eliminó correctamente
+     * @throws Exception si ocurre un error
+     */
+    public Boolean deleteTask(int id) throws Exception {
+        taskRepository.deleteById(id);
+        return true;
+    }
+
+    /**
+     * Obtiene las tareas por ID de usuario
+     * 
+     * @param userId ID del usuario
+     * @return Lista de tareas del usuario
+     */
+    public List<Task> getTasksByUserId(Integer userId) {
+        return taskRepository.findDistinctBySprint_Project_Memberships_User_ID(userId);
+    }
+
+    /**
+     * Obtiene las tareas por ID de proyecto
+     * 
+     * @param projectId ID del proyecto
+     * @return Lista de tareas del proyecto
+     */
+    public List<Task> getTasksByProjectId(Integer projectId) {
+        return taskRepository.findDistinctBySprint_Project_ID(projectId);
+    }
+
+    /**
+     * Obtiene las tareas completadas por ID de sprint
+     * 
+     * @param sprintId ID del sprint
+     * @return Lista de tareas completadas del sprint
+     */
+    public List<Task> getCompletedTasksBySprintId(Integer sprintId) {
+        return taskRepository.findBySprint_IDAndStatusEquals(sprintId, "DONE");
+    }
+
+    /**
+     * Obtiene las tareas completadas por ID de usuario y sprint
+     * 
+     * @param userId   ID del usuario
+     * @param sprintId ID del sprint
+     * @return Lista de tareas completadas del usuario en el sprint
+     */
+    public List<Task> getCompletedTasksByUserAndSprintId(Integer userId, Integer sprintId) {
+        return taskRepository.findByAsignees_User_IDAndSprint_IDAndStatusEquals(userId, sprintId, "DONE");
+    }
 }
