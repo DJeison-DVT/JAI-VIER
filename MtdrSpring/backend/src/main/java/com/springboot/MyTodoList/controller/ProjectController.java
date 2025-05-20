@@ -95,14 +95,14 @@ public class ProjectController {
     @PutMapping(value = "projectlist/{id}")
     public ResponseEntity<Project> updateProject(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Project project,
+            @RequestBody Project p,
             @PathVariable int id) {
-        ensureMember(authHeader, project);
-
         try {
-            Project project1 = projectService.updateProject(id, project);
-            System.out.println(project1.toString());
-            return new ResponseEntity<>(project1, HttpStatus.OK);
+            Project project = projectService.getItemById(id).getBody();
+            ensureMember(authHeader, project);
+            project = projectService.updateProject(id, p);
+            System.out.println(project.toString());
+            return new ResponseEntity<>(project, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

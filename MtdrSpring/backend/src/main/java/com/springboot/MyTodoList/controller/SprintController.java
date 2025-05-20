@@ -120,14 +120,18 @@ public class SprintController {
     @PutMapping(value = "sprintlist/{id}")
     public ResponseEntity<Sprint> updateSprint(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Sprint sprint,
+            @RequestBody Sprint sp,
             @PathVariable int id) {
-        ensureMember(authHeader, sprint);
-
         try {
-            Sprint sprint1 = sprintService.updateSprint(id, sprint);
-            System.out.println(sprint1.toString());
-            return new ResponseEntity<>(sprint1, HttpStatus.OK);
+            Sprint sprint = sprintService.getItemById(id).getBody();
+            if (sprint == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            ensureMember(authHeader, sprint);
+
+            sprint = sprintService.updateSprint(id, sp);
+            System.out.println(sprint.toString());
+            return new ResponseEntity<>(sprint, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
