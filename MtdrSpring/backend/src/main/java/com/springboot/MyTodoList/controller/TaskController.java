@@ -64,9 +64,11 @@ public class TaskController {
     public ResponseEntity<Task> getTaskById(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable int id) {
+        System.out.println("getTaskById: " + id);
         try {
             ResponseEntity<Task> responseEntity = taskService.getItemById(id);
             Task task = responseEntity.getBody();
+            System.out.println("getTaskById: " + task);
 
             ensureMember(authHeader, task);
 
@@ -101,14 +103,15 @@ public class TaskController {
     @PutMapping(value = "tasklist/{id}")
     public ResponseEntity<Task> updateTask(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Task task,
+            @RequestBody Task tk,
             @PathVariable int id) {
-        ensureMember(authHeader, task);
 
         try {
-            Task task1 = taskService.updateTask(id, task);
-            System.out.println(task1.toString());
-            return new ResponseEntity<>(task1, HttpStatus.OK);
+            Task task = taskService.getItemById(id).getBody();
+            ensureMember(authHeader, task);
+            task = taskService.updateTask(id, tk);
+            System.out.println(task.toString());
+            return new ResponseEntity<>(task, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

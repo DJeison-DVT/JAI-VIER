@@ -188,7 +188,7 @@ public class Task {
     }
 
     public int getSprint_id() {
-        return sprint_id;
+        return sprint.getID();
     }
 
     public void setSprint_id(int sprint_id) {
