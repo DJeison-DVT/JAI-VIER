@@ -43,7 +43,7 @@ public class ProjectMemberService {
     }
 
     public boolean isMember(Integer userId, Integer projectId) {
-        return projectMemberRepository.existsByProjectIDAndUserID(userId, projectId);
+        return projectMemberRepository.existsByProjectIDAndUserID(projectId, userId);
     }
 
     public ResponseEntity<ProjectMember> getItemById(int projectId, int userId) {
