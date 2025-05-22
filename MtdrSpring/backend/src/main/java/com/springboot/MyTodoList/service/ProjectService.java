@@ -43,13 +43,18 @@ public class ProjectService {
     public Project addProject(Project project, User user) {
         project.setCreated_at(OffsetDateTime.now());
         project.setUpdated_at(OffsetDateTime.now());
-        ProjectMember projectMember = new ProjectMember();
-        projectMember.setUser(user);
-        projectMember.setProject(project);
-        projectMember.setUser_id(user.getID());
-        projectMember.setProject_id(project.getID());
-        projectMemberRepository.save(projectMember);
-        return projectRepository.save(project);
+        Project saved = projectRepository.save(project);
+
+        ProjectMember member = new ProjectMember();
+        member.setUser(user);
+        member.setProject(saved);
+        member.setUser_id(user.getID());
+        member.setProject_id(saved.getID());
+        member.setJoined_date(OffsetDateTime.now());
+        member.setRole("manager");
+        projectMemberRepository.save(member);
+
+        return saved;
     }
 
     public boolean deleteProject(int id) {
