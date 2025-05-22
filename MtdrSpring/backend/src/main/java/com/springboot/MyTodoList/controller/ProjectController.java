@@ -81,7 +81,8 @@ public class ProjectController {
     public ResponseEntity<Project> addProject(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody Project project) throws Exception {
-        Project pr = projectService.addProject(project);
+        User user = authContext.getCurrentUser(authHeader);
+        Project pr = projectService.addProject(project, user);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("location", "" + pr.getID());
         responseHeaders.set("Access-Control-Expose-Headers", "location");

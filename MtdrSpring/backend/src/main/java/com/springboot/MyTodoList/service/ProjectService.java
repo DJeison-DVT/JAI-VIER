@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.springboot.MyTodoList.model.Project;
+import com.springboot.MyTodoList.model.ProjectMember;
+import com.springboot.MyTodoList.model.User;
+import com.springboot.MyTodoList.repository.ProjectMemberRepository;
 import com.springboot.MyTodoList.repository.ProjectRepository;
 
 @Service
@@ -16,6 +19,8 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectMemberRepository projectMemberRepository;
 
     public List<Project> findAll() {
         List<Project> projects = projectRepository.findAll();
@@ -35,9 +40,15 @@ public class ProjectService {
         return projectRepository.findDistinctByMemberships_User_ID(userId);
     }
 
-    public Project addProject(Project project) {
+    public Project addProject(Project project, User user) {
         project.setCreated_at(OffsetDateTime.now());
         project.setUpdated_at(OffsetDateTime.now());
+        ProjectMember projectMember = new ProjectMember();
+        projectMember.setUser(user);
+        projectMember.setProject(project);
+        projectMember.setUser_id(user.getID());
+        projectMember.setProject_id(project.getID());
+        projectMemberRepository.save(projectMember);
         return projectRepository.save(project);
     }
 
