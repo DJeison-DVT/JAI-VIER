@@ -5,6 +5,7 @@ import com.springboot.MyTodoList.model.Sprint;
 import com.springboot.MyTodoList.model.Task;
 import com.springboot.MyTodoList.model.User;
 import com.springboot.MyTodoList.security.AuthContext;
+import com.springboot.MyTodoList.service.ProjectService;
 import com.springboot.MyTodoList.service.SprintService;
 import com.springboot.MyTodoList.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class TaskController {
     private AuthContext authContext;
     @Autowired
     private SprintService sprintService;
+    @Autowired
+    private ProjectService projectService;
 
     @CrossOrigin
     @GetMapping(value = "/tasklist")
@@ -83,10 +86,6 @@ public class TaskController {
     public ResponseEntity<Task> addTask(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody Task task) throws Exception {
-        if (task.getSprint_id() == 0) {
-            throw new IllegalArgumentException("Task must be linked to an existing Sprint.");
-        }
-
         ensureMember(authHeader, task);
 
         Task td = taskService.addTask(task);
@@ -145,13 +144,14 @@ public class TaskController {
         }
 
         Sprint sprint = spr.getBody();
-        Integer projectId = sprint.getProject().getID();
+        ResponseEntity<Project> prj = projectService.getItemById(sprint.getProject_id());
+        Project project = prj.getBody();
 
         User user = authContext.getCurrentUser(authHeader);
-        if (!authContext.isMember(user.getID(), projectId)) {
+        if (!authContext.isMember(user.getID(), project.getID())) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
-                    "Not a member of project " + projectId);
+                    "Not a member of project " + project.getID());
         }
     }
 
