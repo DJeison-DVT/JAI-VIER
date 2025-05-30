@@ -13,22 +13,23 @@ steps:
     name: Checkout Code
     command: |
       echo "OCI automatically checks out code from the specified repo."
-  
+
   - type: Command
     name: Install Java 11
     command: |
       sudo yum install -y java-11-openjdk-devel
-      export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+      export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
       export PATH=$JAVA_HOME/bin:$PATH
+      echo "JAVA_HOME set to $JAVA_HOME"
       java -version
-
+      javac -version
 
   - type: Command
     name: Build with Maven
     command: |
-      cd MtdrSpring/backend
-      export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+      export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
       export PATH=$JAVA_HOME/bin:$PATH
+      cd MtdrSpring/backend
       mvn clean package -DskipTests
 
 
