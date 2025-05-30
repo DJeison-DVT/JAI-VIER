@@ -17,15 +17,20 @@ steps:
   - type: Command
     name: Install Java 11
     command: |
+      echo "Installing Java 11..."
       sudo yum install -y java-11-openjdk-devel
       export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
-      echo "JAVA_HOME=$JAVA_HOME" >> /tmp/envfile
+      echo "export JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
+      echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+      echo "JAVA_HOME set to $JAVA_HOME"
+      echo $JAVA_HOME > /tmp/java_home_path
 
   - type: Command
     name: Build with Maven
     command: |
-      source /tmp/envfile
+      export JAVA_HOME=$(cat /tmp/java_home_path)
       export PATH=$JAVA_HOME/bin:$PATH
+      echo "Using JAVA_HOME: $JAVA_HOME"
       java -version
       javac -version
       cd MtdrSpring/backend
