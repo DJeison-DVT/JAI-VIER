@@ -19,16 +19,15 @@ steps:
     command: |
       sudo yum install -y java-11-openjdk-devel
       export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
-      export PATH=$JAVA_HOME/bin:$PATH
-      echo "JAVA_HOME set to $JAVA_HOME"
-      java -version
-      javac -version
+      echo "JAVA_HOME=$JAVA_HOME" >> /tmp/envfile
 
   - type: Command
     name: Build with Maven
     command: |
-      export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
+      source /tmp/envfile
       export PATH=$JAVA_HOME/bin:$PATH
+      java -version
+      javac -version
       cd MtdrSpring/backend
       mvn clean package -DskipTests
 
