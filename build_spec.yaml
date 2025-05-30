@@ -20,9 +20,6 @@ steps:
       echo "Installing Java 11..."
       sudo yum install -y java-11-openjdk-devel
       export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
-      echo "export JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
-      echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
-      echo "JAVA_HOME set to $JAVA_HOME"
       echo $JAVA_HOME > /tmp/java_home_path
 
   - type: Command
@@ -35,7 +32,6 @@ steps:
       javac -version
       cd MtdrSpring/backend
       mvn clean package -DskipTests
-
 
   - type: Command
     name: Docker Login
