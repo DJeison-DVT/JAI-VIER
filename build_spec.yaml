@@ -5,8 +5,8 @@ shell: bash
 
 env:
   variables:
-    REGISTRY: "docker.io"
-    IMAGE_NAME: "${DOCKER_USER}/${DOCKER_IMAGE}"
+    REGISTRY="docker.io"
+    IMAGE_NAME="${DOCKER_USER}/${DOCKER_IMAGE}"
 
 steps:
   - type: Command
