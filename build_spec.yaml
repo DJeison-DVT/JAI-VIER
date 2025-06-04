@@ -20,10 +20,7 @@ steps:
       REGISTRY="docker.io"
       IMAGE_NAME="${DOCKER_USER}/${DOCKER_IMAGE}"
       docker build \
-        --tag "${REGISTRY}/${IMAGE_NAME}:${TAG}" \
-        --cache-from=type=local,src=/tmp/.buildx-cache \
-        --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-        .
+        --tag "${REGISTRY}/${IMAGE_NAME}:${TAG}" 
       docker push "${REGISTRY}/${IMAGE_NAME}:${TAG}"
 
   - type: Command
