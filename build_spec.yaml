@@ -27,10 +27,12 @@ steps:
         TAG="dev-$(echo $OCI_CODE_SOURCE_BRANCH_NAME | sed 's|/|-|g')"
       fi
 
-      docker buildx build --push \
+      docker build \
         --tag "${REGISTRY}/${IMAGE_NAME}:${TAG}" \
         --cache-from=type=local,src=/tmp/.buildx-cache \
-        --cache-to=type=local,dest=/tmp/.buildx-cache-new .
+        --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+        .
+      docker push "${REGISTRY}/${IMAGE_NAME}:${TAG}"
 
   - type: Command
     name: Move Docker Build Cache
