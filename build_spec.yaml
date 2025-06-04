@@ -2,12 +2,6 @@ version: 0.1
 component: build
 
 shell: bash
-
-env:
-  variables:
-    REGISTRY="docker.io"
-    IMAGE_NAME="${DOCKER_USER}/${DOCKER_IMAGE}"
-
 steps:
   - type: Command
     name: Checkout Code
@@ -23,6 +17,8 @@ steps:
     name: Build and Push Docker Image
     command: |
       TAG=latest
+      REGISTRY="docker.io"
+      IMAGE_NAME="${DOCKER_USER}/${DOCKER_IMAGE}"
       docker build \
         --tag "${REGISTRY}/${IMAGE_NAME}:${TAG}" \
         --cache-from=type=local,src=/tmp/.buildx-cache \
