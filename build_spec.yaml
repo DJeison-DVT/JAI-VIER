@@ -15,6 +15,7 @@ steps:
 
   - type: Command
     name: Build and Push Docker Image
+    timeoutInSeconds: 1800
     command: |
       TAG=latest
       REGISTRY="docker.io"
