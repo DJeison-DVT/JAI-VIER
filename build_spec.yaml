@@ -23,10 +23,6 @@ steps:
     name: Build and Push Docker Image
     command: |
       TAG=latest
-      if [[ "${OCI_CODE_SOURCE_BRANCH_NAME}" != "main" ]]; then
-        TAG="dev-$(echo $OCI_CODE_SOURCE_BRANCH_NAME | sed 's|/|-|g')"
-      fi
-
       docker build \
         --tag "${REGISTRY}/${IMAGE_NAME}:${TAG}" \
         --cache-from=type=local,src=/tmp/.buildx-cache \
